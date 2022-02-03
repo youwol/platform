@@ -9,3 +9,4 @@ deploy
 nginx.conf
 Dockerfile
 backup
+cdn.zip

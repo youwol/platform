@@ -1011,6 +1011,11 @@
   resolved "https://registry.yarnpkg.com/@youwol/fv-tree/-/fv-tree-0.0.4.tgz#45315452cdb837f89f59a70d4ff4161f6eae65f1"
   integrity sha512-DD/WEPbJDq/hhEqNsiVaEZj0m/1e2qUp6hKuzW7iuYJJ8KwWcpqAfDHUNt94IiYZoIJZdwCYG2ZIDIJZclrweg==
 
+"@youwol/http-clients@^0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@youwol/http-clients/-/http-clients-0.0.1.tgz#848d97e950502f65477e5690f09fd531af0ec68b"
+  integrity sha512-iPBKQ9XuE3NcLGNA00RotyXlxic4eB+DVi33ui6s1IYlEUyuJJrytPV8LfU0Jy/7hYsnAckjCAPAY7nJAqJ+Lg==
+
 "@youwol/logging@^0.0.2":
   version "0.0.2"
   resolved "https://registry.yarnpkg.com/@youwol/logging/-/logging-0.0.2.tgz#50515dd16af5115e033f0c47cab22753d8d22c36"

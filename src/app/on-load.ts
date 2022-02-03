@@ -1,11 +1,8 @@
 import { render } from "@youwol/flux-view";
-import { AppView } from "./app.view";
+import { Core } from "@youwol/platform-essentials";
 
-require('./style.css');
+require("./style.css");
 
-document
-    .getElementById("content")
-    .appendChild(
-        render(new AppView())
-    )
+let appView = new Core.PlatformView();
 
+document.getElementById("content").appendChild(render(appView));

@@ -6,7 +6,7 @@ import {
     children$,
 } from '@youwol/flux-view'
 import * as OsCore from '@youwol/os-core'
-import { TreedbBackend } from '@youwol/http-clients'
+import { ExplorerBackend } from '@youwol/http-clients'
 import { BehaviorSubject } from 'rxjs'
 
 export class DesktopFavoritesView implements VirtualDOM {
@@ -31,7 +31,7 @@ export class DesktopFavoritesView implements VirtualDOM {
                     (items) => {
                         return items.map((item) => {
                             return new DesktopFavoriteView({
-                                entityResponse: item,
+                                item,
                             })
                         })
                     },
@@ -50,13 +50,13 @@ export class DesktopFavoriteView implements VirtualDOM {
         zIndex: 4,
     }
     public readonly style: Stream$<boolean, { [k: string]: string }>
-    public readonly itemNode: OsCore.ItemNode
-    public readonly entityResponse: TreedbBackend.GetEntityResponse
+    public readonly item: ExplorerBackend.GetItemResponse
     public readonly children: VirtualDOM[]
     public readonly defaultOpeningApp$
     public readonly hovered$ = new BehaviorSubject(false)
+
     public readonly ondblclick = () => {
-        OsCore.tryOpenWithDefault$(this.itemNode).subscribe()
+        OsCore.tryOpenWithDefault$(this.item).subscribe()
     }
 
     public readonly onmouseenter = () => {
@@ -66,10 +66,11 @@ export class DesktopFavoriteView implements VirtualDOM {
         this.hovered$.next(false)
     }
 
-    constructor(params: { entityResponse: TreedbBackend.GetEntityResponse }) {
+    constructor(params: { item: ExplorerBackend.GetItemResponse }) {
         Object.assign(this, params)
 
-        this.defaultOpeningApp$ = OsCore.defaultOpeningApp$(this.itemNode)
+        this.defaultOpeningApp$ = OsCore.defaultOpeningApp$(this.item)
+
         this.style = attr$(
             this.hovered$,
             (hovered) => {
@@ -107,7 +108,7 @@ export class DesktopFavoriteView implements VirtualDOM {
                 },
             ),
             {
-                innerText: this.entityResponse.entity.name,
+                innerText: this.item.name,
             },
         ]
     }

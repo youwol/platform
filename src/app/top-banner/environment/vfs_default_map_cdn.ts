@@ -100,18 +100,18 @@ export function createDefaultMapFromCDN(
         fetchSource({
             name: 'environment.d.ts',
             url: `${getUrlBase(
-                '@youwol/platform-essentials',
+                '@youwol/os-core',
                 'latest',
-            )}/dist/lib/core/environment.d.ts`,
+            )}/dist/lib/environment.d.ts`,
         }).then(({ content }) => {
             fsMap.set(`/environment.ts`, content)
         }),
         fetchSource({
             name: 'installer.d.ts',
             url: `${getUrlBase(
-                '@youwol/platform-essentials',
+                '@youwol/os-core',
                 'latest',
-            )}/dist/lib/core/installer.d.ts`,
+            )}/dist/lib/installer.d.ts`,
         }).then(({ content }) => {
             fsMap.set(`/installer.ts`, content)
         }),

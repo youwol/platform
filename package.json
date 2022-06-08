@@ -1,6 +1,6 @@
 {
     "name": "@youwol/platform",
-    "version": "0.0.4",
+    "version": "0.0.5-wip",
     "description": "OS like frontend application of YouWol platform",
     "author": "greinisch@youwol.com",
     "main": "dist/index.html",

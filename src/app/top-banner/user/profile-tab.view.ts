@@ -174,13 +174,13 @@ export class TextFieldView implements VirtualDOM {
     constructor({ label, value }) {
         this.children = [
             {
-                class: 'col-sm',
+                class: 'col-2',
                 innerText: label,
             },
             {
                 tag: 'input',
                 type: 'text',
-                class: 'col-sm',
+                class: 'col-6',
                 value,
             },
         ]

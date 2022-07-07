@@ -64,7 +64,7 @@ export class VisitorBadgeView implements VirtualDOM {
 
         this.children = [
             {
-                class: 'fas fa-user fa-2x',
+                class: 'fas fa-user-secret fa-2x',
             },
             {
                 class: 'mx-1',

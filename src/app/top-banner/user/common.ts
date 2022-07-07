@@ -4,6 +4,17 @@ import { combineLatest, from } from 'rxjs'
 import { install } from '@youwol/cdn-client'
 import { filter, shareReplay, take } from 'rxjs/operators'
 import { CodeIdeView } from './ts-code-editor.view'
+import { Accounts } from '@youwol/http-clients'
+
+type NavigateMethod =
+    | 'logoutAndForgetUserUrl'
+    | 'logoutUrl'
+    | 'loginAsUserUrl'
+    | 'loginAsTempUserUrl'
+
+export function redirectWith(method: NavigateMethod) {
+    window.location.replace(new Accounts.Client()[method](window.location.href))
+}
 
 export class UserSettingsTabBase extends DockableTabs.Tab {
     protected constructor(params: {

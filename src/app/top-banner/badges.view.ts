@@ -1,19 +1,10 @@
 import { VirtualDOM } from '@youwol/flux-view'
 import { Accounts } from '@youwol/http-clients'
+import { redirectWith } from './user/common'
 
 type SessionInfo =
     | Accounts.SessionBaseDetails
     | Accounts.SessionImpersonationDetails
-
-type NavigateMethod =
-    | 'logoutAndForgetUserUrl'
-    | 'logoutUrl'
-    | 'loginAsUserUrl'
-    | 'loginAsTempUserUrl'
-
-function redirectWith(method: NavigateMethod) {
-    window.location.replace(new Accounts.Client()[method](window.location.href))
-}
 
 export class RegisteredUserBadgeView implements VirtualDOM {
     public readonly class = 'd-flex align-items-center'

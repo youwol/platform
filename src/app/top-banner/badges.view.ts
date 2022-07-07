@@ -26,19 +26,29 @@ export class RegisteredUserBadgeView implements VirtualDOM {
                 onclick: (ev) => ev.stopPropagation(),
                 children: [
                     {
-                        class: 'fas fa-sync  fv-hover-text-focus',
-                        onclick: () => redirectWith('loginAsUserUrl'),
-                    },
-                    {
-                        style: {
-                            marginTop: '2px',
-                        },
-                    },
-                    {
                         class: 'fas fa-sign-out-alt position-relative  fv-hover-text-focus',
                         onclick: () => redirectWith('logoutUrl'),
                     },
+                    ...(this.sessionInfo.userInfo.groups
+                        .map((grp) => grp.path)
+                        .includes('/youwol-users/youwol-devs/youwol-admins')
+                        ? this.youwolAdminActions()
+                        : []),
                 ],
+            },
+        ]
+    }
+
+    youwolAdminActions(): VirtualDOM[] {
+        return [
+            {
+                style: {
+                    marginTop: '2px',
+                },
+            },
+            {
+                class: 'fas fa-user-secret  fv-hover-text-focus',
+                onclick: () => redirectWith('loginAsTempUserUrl'),
             },
         ]
     }

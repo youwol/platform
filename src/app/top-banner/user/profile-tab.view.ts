@@ -1,7 +1,8 @@
-import { EnvironmentTab, UserSettingsTabsState } from './settings-tabs'
+import { UserSettingsTabsState } from './settings-tabs'
 import { VirtualDOM } from '@youwol/flux-view'
+import { UserSettingsTabBase } from './common'
 
-export class ProfileTab extends EnvironmentTab {
+export class ProfileTab extends UserSettingsTabBase {
     constructor() {
         super({
             id: 'Profile',

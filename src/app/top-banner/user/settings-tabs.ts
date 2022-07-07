@@ -1,17 +1,11 @@
 import { DockableTabs } from '@youwol/fv-tabs'
-import { child$, VirtualDOM } from '@youwol/flux-view'
-import { BehaviorSubject, combineLatest, from, of } from 'rxjs'
-import { filter, mergeMap, shareReplay, take } from 'rxjs/operators'
-import { install } from '@youwol/cdn-client'
-import * as OsCore from '@youwol/os-core'
-import { CodeIdeView } from './ts-code-editor.view'
+import { BehaviorSubject, from, of } from 'rxjs'
+import { mergeMap, shareReplay } from 'rxjs/operators'
 import { Accounts } from '@youwol/http-clients'
 import { ProfileTab } from './profile-tab.view'
-
-const bottomNavClasses = 'fv-bg-background fv-x-lighter w-100 overflow-auto'
-const bottomNavStyle = {
-    height: '100%',
-}
+import { PreferencesTab } from './preferences-tab.view'
+import { InstallersTab } from './installers-tab.view'
+import { fetchTypescriptCodeMirror$ } from './common'
 
 export class UserSettingsTabsState extends DockableTabs.State {
     public readonly sessionInfo: Accounts.SessionDetails
@@ -38,7 +32,7 @@ export class UserSettingsTabsState extends DockableTabs.State {
     }
 }
 
-export class EnvironmentTabsView extends DockableTabs.View {
+export class UserSettingsTabsView extends DockableTabs.View {
     public readonly onclick = (ev) => {
         ev.stopPropagation()
     }

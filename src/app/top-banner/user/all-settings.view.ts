@@ -1,5 +1,5 @@
 import { VirtualDOM } from '@youwol/flux-view'
-import { EnvironmentTabsView } from './settings-tabs'
+import { UserSettingsTabsView } from './settings-tabs'
 import { Accounts } from '@youwol/http-clients'
 
 export class UserAllSettingsView implements VirtualDOM {
@@ -12,7 +12,7 @@ export class UserAllSettingsView implements VirtualDOM {
         this.children = [
             {
                 class: 'position-relative h-100 d-flex flex-column',
-                children: [new EnvironmentTabsView({ sessionInfo })],
+                children: [new UserSettingsTabsView({ sessionInfo })],
             },
         ]
     }

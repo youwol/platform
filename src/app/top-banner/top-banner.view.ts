@@ -1,6 +1,6 @@
 import { child$, children$, VirtualDOM } from '@youwol/flux-view'
 import * as OsCore from '@youwol/os-core'
-import { EnvironmentView } from './environment/environment-menu.view'
+import { UserAllSettingsView } from './user/all-settings.view'
 import { TopBannerMenuView } from './top-banner-menu.view'
 import { ApplicationsLaunchPadView } from './launch-pad-menu.view'
 import { map } from 'rxjs/operators'
@@ -95,7 +95,7 @@ class EnvironmentMenuView extends TopBannerMenuView {
                       sessionInfo,
                   }),
             contentView: () =>
-                new EnvironmentView({
+                new UserAllSettingsView({
                     sessionInfo,
                 }),
         })

@@ -1,4 +1,4 @@
-import { EnvironmentTab, EnvironmentTabsState } from './environment-tabs'
+import { EnvironmentTab, UserSettingsTabsState } from './settings-tabs'
 import { VirtualDOM } from '@youwol/flux-view'
 
 export class ProfileTab extends EnvironmentTab {
@@ -7,7 +7,7 @@ export class ProfileTab extends EnvironmentTab {
             id: 'Profile',
             title: 'Profile',
             icon: 'fas fa-user',
-            content: ({ tabsState }: { tabsState: EnvironmentTabsState }) => {
+            content: ({ tabsState }: { tabsState: UserSettingsTabsState }) => {
                 return new ProfileView({
                     tabsState: tabsState,
                 })
@@ -23,9 +23,9 @@ export class ProfileView implements VirtualDOM {
         height: '100%',
     }
     public readonly children: VirtualDOM[]
-    public readonly tabsState: EnvironmentTabsState
+    public readonly tabsState: UserSettingsTabsState
 
-    constructor(params: { tabsState: EnvironmentTabsState }) {
+    constructor(params: { tabsState: UserSettingsTabsState }) {
         Object.assign(this, params)
         this.children = [
             {

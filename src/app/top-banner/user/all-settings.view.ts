@@ -1,8 +1,8 @@
 import { VirtualDOM } from '@youwol/flux-view'
-import { EnvironmentTabsView } from './environment-tabs'
+import { EnvironmentTabsView } from './settings-tabs'
 import { Accounts } from '@youwol/http-clients'
 
-export class EnvironmentView implements VirtualDOM {
+export class UserAllSettingsView implements VirtualDOM {
     public readonly style = {
         width: '75vw',
         height: '75vh',

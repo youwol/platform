@@ -13,7 +13,7 @@ const bottomNavStyle = {
     height: '100%',
 }
 
-export class EnvironmentTabsState extends DockableTabs.State {
+export class UserSettingsTabsState extends DockableTabs.State {
     public readonly sessionInfo: Accounts.SessionDetails
     public readonly codeMirror$ = fetchTypescriptCodeMirror$().pipe(
         mergeMap(() => {
@@ -44,7 +44,7 @@ export class EnvironmentTabsView extends DockableTabs.View {
     }
     constructor({ sessionInfo }: { sessionInfo: Accounts.SessionDetails }) {
         super({
-            state: new EnvironmentTabsState({ sessionInfo }),
+            state: new UserSettingsTabsState({ sessionInfo }),
             styleOptions: {
                 wrapper: {
                     class: 'flex-grow-1 overflow-auto rounded',
@@ -74,7 +74,7 @@ export class PreferencesTab extends EnvironmentTab {
             id: 'Preferences',
             title: 'Preferences',
             icon: 'fas fa-user-cog',
-            content: ({ tabsState }: { tabsState: EnvironmentTabsState }) => {
+            content: ({ tabsState }: { tabsState: UserSettingsTabsState }) => {
                 return new PreferencesView({
                     tabsState: tabsState,
                 })
@@ -90,7 +90,7 @@ export class InstallersTab extends EnvironmentTab {
             id: 'Installers',
             title: 'Installers',
             icon: 'fas fa-cubes',
-            content: ({ tabsState }: { tabsState: EnvironmentTabsState }) => {
+            content: ({ tabsState }: { tabsState: UserSettingsTabsState }) => {
                 return new InstallersView({
                     tabsState: tabsState,
                 })
@@ -132,7 +132,7 @@ export class PreferencesView implements VirtualDOM {
     public readonly class = bottomNavClasses
     public readonly style = bottomNavStyle
     public readonly children: VirtualDOM[]
-    constructor(params: { tabsState: EnvironmentTabsState }) {
+    constructor(params: { tabsState: UserSettingsTabsState }) {
         this.children = [
             child$(
                 combineLatest([
@@ -175,7 +175,7 @@ export class InstallersView implements VirtualDOM {
     public readonly class = bottomNavClasses
     public readonly style = bottomNavStyle
     public readonly children: VirtualDOM[]
-    constructor(params: { tabsState: EnvironmentTabsState }) {
+    constructor(params: { tabsState: UserSettingsTabsState }) {
         this.children = [
             child$(
                 combineLatest([

@@ -1,6 +1,6 @@
 import { attr$, child$, children$, VirtualDOM } from '@youwol/flux-view'
 import * as OsCore from '@youwol/os-core'
-import { BehaviorSubject, Observable } from 'rxjs'
+import { BehaviorSubject, combineLatest, Observable } from 'rxjs'
 import { map } from 'rxjs/operators'
 
 export class ApplicationsLaunchPadView implements VirtualDOM {
@@ -16,7 +16,7 @@ export class ApplicationsLaunchPadView implements VirtualDOM {
         Object.assign(this, params)
         this.children = [
             {
-                class: 'h-100 w-100 d-flex flex-column',
+                class: 'h-100 w-100 d-flex',
                 children: [
                     child$(this.state.runningApplications$, (apps) =>
                         apps.length > 0
@@ -51,10 +51,10 @@ class NewAppsView implements VirtualDOM {
 
         this.children = [
             {
-                class: 'justify-content-center fv-text-focus fv-border-bottom-focus d-flex align-items-center',
+                class: 'justify-content-center fv-text-focus d-flex align-items-center',
                 children: [
                     {
-                        innerText: 'Launch pad',
+                        innerText: 'Applications',
                     },
                     spinner,
                 ],
@@ -117,7 +117,14 @@ class NewAppView implements VirtualDOM {
             {
                 class: 'd-flex w-100 h-100 justify-content-center mx-auto flex-column h-100 w-100 text-center',
                 children: [
-                    this.app.graphics.appIcon,
+                    {
+                        class: 'mx-auto d-flex flex-column justify-content-center',
+                        style: {
+                            width: '40px',
+                            height: '40px',
+                        },
+                        children: [this.app.graphics.appIcon],
+                    },
                     { class: 'mt-1', innerText: this.app.displayName },
                 ],
             },
@@ -126,7 +133,7 @@ class NewAppView implements VirtualDOM {
 }
 
 class RunningAppsView implements VirtualDOM {
-    public readonly class = 'w-100  overflow-auto mb-4'
+    public readonly class = 'w-25 overflow-auto border-right'
     public readonly children: VirtualDOM[]
     public readonly state: OsCore.PlatformState
 
@@ -135,15 +142,15 @@ class RunningAppsView implements VirtualDOM {
         const expanded$ = new BehaviorSubject(false)
         this.children = [
             {
-                class: 'text-center fv-text-focus fv-border-bottom-focus',
-                innerText: 'Running apps',
+                class: 'text-center fv-text-focus',
+                innerText: 'Running',
                 style: {
                     fontSize: 'x-large',
                     fontWeight: 'bolder',
                 },
             },
             {
-                class: 'd-flex justify-content-center',
+                class: 'd-flex flex-column justify-content-center',
                 children: children$(
                     this.state.runningApplications$,
                     (runningApps) => {
@@ -175,15 +182,17 @@ class RunningAppsView implements VirtualDOM {
 }
 
 export class RunningAppView implements VirtualDOM {
-    public readonly class =
-        'd-flex flex-column align-items-center m-2 border rounded p-2'
+    public readonly class = `d-flex flex-column align-items-center rounded fv-hover-bg-background-alt mx-auto p-1 fv-pointer`
     public readonly children: VirtualDOM[]
     public readonly executable: OsCore.Executable
-    public readonly style = {
-        minWidth: '200px',
-    }
     public readonly instances: OsCore.RunningApp[]
     public readonly state: OsCore.PlatformState
+    public readonly hovered$ = new BehaviorSubject(false)
+    public readonly style = {
+        width: 'fit-content',
+    }
+    public readonly onmouseenter: (ev: MouseEvent) => void
+    public readonly onmouseleave: (ev: MouseEvent) => void
 
     constructor(params: {
         state: OsCore.PlatformState
@@ -194,29 +203,83 @@ export class RunningAppView implements VirtualDOM {
         Object.assign(this, params)
         this.children = [
             this.headerView(),
-            new InstancesListView({
-                state: this.state,
-                instances: this.instances,
-                executable: this.executable,
+            child$(this.hovered$, (hoverer) => {
+                return hoverer
+                    ? new InstancesListView({
+                          state: this.state,
+                          instances: this.instances,
+                          executable: this.executable,
+                      })
+                    : {}
             }),
         ]
+        this.onmouseenter = () => this.hovered$.next(true)
+        this.onmouseleave = () => this.hovered$.next(false)
     }
 
     headerView() {
         return {
-            class: `fv-text-primary d-flex align-items-center`,
+            class: `fv-text-primary d-flex align-items-center position-relative`,
             children: [
-                child$(this.executable.appMetadata$, (d) => d.graphics.appIcon),
-                {
-                    tag: 'span',
-                    class: 'mx-2',
-                    innerText: attr$(
-                        this.executable.appMetadata$,
-                        (d) => d.displayName,
-                    ),
-                },
+                child$(this.executable.appMetadata$, (d) => ({
+                    class: 'p-2',
+                    children: [d.graphics.appIcon],
+                })),
+                child$(
+                    combineLatest([
+                        this.hovered$,
+                        this.state.runningApplication$,
+                    ]),
+                    ([hovered, runningApp]) => {
+                        return hovered
+                            ? {
+                                  tag: 'span',
+                                  style: {
+                                      fontWeight: 'bolder',
+                                  },
+                                  class: 'mx-2 fv-text-success',
+                                  innerText: attr$(
+                                      this.executable.appMetadata$,
+                                      (d) => d.displayName,
+                                  ),
+                              }
+                            : new RunningAppBullet({
+                                  runningApp,
+                                  instances: this.instances,
+                              })
+                    },
+                ),
             ],
         }
+    }
+}
+
+class RunningAppBullet implements VirtualDOM {
+    public readonly class =
+        'w-100 h-100 position-absolute d-flex justify-content-around'
+    public readonly style = {
+        top: '0px',
+        left: '0px',
+    }
+    public readonly children: VirtualDOM[]
+    public readonly runningApp
+    public readonly instances
+
+    constructor(params: { runningApp; instances }) {
+        Object.assign(this, params)
+        this.children = this.instances.map((app) => {
+            return {
+                class:
+                    this.runningApp &&
+                    this.runningApp.instanceId == app.instanceId
+                        ? 'fv-bg-secondary rounded border'
+                        : 'fv-bg-primary rounded border',
+                style: {
+                    width: '7px',
+                    height: '7px',
+                },
+            }
+        })
     }
 }
 
@@ -226,7 +289,7 @@ class InstancesListView implements VirtualDOM {
     public readonly executable: OsCore.Executable
     public readonly instances: OsCore.RunningApp[]
     public readonly class =
-        'd-flex flex-column justify-content-center p-1 w-100 rounded'
+        'd-flex flex-column justify-content-center p-1 rounded'
     public readonly style = { userSelect: 'none' }
 
     constructor(params: {
@@ -254,7 +317,7 @@ class InstancesListView implements VirtualDOM {
                         },
                         {
                             wrapper: (d) =>
-                                `${d} fv-pointer px-1 my-1 rounded fv-hover-bg-background-alt d-flex align-items-center justify-content-between`,
+                                `${d} fv-pointer px-1 my-1 rounded fv-hover-bg-secondary fv-hover-text-primary d-flex align-items-center justify-content-between`,
                         },
                     ),
                     onclick: () => this.state.focus(app.instanceId),

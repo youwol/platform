@@ -1,8 +1,22 @@
-import { child$, VirtualDOM } from '@youwol/flux-view'
+import { child$, children$, VirtualDOM } from '@youwol/flux-view'
 import * as OsCore from '@youwol/os-core'
-import { EnvironmentView } from './environment-menu.view'
+import { EnvironmentView } from './environment/environment-menu.view'
 import { TopBannerMenuView } from './top-banner-menu.view'
 import { ApplicationsLaunchPadView } from './launch-pad-menu.view'
+import { map } from 'rxjs/operators'
+import { AssetsGateway, raiseHTTPErrors, Accounts } from '@youwol/http-clients'
+import { RegisteredUserBadgeView, VisitorBadgeView } from './badges.view'
+
+function getUserBadgeView$(state) {
+    return child$(
+        new AssetsGateway.Client().accounts
+            .getSessionDetails$()
+            .pipe(raiseHTTPErrors()),
+        (sessionInfo) => {
+            return new EnvironmentMenuView({ state, sessionInfo })
+        },
+    )
+}
 
 export class PlatformBannerView implements VirtualDOM {
     public readonly state: OsCore.PlatformState
@@ -64,20 +78,29 @@ class YouwolMenuView extends TopBannerMenuView {
 }
 
 class EnvironmentMenuView extends TopBannerMenuView {
-    constructor({ state }: { state: OsCore.PlatformState }) {
+    constructor({
+        state,
+        sessionInfo,
+    }: {
+        state: OsCore.PlatformState
+        sessionInfo: Accounts.SessionDetails
+    }) {
         super({
             state,
-            iconView: child$(
-                OsCore.PreferencesFacade.getPreferences$(),
-                (preferences) => {
-                    return preferences.profile.avatar
-                },
-            ),
-            contentView: () => new EnvironmentView(),
+            iconView: sessionInfo.userInfo.temp
+                ? new VisitorBadgeView({
+                      sessionInfo,
+                  })
+                : new RegisteredUserBadgeView({
+                      sessionInfo,
+                  }),
+            contentView: () =>
+                new EnvironmentView({
+                    sessionInfo,
+                }),
         })
     }
 }
-
 /**
  * Regular top banner of the application (no application running)
  */
@@ -99,7 +122,7 @@ class RegularBannerView implements VirtualDOM {
                     ),
                 ],
             },
-            new EnvironmentMenuView({ state }),
+            getUserBadgeView$(state),
         ]
     }
 }
@@ -128,7 +151,7 @@ class RunningAppBannerView implements VirtualDOM {
                     },
                 ],
             },
-            new EnvironmentMenuView({ state }),
+            getUserBadgeView$(state),
         ]
     }
 }

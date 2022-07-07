@@ -5,6 +5,8 @@ import { filter, mergeMap, shareReplay, take } from 'rxjs/operators'
 import { install } from '@youwol/cdn-client'
 import * as OsCore from '@youwol/os-core'
 import { CodeIdeView } from './ts-code-editor.view'
+import { Accounts } from '@youwol/http-clients'
+import { ProfileTab } from './profile-tab.view'
 
 const bottomNavClasses = 'fv-bg-background fv-x-lighter w-100 overflow-auto'
 const bottomNavStyle = {
@@ -12,6 +14,7 @@ const bottomNavStyle = {
 }
 
 export class EnvironmentTabsState extends DockableTabs.State {
+    public readonly sessionInfo: Accounts.SessionDetails
     public readonly codeMirror$ = fetchTypescriptCodeMirror$().pipe(
         mergeMap(() => {
             return from(import('./ts-code-editor.view'))
@@ -19,14 +22,19 @@ export class EnvironmentTabsState extends DockableTabs.State {
         shareReplay({ bufferSize: 1, refCount: true }),
     )
 
-    constructor() {
+    constructor(params: { sessionInfo: Accounts.SessionDetails }) {
         super({
             disposition: 'top',
             viewState$: new BehaviorSubject<DockableTabs.DisplayMode>('pined'),
-            tabs$: of([new PreferencesTab(), new InstallersTab()]),
-            selected$: new BehaviorSubject('Preferences'),
+            tabs$: of([
+                new ProfileTab(),
+                new PreferencesTab(),
+                new InstallersTab(),
+            ]),
+            selected$: new BehaviorSubject('Profile'),
             persistTabsView: false,
         })
+        Object.assign(this, params)
     }
 }
 
@@ -34,12 +42,12 @@ export class EnvironmentTabsView extends DockableTabs.View {
     public readonly onclick = (ev) => {
         ev.stopPropagation()
     }
-    constructor() {
+    constructor({ sessionInfo }: { sessionInfo: Accounts.SessionDetails }) {
         super({
-            state: new EnvironmentTabsState(),
+            state: new EnvironmentTabsState({ sessionInfo }),
             styleOptions: {
                 wrapper: {
-                    class: 'flex-grow-1 overflow-auto',
+                    class: 'flex-grow-1 overflow-auto rounded',
                     style: {
                         minHeight: '0px',
                     },

@@ -46,7 +46,6 @@ export class TopBannerMenuView implements VirtualDOM {
         this.children = [
             {
                 style: {
-                    width: '30px',
                     overflow: 'hidden',
                 },
                 children: [this.iconView],

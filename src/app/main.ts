@@ -1,6 +1,6 @@
 export {}
 require('./style.css')
-let cdn = window['@youwol/cdn-client']
+const cdn = window['@youwol/cdn-client']
 
 await cdn.install(
     {

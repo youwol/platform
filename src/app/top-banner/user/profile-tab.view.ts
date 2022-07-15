@@ -1,6 +1,9 @@
-import { UserSettingsTabsState } from './settings-tabs'
-import { VirtualDOM } from '@youwol/flux-view'
+import { attr$, VirtualDOM } from '@youwol/flux-view'
+import { Accounts, onHTTPErrors } from '@youwol/http-clients'
+import { BehaviorSubject, Subject } from 'rxjs'
 import { redirectWith, UserSettingsTabBase } from './common'
+import { UserSettingsTabsState } from './settings-tabs'
+
 
 export class ProfileTab extends UserSettingsTabBase {
     constructor() {
@@ -48,7 +51,7 @@ export class RegisteredProfileView extends BaseProfileView {
                             {
                                 class: 'px-2',
                                 innerText:
-                                    this.tabsState.sessionInfo.userInfo.name,
+                                this.tabsState.sessionInfo.userInfo.name,
                             },
                             {
                                 style: {
@@ -103,12 +106,30 @@ export class RegisteredProfileView extends BaseProfileView {
     }
 }
 
+type SendingRegistrationEmail = 'done' | 'enable' | 'disable' | 'processing'
+
 export class VisitorProfileView extends BaseProfileView {
     public readonly children: VirtualDOM[]
 
     constructor(params: { tabsState: UserSettingsTabsState }) {
         super(params)
-
+        const validationsMessage$ = new Subject<string>()
+        const emailTextFieldView = new TextFieldView({
+            label: 'E-mail:',
+            value: '',
+        })
+        const sendingRegistrationEmail$ = new Subject<SendingRegistrationEmail>()
+        emailTextFieldView.value$.subscribe((email) => {
+            if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                sendingRegistrationEmail$.next('enable')
+                validationsMessage$.next(`send registration email to ${email}`)
+            } else {
+                sendingRegistrationEmail$.next('disable')
+                validationsMessage$.next('email address invalid')
+            }
+        })
+        const classButtonEnabled = 'p-2 border  rounded  fv-pointer  fv-bg-secondary fv-hover-xx-lighter mx-auto my-4'
+        const classButtonDisabled = 'p-2 border  rounded  fv-bg-disabled mx-auto my-4'
         this.children = [
             {
                 class: 'd-flex flex-column align-items-center px-4 py-2 my-3 justify-content-center fv-text-focus',
@@ -142,14 +163,42 @@ If you like the project, even if you are not planning to use it for now, registe
             },
             {
                 class: 'container w-50 mt-4',
-                children: [new TextFieldView({ label: 'E-mail:', value: '' })],
+                children: [emailTextFieldView],
             },
             {
-                class: 'p-2 border rounded fv-pointer fv-bg-secondary fv-hover-xx-lighter mx-auto my-4',
+                class: 'mx-auto w-50 text-center',
+                innerText: attr$(validationsMessage$, (v) => v)
+            },
+            {
+                class: attr$(sendingRegistrationEmail$,
+                    (v) =>
+                        v === 'enable'
+                            ? classButtonEnabled
+                            : classButtonDisabled,
+                    { untilFirst: classButtonDisabled }),
                 style: {
                     width: 'fit-content',
                 },
                 innerText: 'Register',
+                enable: attr$(sendingRegistrationEmail$, (v) => v === 'enable'),
+                onclick: () => {
+                    sendingRegistrationEmail$.next('processing')
+                    validationsMessage$.next('validating registration')
+                    new Accounts.Client().sendRegisterMail$({
+                        email: emailTextFieldView.value$.value,
+                        target_uri: window.location.href,
+                    }).pipe(onHTTPErrors((error) => {
+                        return error.body['message']
+                    })).subscribe((value) => {
+                        if (typeof value !== 'string') {
+                            sendingRegistrationEmail$.next('done')
+                            validationsMessage$.next('follow email instruction to finalize registration')
+                        } else {
+                            sendingRegistrationEmail$.next('disable')
+                            validationsMessage$.next(`failed to register : ${value}`)
+                        }
+                    })
+                },
             },
             {
                 class: 'mx-auto w-50 text-center',
@@ -168,10 +217,14 @@ If you like the project, even if you are not planning to use it for now, registe
     }
 }
 
+
 export class TextFieldView implements VirtualDOM {
     public readonly class = 'row my-1'
     public readonly children: VirtualDOM[]
+    public readonly value$: BehaviorSubject<string>
+
     constructor({ label, value }) {
+        this.value$ = new BehaviorSubject<string>(value)
         this.children = [
             {
                 class: 'col-2',
@@ -181,7 +234,8 @@ export class TextFieldView implements VirtualDOM {
                 tag: 'input',
                 type: 'text',
                 class: 'col-6',
-                value,
+                value: value,
+                oninput: (event) => this.value$.next(event.target.value),
             },
         ]
     }

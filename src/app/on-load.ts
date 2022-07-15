@@ -1,9 +1,9 @@
-import { render, VirtualDOM, Stream$, child$, attr$ } from '@youwol/flux-view'
+import { attr$, child$, render, Stream$, VirtualDOM } from '@youwol/flux-view'
 import * as OsCore from '@youwol/os-core'
+import { RunningApp } from '@youwol/os-core'
 
 import { RunningAppView } from './running-apps/running-app.view'
 import { PlatformBannerView } from './top-banner/top-banner.view'
-import { RunningApp } from '@youwol/os-core/dist'
 
 require('./style.css')
 

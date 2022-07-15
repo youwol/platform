@@ -2,16 +2,12 @@ import { VirtualDOM } from '@youwol/flux-view'
 import { Accounts } from '@youwol/http-clients'
 import { redirectWith } from './user/common'
 
-type SessionInfo =
-    | Accounts.SessionBaseDetails
-    | Accounts.SessionImpersonationDetails
-
 export class RegisteredUserBadgeView implements VirtualDOM {
     public readonly class = 'd-flex align-items-center'
     public readonly children: VirtualDOM[]
-    public readonly sessionInfo: SessionInfo
+    public readonly sessionInfo: Accounts.SessionDetails
 
-    constructor(params: { sessionInfo: SessionInfo }) {
+    constructor(params: { sessionInfo: Accounts.SessionDetails }) {
         Object.assign(this, params)
 
         this.children = [
@@ -57,9 +53,9 @@ export class RegisteredUserBadgeView implements VirtualDOM {
 export class VisitorBadgeView implements VirtualDOM {
     public readonly class = 'd-flex align-items-center'
     public readonly children: VirtualDOM[]
-    public readonly sessionInfo: SessionInfo
+    public readonly sessionInfo: Accounts.SessionDetails
 
-    constructor(params: { sessionInfo: SessionInfo }) {
+    constructor(params: { sessionInfo: Accounts.SessionDetails }) {
         Object.assign(this, params)
 
         this.children = [

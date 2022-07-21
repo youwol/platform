@@ -3,13 +3,28 @@ import * as OsCore from '@youwol/os-core'
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs'
 import { map } from 'rxjs/operators'
 
+/**
+ * @category View
+ */
 export class ApplicationsLaunchPadView implements VirtualDOM {
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly class = 'd-flex flex-wrap justify-content-center'
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly style = {
         width: '75vw',
         height: '75vh',
     }
+    /**
+     * @group States
+     */
     public readonly state: OsCore.PlatformState
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly children
 
     constructor(params: { state: OsCore.PlatformState }) {
@@ -30,9 +45,21 @@ export class ApplicationsLaunchPadView implements VirtualDOM {
     }
 }
 
+/**
+ * @category View
+ */
 class NewAppsView implements VirtualDOM {
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly class = 'w-100 flex-grow-1 overflow-auto'
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly children: VirtualDOM[]
+    /**
+     * @group State
+     */
     public readonly state: OsCore.PlatformState
 
     constructor(params: { state: OsCore.PlatformState }) {
@@ -86,19 +113,41 @@ class NewAppsView implements VirtualDOM {
         ]
     }
 }
+
+/**
+ * @category View
+ */
 class NewAppView implements VirtualDOM {
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly class =
         'border rounded mx-3 my-2 fv-hover-xx-lighter fv-pointer fv-text-primary fv-hover-bg-background-alt'
 
+    /**
+     * @group States
+     */
     public readonly state: OsCore.PlatformState
+    /**
+     * @group Immutable Constants
+     */
     public readonly app: OsCore.ApplicationInfo
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly style = {
         width: '100px',
         height: '100px',
         position: 'relative',
     }
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly children: VirtualDOM[]
 
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly onclick = () => {
         this.state
             .createInstance$({
@@ -132,9 +181,21 @@ class NewAppView implements VirtualDOM {
     }
 }
 
+/**
+ * @category View
+ */
 class RunningAppsView implements VirtualDOM {
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly class = 'w-25 overflow-auto border-right'
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly children: VirtualDOM[]
+    /**
+     * @group States
+     */
     public readonly state: OsCore.PlatformState
 
     constructor(params: { state: OsCore.PlatformState }) {
@@ -181,17 +242,47 @@ class RunningAppsView implements VirtualDOM {
     }
 }
 
+/**
+ * @category View
+ */
 export class RunningAppView implements VirtualDOM {
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly class = `d-flex flex-column align-items-center rounded fv-hover-bg-background-alt mx-auto p-1 fv-pointer`
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly children: VirtualDOM[]
+    /**
+     * @group Immutable Constants
+     */
     public readonly executable: OsCore.Executable
+    /**
+     * @group Immutable Constants
+     */
     public readonly instances: OsCore.RunningApp[]
+    /**
+     * @group States
+     */
     public readonly state: OsCore.PlatformState
-    public readonly hovered$ = new BehaviorSubject(false)
+    /**
+     * @group Observables
+     */
+    private readonly hovered$ = new BehaviorSubject(false)
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly style = {
         width: 'fit-content',
     }
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly onmouseenter: (ev: MouseEvent) => void
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly onmouseleave: (ev: MouseEvent) => void
 
     constructor(params: {
@@ -254,16 +345,34 @@ export class RunningAppView implements VirtualDOM {
     }
 }
 
+/**
+ * @category View
+ */
 class RunningAppBullet implements VirtualDOM {
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly class =
         'w-100 h-100 position-absolute d-flex justify-content-around'
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly style = {
         top: '0px',
         left: '0px',
     }
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly children: VirtualDOM[]
-    public readonly runningApp
-    public readonly instances
+    /**
+     * @group Immutable Constants
+     */
+    public readonly runningApp: OsCore.RunningApp
+    /**
+     * @group Immutable Constants
+     */
+    public readonly instances: OsCore.RunningApp[]
 
     constructor(params: { runningApp; instances }) {
         Object.assign(this, params)
@@ -283,13 +392,34 @@ class RunningAppBullet implements VirtualDOM {
     }
 }
 
+/**
+ * @category View
+ */
 class InstancesListView implements VirtualDOM {
+    /**
+     * @group States
+     */
     public readonly state: OsCore.PlatformState
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly children: VirtualDOM[]
+    /**
+     * @group Immutable Constants
+     */
     public readonly executable: OsCore.Executable
+    /**
+     * @group Immutable Constants
+     */
     public readonly instances: OsCore.RunningApp[]
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly class =
         'd-flex flex-column justify-content-center p-1 rounded'
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly style = { userSelect: 'none' }
 
     constructor(params: {

@@ -9,12 +9,25 @@ require('./style.css')
 
 /**
  * @category Getting Started
+ * @category View
  */
 export class PlatformView implements VirtualDOM {
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly class =
         'h-100 w-100 d-flex flex-column fv-text-primary position-relative'
+    /**
+     * @group States
+     */
     public readonly state = new OsCore.PlatformState()
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly children: VirtualDOM[]
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly style: Stream$<
         { [_key: string]: string },
         { [_key: string]: string }
@@ -43,13 +56,25 @@ export class PlatformView implements VirtualDOM {
     }
 }
 
+/**
+ * @category View
+ */
 export class BackgroundView implements VirtualDOM {
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly class = 'position-absolute w-100 h-100'
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly style = {
         top: '0px',
         left: '0px',
         zIndex: '-1',
     }
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly children: VirtualDOM[]
     constructor() {
         this.children = [
@@ -63,9 +88,21 @@ export class BackgroundView implements VirtualDOM {
     }
 }
 
+/**
+ * @category View
+ */
 export class DesktopWidgetsView {
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly class: Stream$<RunningApp, string>
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly children: VirtualDOM[]
+    /**
+     * @group States
+     */
     public readonly state: OsCore.PlatformState
 
     constructor(params: { state: OsCore.PlatformState }) {

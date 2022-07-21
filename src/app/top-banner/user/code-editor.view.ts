@@ -10,7 +10,13 @@ export class SourceCode {
 
 type SourcePath = string
 
+/**
+ * @category View
+ */
 export class CodeEditorView {
+    /**
+     * @group Immutable Constants
+     */
     public readonly config = {
         value: '',
         lineNumbers: true,
@@ -18,16 +24,39 @@ export class CodeEditorView {
         lineWrapping: false,
         indentUnit: 4,
     }
+    /**
+     * @group Immutable Constants
+     */
     public readonly language: string
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly class = 'w-100 h-100 d-flex flex-column overflow-auto'
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly style = {
         'font-size': 'initial',
     }
+    /**
+     * @group Observables
+     */
     public readonly file$: BehaviorSubject<SourceCode>
+    /**
+     * @group Observables
+     */
     public readonly change$ = new ReplaySubject<CodeMirror.EditorChange[]>(1)
+    /**
+     * @group Observables
+     */
     public readonly cursor$ = new ReplaySubject<CodeMirror.Position>(1)
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly children: VirtualDOM[]
-
+    /**
+     * @group Observables
+     */
     public readonly nativeEditor$ = new ReplaySubject<CodeMirror.Editor>(1)
 
     constructor(params: {

@@ -1,10 +1,22 @@
 import { VirtualDOM } from '@youwol/flux-view'
 import { Accounts } from '@youwol/http-clients'
-import { redirectWith } from './user/common'
+import { redirectWith } from './user'
 
+/**
+ * @category View
+ */
 export class RegisteredUserBadgeView implements VirtualDOM {
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly class = 'd-flex align-items-center'
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly children: VirtualDOM[]
+    /**
+     * @group Immutable Constants
+     */
     public readonly sessionInfo: Accounts.SessionDetails
 
     constructor(params: { sessionInfo: Accounts.SessionDetails }) {
@@ -50,9 +62,21 @@ export class RegisteredUserBadgeView implements VirtualDOM {
     }
 }
 
+/**
+ * @category View
+ */
 export class VisitorBadgeView implements VirtualDOM {
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly class = 'd-flex align-items-center'
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly children: VirtualDOM[]
+    /**
+     * @group Immutable Constants
+     */
     public readonly sessionInfo: Accounts.SessionDetails
 
     constructor(params: { sessionInfo: Accounts.SessionDetails }) {

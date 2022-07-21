@@ -7,8 +7,17 @@ import { PreferencesTab } from './preferences-tab.view'
 import { InstallersTab } from './installers-tab.view'
 import { fetchTypescriptCodeMirror$ } from './common'
 
+/**
+ * @category State
+ */
 export class UserSettingsTabsState extends DockableTabs.State {
+    /**
+     * @group Immutable Constants
+     */
     public readonly sessionInfo: Accounts.SessionDetails
+    /**
+     * @group Observable
+     */
     public readonly codeMirror$ = fetchTypescriptCodeMirror$().pipe(
         mergeMap(() => {
             return from(import('./ts-code-editor.view'))
@@ -32,7 +41,13 @@ export class UserSettingsTabsState extends DockableTabs.State {
     }
 }
 
+/**
+ * @category View
+ */
 export class UserSettingsTabsView extends DockableTabs.View {
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly onclick = (ev) => {
         ev.stopPropagation()
     }

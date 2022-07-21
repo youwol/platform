@@ -16,6 +16,9 @@ export function redirectWith(method: NavigateMethod) {
     window.location.replace(new Accounts.Client()[method](window.location.href))
 }
 
+/**
+ * @category View.Tab
+ */
 export class UserSettingsTabBase extends DockableTabs.Tab {
     protected constructor(params: {
         id: string
@@ -27,6 +30,9 @@ export class UserSettingsTabBase extends DockableTabs.Tab {
     }
 }
 
+/**
+ * @category HTTP
+ */
 export const fetchTypescriptCodeMirror$ = () =>
     from(
         install({
@@ -43,6 +49,9 @@ export const fetchTypescriptCodeMirror$ = () =>
         }),
     ).pipe(shareReplay({ bufferSize: 1, refCount: true }))
 
+/**
+ * @category View
+ */
 export function createEditor(
     mdle,
     tabsState: DockableTabs.State,

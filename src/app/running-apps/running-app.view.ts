@@ -7,14 +7,32 @@ import {
 import * as OsCore from '@youwol/os-core'
 import { filter, map } from 'rxjs/operators'
 
+/**
+ * @category View
+ */
 export class RunningAppView implements VirtualDOM {
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly class: Stream$<OsCore.RunningApp, string>
+    /**
+     * @group States
+     */
     public readonly state: OsCore.PlatformState
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly children
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly style = {
         zIndex: 2,
     }
-    cacheRunningAppsView = {}
+    /**
+     * @group Mutable
+     */
+    private cacheRunningAppsView = {}
 
     constructor(params: { state: OsCore.PlatformState }) {
         Object.assign(this, params)

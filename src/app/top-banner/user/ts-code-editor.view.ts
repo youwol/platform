@@ -18,16 +18,34 @@ export class SourceCode {
 
 type SourcePath = string
 
+/**
+ * @category State
+ */
 export class CodeIdeState {
+    /**
+     * @group Immutable Constants
+     */
     public readonly entryPoint: SourcePath
+    /**
+     * @group Observables
+     */
     public readonly currentFile$: BehaviorSubject<SourceCode>
 
+    /**
+     * @group Observables
+     */
     public readonly fsMap$ = new BehaviorSubject<Map<string, string>>(undefined)
+    /**
+     * @group Observables
+     */
     public readonly parsedSrc$ = new ReplaySubject<{
         jsSrc: string
         tsSrc: string
     }>(1)
 
+    /**
+     * @group Immutable Constants
+     */
     public readonly config = {
         lineNumbers: true,
         theme: 'blackboard',
@@ -96,10 +114,25 @@ export class CodeIdeState {
     }
 }
 
+/**
+ * @category View
+ */
 export class CodeIdeView implements VirtualDOM {
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly class = 'd-flex h-100'
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly children: VirtualDOM[]
+    /**
+     * @group States
+     */
     public readonly ideState: CodeIdeState
+    /**
+     * @group States
+     */
     public readonly tsCodeEditorView: TsCodeEditorView
 
     constructor(params: { ideState: CodeIdeState }) {
@@ -109,7 +142,13 @@ export class CodeIdeView implements VirtualDOM {
     }
 }
 
+/**
+ * @category View
+ */
 export class TsCodeEditorView extends CodeEditorView {
+    /**
+     * @group States
+     */
     public readonly ideState: CodeIdeState
 
     constructor(params: { ideState: CodeIdeState }) {
@@ -150,14 +189,29 @@ export class TsCodeEditorView extends CodeEditorView {
     }
 }
 
+/**
+ * @category Data Structure
+ */
 export interface SrcPosition {
     line: number
     ch: number
 }
 
+/**
+ * @category Data Structure
+ */
 export class SrcHighlight {
+    /**
+     * @group Immutable Constants
+     */
     public readonly messageText: string
+    /**
+     * @group Immutable Constants
+     */
     public readonly from: SrcPosition
+    /**
+     * @group Immutable Constants
+     */
     public readonly to: SrcPosition
 
     constructor(public readonly diagnostic: ts.Diagnostic) {

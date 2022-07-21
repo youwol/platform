@@ -9,9 +9,21 @@ import * as OsCore from '@youwol/os-core'
 import { ExplorerBackend } from '@youwol/http-clients'
 import { BehaviorSubject } from 'rxjs'
 
+/**
+ * @category View
+ */
 export class DesktopFavoritesView implements VirtualDOM {
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly class: Stream$<OsCore.RunningApp, string>
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly children: VirtualDOM[]
+    /**
+     * @group States
+     */
     public readonly state: OsCore.PlatformState
 
     constructor(params: { state: OsCore.PlatformState }) {
@@ -41,27 +53,59 @@ export class DesktopFavoritesView implements VirtualDOM {
     }
 }
 
+/**
+ * @category View
+ */
 export class DesktopFavoriteView implements VirtualDOM {
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly class =
         'rounded p-2 d-flex flex-column align-items-center fv-pointer fv-hover-border-focus m-2'
+    /**
+     * @group Immutable Constants
+     */
     public readonly baseStyle = {
         width: 'fit-content',
         height: 'fit-content',
         zIndex: 4,
     }
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly style: Stream$<boolean, { [k: string]: string }>
+    /**
+     * @group Immutable Constants
+     */
     public readonly item: ExplorerBackend.GetItemResponse
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly children: VirtualDOM[]
+    /**
+     * @group Observables
+     */
     public readonly defaultOpeningApp$
-    public readonly hovered$ = new BehaviorSubject(false)
+    /**
+     * @group Observables
+     */
+    private readonly hovered$ = new BehaviorSubject(false)
 
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly ondblclick = () => {
         OsCore.tryOpenWithDefault$(this.item).subscribe()
     }
-
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly onmouseenter = () => {
         this.hovered$.next(true)
     }
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly onmouseleave = () => {
         this.hovered$.next(false)
     }

@@ -1,12 +1,17 @@
 import { child$, children$, VirtualDOM } from '@youwol/flux-view'
 import * as OsCore from '@youwol/os-core'
-import { UserAllSettingsView } from './user/all-settings.view'
+import { UserAllSettingsView } from './user'
 import { TopBannerMenuView } from './top-banner-menu.view'
 import { ApplicationsLaunchPadView } from './launch-pad-menu.view'
 import { map } from 'rxjs/operators'
 import { AssetsGateway, raiseHTTPErrors, Accounts } from '@youwol/http-clients'
 import { RegisteredUserBadgeView, VisitorBadgeView } from './badges.view'
 
+/**
+ *
+ * @param state
+ * @category View.TopBanner
+ */
 function getUserBadgeView$(state) {
     return child$(
         new AssetsGateway.Client().accounts
@@ -18,8 +23,18 @@ function getUserBadgeView$(state) {
     )
 }
 
+/**
+ *
+ * @category View.TopBanner
+ */
 export class PlatformBannerView implements VirtualDOM {
+    /**
+     * @group States
+     */
     public readonly state: OsCore.PlatformState
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly children: VirtualDOM[]
 
     constructor(params: {
@@ -37,6 +52,10 @@ export class PlatformBannerView implements VirtualDOM {
     }
 }
 
+/**
+ *
+ * @category View.TopBanner
+ */
 class YouwolMenuView extends TopBannerMenuView {
     constructor({ state }: { state: OsCore.PlatformState }) {
         super({
@@ -77,6 +96,10 @@ class YouwolMenuView extends TopBannerMenuView {
     }
 }
 
+/**
+ *
+ * @category View.TopBanner
+ */
 class EnvironmentMenuView extends TopBannerMenuView {
     constructor({
         state,
@@ -103,9 +126,17 @@ class EnvironmentMenuView extends TopBannerMenuView {
 }
 /**
  * Regular top banner of the application (no application running)
+ *
+ * @category View.TopBanner
  */
 class RegularBannerView implements VirtualDOM {
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly class = 'd-flex'
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly children: VirtualDOM[]
 
     constructor(state: OsCore.PlatformState) {
@@ -129,9 +160,17 @@ class RegularBannerView implements VirtualDOM {
 
 /**
  * Top banner when an application is running
+ *
+ * @category View
  */
 class RunningAppBannerView implements VirtualDOM {
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly class = 'd-flex w-100'
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly children: VirtualDOM[]
 
     constructor(state: OsCore.PlatformState, app: OsCore.RunningApp) {
@@ -156,12 +195,25 @@ class RunningAppBannerView implements VirtualDOM {
     }
 }
 
+/**
+ *
+ * @category View
+ */
 class RunningAppTitleView implements VirtualDOM {
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly class =
         'd-flex align-items-center mx-3 px-2 py-1 rounded fv-border-primary my-auto'
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly style = {
         height: 'fit-content',
     }
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly children: VirtualDOM[]
 
     constructor(state: OsCore.PlatformState, app: OsCore.RunningApp) {

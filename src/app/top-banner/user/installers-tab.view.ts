@@ -9,6 +9,9 @@ const bottomNavStyle = {
     height: '100%',
 }
 
+/**
+ * @category View.Tab
+ */
 export class InstallersTab extends UserSettingsTabBase {
     constructor() {
         super({
@@ -25,10 +28,23 @@ export class InstallersTab extends UserSettingsTabBase {
     }
 }
 
+/**
+ * @category View
+ */
 export class InstallersView implements VirtualDOM {
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly class = bottomNavClasses
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly style = bottomNavStyle
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly children: VirtualDOM[]
+
     constructor(params: { tabsState: UserSettingsTabsState }) {
         this.children = [
             child$(

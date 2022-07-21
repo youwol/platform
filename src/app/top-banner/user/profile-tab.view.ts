@@ -4,7 +4,9 @@ import { BehaviorSubject, Subject } from 'rxjs'
 import { redirectWith, UserSettingsTabBase } from './common'
 import { UserSettingsTabsState } from './settings-tabs'
 
-
+/**
+ * @category View.Tab
+ */
 export class ProfileTab extends UserSettingsTabBase {
     constructor() {
         super({
@@ -21,11 +23,23 @@ export class ProfileTab extends UserSettingsTabBase {
     }
 }
 
+/**
+ * @category View
+ */
 export class BaseProfileView implements VirtualDOM {
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly class = 'd-flex flex-column'
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly style = {
         height: '100%',
     }
+    /**
+     * @group States
+     */
     public readonly tabsState: UserSettingsTabsState
 
     constructor(params: { tabsState: UserSettingsTabsState }) {
@@ -33,7 +47,13 @@ export class BaseProfileView implements VirtualDOM {
     }
 }
 
+/**
+ * @category View
+ */
 export class RegisteredProfileView extends BaseProfileView {
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly children: VirtualDOM[]
 
     constructor(params: { tabsState: UserSettingsTabsState }) {
@@ -51,7 +71,7 @@ export class RegisteredProfileView extends BaseProfileView {
                             {
                                 class: 'px-2',
                                 innerText:
-                                this.tabsState.sessionInfo.userInfo.name,
+                                    this.tabsState.sessionInfo.userInfo.name,
                             },
                             {
                                 style: {
@@ -108,7 +128,13 @@ export class RegisteredProfileView extends BaseProfileView {
 
 type SendingRegistrationEmail = 'done' | 'enable' | 'disable' | 'processing'
 
+/**
+ * @category View
+ */
 export class VisitorProfileView extends BaseProfileView {
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly children: VirtualDOM[]
 
     constructor(params: { tabsState: UserSettingsTabsState }) {
@@ -118,7 +144,8 @@ export class VisitorProfileView extends BaseProfileView {
             label: 'E-mail:',
             value: '',
         })
-        const sendingRegistrationEmail$ = new Subject<SendingRegistrationEmail>()
+        const sendingRegistrationEmail$ =
+            new Subject<SendingRegistrationEmail>()
         emailTextFieldView.value$.subscribe((email) => {
             if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
                 sendingRegistrationEmail$.next('enable')
@@ -128,8 +155,10 @@ export class VisitorProfileView extends BaseProfileView {
                 validationsMessage$.next('email address invalid')
             }
         })
-        const classButtonEnabled = 'p-2 border  rounded  fv-pointer  fv-bg-secondary fv-hover-xx-lighter mx-auto my-4'
-        const classButtonDisabled = 'p-2 border  rounded  fv-bg-disabled mx-auto my-4'
+        const classButtonEnabled =
+            'p-2 border  rounded  fv-pointer  fv-bg-secondary fv-hover-xx-lighter mx-auto my-4'
+        const classButtonDisabled =
+            'p-2 border  rounded  fv-bg-disabled mx-auto my-4'
         this.children = [
             {
                 class: 'd-flex flex-column align-items-center px-4 py-2 my-3 justify-content-center fv-text-focus',
@@ -167,15 +196,17 @@ If you like the project, even if you are not planning to use it for now, registe
             },
             {
                 class: 'mx-auto w-50 text-center',
-                innerText: attr$(validationsMessage$, (v) => v)
+                innerText: attr$(validationsMessage$, (v) => v),
             },
             {
-                class: attr$(sendingRegistrationEmail$,
+                class: attr$(
+                    sendingRegistrationEmail$,
                     (v) =>
                         v === 'enable'
                             ? classButtonEnabled
                             : classButtonDisabled,
-                    { untilFirst: classButtonDisabled }),
+                    { untilFirst: classButtonDisabled },
+                ),
                 style: {
                     width: 'fit-content',
                 },
@@ -184,20 +215,29 @@ If you like the project, even if you are not planning to use it for now, registe
                 onclick: () => {
                     sendingRegistrationEmail$.next('processing')
                     validationsMessage$.next('validating registration')
-                    new Accounts.Client().sendRegisterMail$({
-                        email: emailTextFieldView.value$.value,
-                        target_uri: window.location.href,
-                    }).pipe(onHTTPErrors((error) => {
-                        return error.body['message']
-                    })).subscribe((value) => {
-                        if (typeof value !== 'string') {
-                            sendingRegistrationEmail$.next('done')
-                            validationsMessage$.next('follow email instruction to finalize registration')
-                        } else {
-                            sendingRegistrationEmail$.next('disable')
-                            validationsMessage$.next(`failed to register : ${value}`)
-                        }
-                    })
+                    new Accounts.Client()
+                        .sendRegisterMail$({
+                            email: emailTextFieldView.value$.value,
+                            target_uri: window.location.href,
+                        })
+                        .pipe(
+                            onHTTPErrors((error) => {
+                                return error.body['message']
+                            }),
+                        )
+                        .subscribe((value) => {
+                            if (typeof value !== 'string') {
+                                sendingRegistrationEmail$.next('done')
+                                validationsMessage$.next(
+                                    'follow email instruction to finalize registration',
+                                )
+                            } else {
+                                sendingRegistrationEmail$.next('disable')
+                                validationsMessage$.next(
+                                    `failed to register : ${value}`,
+                                )
+                            }
+                        })
                 },
             },
             {
@@ -217,10 +257,21 @@ If you like the project, even if you are not planning to use it for now, registe
     }
 }
 
-
+/**
+ * @category View
+ */
 export class TextFieldView implements VirtualDOM {
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly class = 'row my-1'
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly children: VirtualDOM[]
+    /**
+     * @group Observables
+     */
     public readonly value$: BehaviorSubject<string>
 
     constructor({ label, value }) {

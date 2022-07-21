@@ -4,6 +4,16 @@ module.exports = {
     out: 'dist/docs',
     theme: 'default',
     categorizeByGroup: false,
-    categoryOrder: ['Getting Started', '*'],
+    categoryOrder: [
+        'Getting Started',
+        'State',
+        'View',
+        'View.Tab',
+        'View.TopBanner',
+        'Configuration',
+        'HTTP',
+        '*',
+    ],
     excludeExternals: true,
+    sort: 'source-order',
 }

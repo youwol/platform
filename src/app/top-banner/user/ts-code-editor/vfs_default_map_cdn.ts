@@ -2,6 +2,9 @@ import * as ts from 'typescript'
 import { ScriptTarget } from 'typescript'
 import { fetchSource, getUrlBase } from '@youwol/cdn-client'
 
+/**
+ * @category HTTP
+ */
 export function createDefaultMapFromCDN(
     options: ts.CompilerOptions,
     version: string,

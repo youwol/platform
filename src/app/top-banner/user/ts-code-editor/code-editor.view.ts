@@ -3,9 +3,18 @@ import { HTMLElement$, VirtualDOM } from '@youwol/flux-view'
 import CodeMirror from 'codemirror'
 import { distinctUntilChanged } from 'rxjs/operators'
 
+/**
+ * @category Data Structure
+ */
 export class SourceCode {
-    path: SourcePath
-    content: string
+    /**
+     * @group Immutable Constants
+     */
+    public readonly path: SourcePath
+    /**
+     * @group Immutable Constants
+     */
+    public readonly content: string
 }
 
 type SourcePath = string

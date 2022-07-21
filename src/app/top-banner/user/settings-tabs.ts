@@ -20,7 +20,7 @@ export class UserSettingsTabsState extends DockableTabs.State {
      */
     public readonly codeMirror$ = fetchTypescriptCodeMirror$().pipe(
         mergeMap(() => {
-            return from(import('./ts-code-editor.view'))
+            return from(import('./ts-code-editor/ts-code-editor.view'))
         }),
         shareReplay({ bufferSize: 1, refCount: true }),
     )

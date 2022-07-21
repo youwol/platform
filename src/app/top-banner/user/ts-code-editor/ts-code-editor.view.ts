@@ -1,4 +1,4 @@
-import { CodeEditorView } from './code-editor.view'
+import { CodeEditorView, SourceCode } from './code-editor.view'
 import { BehaviorSubject, ReplaySubject } from 'rxjs'
 import { createDefaultMapFromCDN } from './vfs_default_map_cdn'
 import CodeMirror from 'codemirror'
@@ -10,11 +10,6 @@ import {
     createVirtualTypeScriptEnvironment,
 } from '@typescript/vfs'
 import { VirtualDOM } from '@youwol/flux-view'
-
-export class SourceCode {
-    path: SourcePath
-    content: string
-}
 
 type SourcePath = string
 
@@ -233,6 +228,9 @@ export class SrcHighlight {
     }
 }
 
+/**
+ * @category Configuration
+ */
 export const compilerOptions = {
     target: ts.ScriptTarget.ES2020,
     module: ts.ModuleKind.ES2020,
@@ -241,7 +239,7 @@ export const compilerOptions = {
     baseUrl: '/',
 }
 
-export function getHighlights(fsMap, src) {
+function getHighlights(fsMap, src) {
     fsMap.set('index.ts', `${src}`)
     const system = createSystem(fsMap)
     const env = createVirtualTypeScriptEnvironment(

@@ -3,7 +3,7 @@ import { VirtualDOM } from '@youwol/flux-view'
 import { combineLatest, from } from 'rxjs'
 import { install } from '@youwol/cdn-client'
 import { filter, shareReplay, take } from 'rxjs/operators'
-import { CodeIdeView } from './ts-code-editor.view'
+import { CodeIdeView } from './ts-code-editor'
 import { Accounts } from '@youwol/http-clients'
 
 type NavigateMethod =

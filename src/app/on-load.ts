@@ -7,6 +7,9 @@ import { PlatformBannerView } from './top-banner/top-banner.view'
 
 require('./style.css')
 
+/**
+ * @category Getting Started
+ */
 export class PlatformView implements VirtualDOM {
     public readonly class =
         'h-100 w-100 d-flex flex-column fv-text-primary position-relative'

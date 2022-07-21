@@ -1,45 +1,48 @@
-# workspace-explorer
-
-<p>
-    <a href="https://github.com/kefranabg/readme-md-generator/graphs/commit-activity" target="_blank">
-        <img alt="Maintenance" src="https://img.shields.io/badge/Maintained%3F-yes-green.svg" />
-    </a>
-    <a href="https://github.com/kefranabg/readme-md-generator/blob/master/LICENSE" target="_blank">
-        <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg" />
-    </a>
-</p>
-
-The workspace explorer of YouWol
+# Platform
 
 
-## Installation, Build & Test 
+The 'os-like' application of YouWol.
+
+
+## Installation, Build & Test
 
 To install the required dependencies:
+
 ```shell
-yarn 
+yarn
 ```
 
 To build for development:
+
 ```shell
 yarn build:dev
 ```
 
 To build for production:
+
 ```shell
 yarn build:prod
 ```
 
-To test:
+Tests require py-youwol to run on port 2001 using the configuration defined [here](https://github.com/youwol/integration-tests-conf).
+
 ```shell
 yarn test
 ```
 
-To run the dev server, the easiest way is to first install the local [youwol environment](https://pypi.org/project/youwol/), then:
-```shell 
-yarn start 
+To start the dev-server:
+
+```shell
+yarn start
 ```
 
 To generate code documentation:
+
 ```shell
 yarn doc
 ```
+
+
+## Documentation
+
+Documentation of the library can be found [here](https://platform.youwol.com/applications/@youwol/cdn-explorer/latest?package=@youwol/platform).

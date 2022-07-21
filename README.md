@@ -30,8 +30,10 @@ Tests require py-youwol to run on port 2001 using the configuration defined [her
 yarn test
 ```
 
-To start the dev-server:
-
+To start the 'dev-server':
+- add `CdnOverride(packageName="@youwol/platform", port=3004)` in your yw_config in the `dispatches` list.
+- run py-youwol
+- then execute
 ```shell
 yarn start
 ```

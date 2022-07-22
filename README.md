@@ -3,7 +3,9 @@
 
 The 'os-like' [front-end application of YouWol](https://platform.youwol.com/applications/@youwol/platform/latest).
 
-Documentation, coverage and bundle's analysis can be found 
+User guide can be found [here](https://platform.youwol.com/documentation/@youwol/platform).
+
+Developer's documentation, coverage and bundle's analysis can be found 
 [here](https://platform.youwol.com/applications/@youwol/cdn-explorer/latest?package=@youwol/platform).
 
 ## Installation, Build & Test

@@ -6,7 +6,7 @@
  *
  * > **DO NOT IMPORT ONE OF THE FILE OF THIS MODULE FROM OUTSIDE - ONLY TYPES IMPORTS ARE AUTHORIZED**
  *
- * @module
+ * @module Typescript Code Editor
  */
 export * from './code-editor.view'
 export * from './ts-code-editor.view'

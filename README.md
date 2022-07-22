@@ -26,7 +26,7 @@ To build for production:
 yarn build:prod
 ```
 
-Tests require [py-youwol](https://platform.youwol.com/applications/@youwol/stories/latest?id=fa525fef-cb28-40fb-94d0-c45c2b464571&document=68f12394-6ad4-46ee-affe-19e929cb4fed&mode=reader)
+Tests require [py-youwol](https://platform.youwol.com/documentation/py-youwol)
 to run on port 2001 using the configuration defined [here](https://github.com/youwol/integration-tests-conf).
 
 ```shell
@@ -35,13 +35,13 @@ yarn test
 
 To start the 'dev-server':
 - add `CdnOverride(packageName="@youwol/platform", port=3004)` in your 
-[YouWol configuration file](https://platform.youwol.com/applications/@youwol/stories/latest?id=fa525fef-cb28-40fb-94d0-c45c2b464571&document=012d520b-8734-48c8-b4d1-5f6ec8a109a4&mode=reader)
+[YouWol configuration file](https://platform.youwol.com/documentation/py-youwol/configuration)
   (in the `dispatches` list).
-- run [py-youwol](https://platform.youwol.com/applications/@youwol/stories/latest?id=fa525fef-cb28-40fb-94d0-c45c2b464571&document=68f12394-6ad4-46ee-affe-19e929cb4fed&mode=reader)
+- run [py-youwol](https://platform.youwol.com/documentation/py-youwol)
 - then execute
-```shell
-yarn start
-```
+  ```shell
+  yarn start
+  ```
 
 To generate code documentation:
 

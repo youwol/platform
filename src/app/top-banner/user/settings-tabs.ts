@@ -1,11 +1,10 @@
 import { DockableTabs } from '@youwol/fv-tabs'
-import { BehaviorSubject, from, of } from 'rxjs'
-import { mergeMap, shareReplay } from 'rxjs/operators'
+import { BehaviorSubject, of } from 'rxjs'
 import { Accounts } from '@youwol/http-clients'
 import { ProfileTab } from './profile-tab.view'
 import { PreferencesTab } from './preferences-tab.view'
 import { InstallersTab } from './installers-tab.view'
-import { fetchTypescriptCodeMirror$ } from './common'
+import { loadFvCodeEditorsModule$ } from './common'
 
 /**
  * @category State
@@ -18,12 +17,7 @@ export class UserSettingsTabsState extends DockableTabs.State {
     /**
      * @group Observable
      */
-    public readonly codeMirror$ = fetchTypescriptCodeMirror$().pipe(
-        mergeMap(() => {
-            return from(import('./ts-code-editor/ts-code-editor.view'))
-        }),
-        shareReplay({ bufferSize: 1, refCount: true }),
-    )
+    public readonly codeMirror$ = loadFvCodeEditorsModule$()
 
     constructor(params: { sessionInfo: Accounts.SessionDetails }) {
         super({

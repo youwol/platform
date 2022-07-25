@@ -16,7 +16,7 @@ export function redirectWith(method: NavigateMethod) {
 }
 
 /**
- * @category View.Tab
+ * @category View
  */
 export class UserSettingsTabBase extends DockableTabs.Tab {
     protected constructor(params: {

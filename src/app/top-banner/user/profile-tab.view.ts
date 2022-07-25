@@ -5,7 +5,7 @@ import { redirectWith, UserSettingsTabBase } from './common'
 import { UserSettingsTabsState } from './settings-tabs'
 
 /**
- * @category View.Tab
+ * @category View
  */
 export class ProfileTab extends UserSettingsTabBase {
     constructor() {

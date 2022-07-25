@@ -10,7 +10,7 @@ const bottomNavStyle = {
 }
 
 /**
- * @category View.Tab
+ * @category View
  */
 export class PreferencesTab extends UserSettingsTabBase {
     constructor() {

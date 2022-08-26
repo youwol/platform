@@ -1,6 +1,6 @@
 {
     "name": "@youwol/platform",
-    "version": "0.0.6-wip",
+    "version": "0.0.7",
     "description": "OS like frontend application of YouWol platform",
     "author": "greinisch@youwol.com",
     "main": "dist/index.html",
@@ -45,7 +45,7 @@
         "eslint-plugin-tsdoc": "^0.2.16",
         "eslint-plugin-unused-imports": "^2.0.0",
         "file-loader": "6.2.0",
-        "@youwol/fv-code-mirror-editors": "0.0.1 - 1",
+        "@youwol/fv-code-mirror-editors": ">=0.0.1 <1",
         "html-webpack-plugin": "5.2.0",
         "jest": "^28.1.3",
         "jest-environment-jsdom": "^28.1.3",

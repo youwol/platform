@@ -14,10 +14,8 @@ await cdn.install(
             'fontawesome#5.12.1~css/all.min.css',
             '@youwol/fv-widgets#latest~dist/assets/styles/style.youwol.css',
         ],
-    },
-    {
-        displayLoadingScreen: true,
-    },
+        displayLoadingScreen: true
+    }
 )
 
 await import('./on-load')

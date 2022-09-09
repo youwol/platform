@@ -3,9 +3,13 @@ import * as OsCore from '@youwol/os-core'
 import { UserAllSettingsView } from './user'
 import { TopBannerMenuView } from './top-banner-menu.view'
 import { ApplicationsLaunchPadView } from './launch-pad-menu.view'
-import { map } from 'rxjs/operators'
+import { map, shareReplay } from 'rxjs/operators'
 import { AssetsGateway, raiseHTTPErrors, Accounts } from '@youwol/http-clients'
 import { RegisteredUserBadgeView, VisitorBadgeView } from './badges.view'
+
+const sessionDetails$ = new AssetsGateway.Client().accounts
+    .getSessionDetails$()
+    .pipe(raiseHTTPErrors(), shareReplay({ bufferSize: 1, refCount: true }))
 
 /**
  *
@@ -13,14 +17,9 @@ import { RegisteredUserBadgeView, VisitorBadgeView } from './badges.view'
  * @category View.TopBanner
  */
 function getUserBadgeView$(state) {
-    return child$(
-        new AssetsGateway.Client().accounts
-            .getSessionDetails$()
-            .pipe(raiseHTTPErrors()),
-        (sessionInfo) => {
-            return new EnvironmentMenuView({ state, sessionInfo })
-        },
-    )
+    return child$(sessionDetails$, (sessionInfo) => {
+        return new EnvironmentMenuView({ state, sessionInfo })
+    })
 }
 
 /**

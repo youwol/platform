@@ -1,21 +1,32 @@
-# Platform
+# @youwol/platform
 
+OS like frontend application of YouWol platform.
 
-The 'os-like' [front-end application of YouWol](https://platform.youwol.com/applications/@youwol/platform/latest).
+This library is part of the hybrid cloud/local ecosystem
+[YouWol](https://platform.youwol.com/applications/@youwol/platform/latest).
 
-User guide can be found [here](https://l.youwol.com/doc/@youwol/platform).
+## Links
 
-Developer's documentation, coverage and bundle's analysis can be found 
-[here](https://platform.youwol.com/applications/@youwol/cdn-explorer/latest?package=@youwol/platform).
+[Running app.](https://platform.youwol.com/applications/@youwol/platform/latest)
 
-## Installation, Build & Test
+[Online user-guide](https://l.youwol.com/doc/@youwol/platform)
+
+[Developers documentation](https://platform.youwol.com/applications/@youwol/cdn-explorer/latest?package=@youwol/platform)
+
+[Package on npm](https://www.npmjs.com/package/@youwol/platform)
+
+[Source on GitHub](https://github.com/youwol/platform)
+
+# Installation, Build, Test
 
 To install the required dependencies:
 
 ```shell
 yarn
 ```
+
 ---
+
 To build for development:
 
 ```shell
@@ -27,29 +38,37 @@ To build for production:
 ```shell
 yarn build:prod
 ```
+
 ---
-Tests require [py-youwol](https://l.youwol.com/doc/py-youwol)
-to run on port 2001 using the configuration defined [here](https://github.com/youwol/integration-tests-conf).
+
+To run tests:
 
 ```shell
 yarn test
 ```
+
+Coverage can be evaluated using:
+
+```shell
+yarn test-coverage
+```
+
 ---
+
 To start the 'dev-server':
-- add `CdnOverride(packageName="@youwol/platform", port=3004)` in your 
-[YouWol configuration file](https://l.youwol.com/doc/py-youwol/configuration)
-  (in the `dispatches` list).
-- run [py-youwol](https://l.youwol.com/doc/py-youwol)
-- then execute
-  ```shell
-  yarn start
-  ```
 
-Then, browse to the url `http://localhost:2000/applications/@youwol/platform/latest`
-> the port `2000` is the default port for py-youwol, it can be redefined in your py-youwol's configuration file.
+- add `CdnOverride(packageName="@youwol/platform", port=3004)` in your
+  [YouWol configuration file](https://l.youwol.com/doc/py-youwol/configuration)
+  (in the `dispatches` list).
+- start [py-youwol](https://l.youwol.com/doc/py-youwol)
+- then execute `yarn start`
+
+The application can be accessed [here](http://localhost:2000/applications/@youwol/platform/latest) (providing py-youwol
+running using the default port `2000`).
+
 ---
 
-To generate code documentation:
+To generate code's documentation:
 
 ```shell
 yarn doc

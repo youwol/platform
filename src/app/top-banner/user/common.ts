@@ -4,6 +4,7 @@ import { combineLatest, from, Observable } from 'rxjs'
 import { install } from '@youwol/cdn-client'
 import { filter, map, shareReplay, take } from 'rxjs/operators'
 import { Accounts } from '@youwol/http-clients'
+import { setup } from '../../../auto-generated'
 
 type NavigateMethod =
     | 'logoutAndForgetUserUrl'
@@ -30,6 +31,8 @@ export class UserSettingsTabBase extends DockableTabs.Tab {
 }
 
 declare type CodeEditorModule = typeof import('@youwol/fv-code-mirror-editors')
+const fvCodeMirrorEditorsVersion =
+    setup.runTimeDependencies.differed['@youwol/fv-code-mirror-editors']
 /**
  * Lazy loading of the module `@youwol/fv-code-mirror-editors`
  *
@@ -39,7 +42,9 @@ export const loadFvCodeEditorsModule$: () => Observable<CodeEditorModule> =
     () =>
         from(
             install({
-                modules: ['@youwol/fv-code-mirror-editors#0'],
+                modules: [
+                    `@youwol/fv-code-mirror-editors#${fvCodeMirrorEditorsVersion}`,
+                ],
                 scripts: [
                     'codemirror#5.52.0~mode/javascript.min.js',
                     'codemirror#5.52.0~addons/lint/lint.js',

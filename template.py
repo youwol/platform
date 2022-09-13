@@ -32,7 +32,11 @@ template = Template(
                 '@youwol/fv-code-mirror-editors': '^0.1.0'
             }
         ),
-        devTime={}
+        devTime={
+            #  those two prevent failure of typedoc
+            "@types/lz-string": "^1.3.34",
+            "lz-string": "^1.4.4"
+        }
     ),
     userGuide=True,
     devServer=DevServer(

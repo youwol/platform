@@ -4,7 +4,7 @@ import { combineLatest, from, Observable } from 'rxjs'
 import { install } from '@youwol/cdn-client'
 import { filter, map, shareReplay, take } from 'rxjs/operators'
 import { Accounts } from '@youwol/http-clients'
-import { setup } from '../../../auto-generated'
+import { getExportedSymbolName, setup } from '../../../auto-generated'
 
 type NavigateMethod =
     | 'logoutAndForgetUserUrl'
@@ -31,8 +31,9 @@ export class UserSettingsTabBase extends DockableTabs.Tab {
 }
 
 declare type CodeEditorModule = typeof import('@youwol/fv-code-mirror-editors')
-const fvCodeMirrorEditorsVersion =
+const fvCmEditorVersions =
     setup.runTimeDependencies.differed['@youwol/fv-code-mirror-editors']
+
 /**
  * Lazy loading of the module `@youwol/fv-code-mirror-editors`
  *
@@ -43,7 +44,7 @@ export const loadFvCodeEditorsModule$: () => Observable<CodeEditorModule> =
         from(
             install({
                 modules: [
-                    `@youwol/fv-code-mirror-editors#${fvCodeMirrorEditorsVersion}`,
+                    `@youwol/fv-code-mirror-editors#${fvCmEditorVersions}`,
                 ],
                 scripts: [
                     'codemirror#5.52.0~mode/javascript.min.js',
@@ -55,11 +56,13 @@ export const loadFvCodeEditorsModule$: () => Observable<CodeEditorModule> =
                     'codemirror#5.52.0~addons/lint/lint.css',
                 ],
                 aliases: {
-                    codeMirrorEditors: '@youwol/fv-code-mirror-editors',
+                    codeMirrorEditors: getExportedSymbolName(
+                        '@youwol/fv-code-mirror-editors',
+                    ),
                 },
             }),
         ).pipe(
-            map((window) => window['codeMirrorEditors'] as CodeEditorModule),
+            map((window) => window['codeMirrorEditors']),
             shareReplay({ bufferSize: 1, refCount: true }),
         )
 
@@ -71,7 +74,6 @@ export function createEditor(
     tabsState: DockableTabs.State,
     tsSrcs: string,
 ) {
-    console.log('Module', mdle)
     const ideState = new mdle.CodeIdeState({
         files: {
             path: './index.ts',

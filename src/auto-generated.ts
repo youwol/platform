@@ -25,7 +25,40 @@ const externals = {
     "@youwol/fv-code-mirror-editors": "window['@youwol/fv-code-mirror-editors_APIv01']",
     "rxjs/operators": "window['rxjs_APIv6']['operators']"
 }
-
+const exportedSymbols = {
+    "@youwol/fv-tabs": {
+        "apiKey": "02",
+        "exportedSymbol": "@youwol/fv-tabs"
+    },
+    "@youwol/os-core": {
+        "apiKey": "01",
+        "exportedSymbol": "@youwol/os-core"
+    },
+    "@youwol/fv-group": {
+        "apiKey": "02",
+        "exportedSymbol": "@youwol/fv-group"
+    },
+    "@youwol/flux-view": {
+        "apiKey": "1",
+        "exportedSymbol": "@youwol/flux-view"
+    },
+    "@youwol/http-clients": {
+        "apiKey": "1",
+        "exportedSymbol": "@youwol/http-clients"
+    },
+    "rxjs": {
+        "apiKey": "6",
+        "exportedSymbol": "rxjs"
+    },
+    "@youwol/cdn-client": {
+        "apiKey": "1",
+        "exportedSymbol": "@youwol/cdn-client"
+    },
+    "@youwol/fv-code-mirror-editors": {
+        "apiKey": "01",
+        "exportedSymbol": "@youwol/fv-code-mirror-editors"
+    }
+}
 export const setup = {
     name:'@youwol/platform',
         assetId:'QHlvdXdvbC9wbGF0Zm9ybQ==',
@@ -37,5 +70,10 @@ export const setup = {
     userGuide:'https://l.youwol.com/doc/@youwol/platform',
     apiVersion:'01',
     runTimeDependencies,
-    externals
+    externals,
+    exportedSymbols
+}
+
+export function getExportedSymbolName(module:string){
+    return `${exportedSymbols[module].exportedSymbol}_APIv${exportedSymbols[module].apiKey}`
 }

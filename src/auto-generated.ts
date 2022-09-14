@@ -1,16 +1,16 @@
 
 const runTimeDependencies = {
     "load": {
-        "@youwol/fv-tabs": "^0.2.0",
-        "@youwol/os-core": "^0.1.0",
-        "@youwol/fv-group": "^0.2.0",
-        "@youwol/flux-view": "^1.0.0",
-        "@youwol/http-clients": "^1.0.0",
+        "@youwol/fv-tabs": "^0.2.1",
+        "@youwol/os-core": "^0.1.1",
+        "@youwol/fv-group": "^0.2.1",
+        "@youwol/flux-view": "^1.0.3",
+        "@youwol/http-clients": "^1.0.2",
         "rxjs": "^6.5.5",
-        "@youwol/cdn-client": "^1.0.0"
+        "@youwol/cdn-client": "^1.0.2"
     },
     "differed": {
-        "@youwol/fv-code-mirror-editors": "^0.1.0"
+        "@youwol/fv-code-mirror-editors": "^0.1.1"
     },
     "includedInBundle": []
 }
@@ -62,7 +62,7 @@ const exportedSymbols = {
 export const setup = {
     name:'@youwol/platform',
         assetId:'QHlvdXdvbC9wbGF0Zm9ybQ==',
-    version:'0.1.1',
+    version:'0.1.2',
     shortDescription:"OS like frontend application of YouWol platform.",
     developerDocumentation:'https://platform.youwol.com/applications/@youwol/cdn-explorer/latest?package=@youwol/platform',
     npmPackage:'https://www.npmjs.com/package/@youwol/platform',
@@ -71,9 +71,8 @@ export const setup = {
     apiVersion:'01',
     runTimeDependencies,
     externals,
-    exportedSymbols
-}
-
-export function getExportedSymbolName(module:string){
-    return `${exportedSymbols[module].exportedSymbol}_APIv${exportedSymbols[module].apiKey}`
+    exportedSymbols,
+    getDependencySymbolExported: (module:string) => {
+        return `${exportedSymbols[module].exportedSymbol}_APIv${exportedSymbols[module].apiKey}`
+    }
 }

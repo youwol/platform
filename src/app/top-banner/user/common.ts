@@ -4,7 +4,7 @@ import { combineLatest, from, Observable } from 'rxjs'
 import { install } from '@youwol/cdn-client'
 import { filter, map, shareReplay, take } from 'rxjs/operators'
 import { Accounts } from '@youwol/http-clients'
-import { getExportedSymbolName, setup } from '../../../auto-generated'
+import { setup } from '../../../auto-generated'
 
 type NavigateMethod =
     | 'logoutAndForgetUserUrl'
@@ -56,7 +56,7 @@ export const loadFvCodeEditorsModule$: () => Observable<CodeEditorModule> =
                     'codemirror#5.52.0~addons/lint/lint.css',
                 ],
                 aliases: {
-                    codeMirrorEditors: getExportedSymbolName(
+                    codeMirrorEditors: setup.getDependencySymbolExported(
                         '@youwol/fv-code-mirror-editors',
                     ),
                 },

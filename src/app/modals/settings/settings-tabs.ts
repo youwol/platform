@@ -1,7 +1,6 @@
 import { DockableTabs } from '@youwol/fv-tabs'
 import { BehaviorSubject, of } from 'rxjs'
 import { Accounts } from '@youwol/http-clients'
-import { ProfileTab } from './profile-tab.view'
 import { PreferencesTab } from './preferences-tab.view'
 import { InstallersTab } from './installers-tab.view'
 import { loadFvCodeEditorsModule$ } from './common'
@@ -9,7 +8,7 @@ import { loadFvCodeEditorsModule$ } from './common'
 /**
  * @category State
  */
-export class UserSettingsTabsState extends DockableTabs.State {
+export class SettingsTabsState extends DockableTabs.State {
     /**
      * @group Immutable Constants
      */
@@ -23,12 +22,8 @@ export class UserSettingsTabsState extends DockableTabs.State {
         super({
             disposition: 'top',
             viewState$: new BehaviorSubject<DockableTabs.DisplayMode>('pined'),
-            tabs$: of([
-                new ProfileTab(),
-                new PreferencesTab(),
-                new InstallersTab(),
-            ]),
-            selected$: new BehaviorSubject('Profile'),
+            tabs$: of([new PreferencesTab(), new InstallersTab()]),
+            selected$: new BehaviorSubject('Preferences'),
             persistTabsView: false,
         })
         Object.assign(this, params)
@@ -38,7 +33,7 @@ export class UserSettingsTabsState extends DockableTabs.State {
 /**
  * @category View
  */
-export class UserSettingsTabsView extends DockableTabs.View {
+export class SettingsTabsView extends DockableTabs.View {
     /**
      * @group Immutable DOM Constants
      */
@@ -47,7 +42,7 @@ export class UserSettingsTabsView extends DockableTabs.View {
     }
     constructor({ sessionInfo }: { sessionInfo: Accounts.SessionDetails }) {
         super({
-            state: new UserSettingsTabsState({ sessionInfo }),
+            state: new SettingsTabsState({ sessionInfo }),
             styleOptions: {
                 wrapper: {
                     class: 'flex-grow-1 overflow-auto rounded',

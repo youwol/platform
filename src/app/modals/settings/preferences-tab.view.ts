@@ -1,7 +1,7 @@
 import { child$, VirtualDOM } from '@youwol/flux-view'
 import { combineLatest } from 'rxjs'
 import * as OsCore from '@youwol/os-core'
-import { UserSettingsTabsState } from './settings-tabs'
+import { SettingsTabsState } from './settings-tabs'
 import { createEditor, UserSettingsTabBase } from './common'
 
 const bottomNavClasses = 'fv-bg-background fv-x-lighter w-100 overflow-auto'
@@ -18,7 +18,7 @@ export class PreferencesTab extends UserSettingsTabBase {
             id: 'Preferences',
             title: 'Preferences',
             icon: 'fas fa-user-cog',
-            content: ({ tabsState }: { tabsState: UserSettingsTabsState }) => {
+            content: ({ tabsState }: { tabsState: SettingsTabsState }) => {
                 return new PreferencesView({
                     tabsState: tabsState,
                 })
@@ -45,7 +45,7 @@ export class PreferencesView implements VirtualDOM {
      */
     public readonly children: VirtualDOM[]
 
-    constructor(params: { tabsState: UserSettingsTabsState }) {
+    constructor(params: { tabsState: SettingsTabsState }) {
         this.children = [
             child$(
                 combineLatest([

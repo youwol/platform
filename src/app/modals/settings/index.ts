@@ -1,0 +1,5 @@
+export * from './preferences-tab.view'
+export * from './installers-tab.view'
+export * from './settings-tabs'
+export * from './settings.view'
+export * from './common'

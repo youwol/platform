@@ -1,11 +1,11 @@
 import { VirtualDOM } from '@youwol/flux-view'
-import { UserSettingsTabsView } from './settings-tabs'
+import { SettingsTabsView } from './settings-tabs'
 import { Accounts } from '@youwol/http-clients'
 
 /**
  * @category View
  */
-export class UserAllSettingsView implements VirtualDOM {
+export class SettingsView implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
@@ -22,7 +22,7 @@ export class UserAllSettingsView implements VirtualDOM {
         this.children = [
             {
                 class: 'position-relative h-100 d-flex flex-column',
-                children: [new UserSettingsTabsView({ sessionInfo })],
+                children: [new SettingsTabsView({ sessionInfo })],
             },
         ]
     }

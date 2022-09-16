@@ -18,6 +18,9 @@ export class RegularBannerView implements VirtualDOM {
      */
     public readonly children: VirtualDOM[]
 
+    public readonly style = {
+        height: '40px',
+    }
     constructor(state: OsCore.PlatformState) {
         this.children = [
             child$(

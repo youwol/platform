@@ -13,7 +13,8 @@ export const separatorView = {
 }
 
 export class BaseUserFormView implements VirtualDOM {
-    public readonly class = 'fv-border-primary rounded p-3 fv-text-primary'
+    public readonly class =
+        'fv-border-primary rounded p-3 fv-text-primary fv-bg-background'
 }
 
 export function redirectWith(method: NavigateMethod) {

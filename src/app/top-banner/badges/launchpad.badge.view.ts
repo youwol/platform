@@ -51,6 +51,10 @@ export class LaunchpadBadgeView implements VirtualDOM {
             },
         ]
         this.onclick = () =>
-            popupModal(() => new ApplicationsLaunchPadView({ state }))
+            popupModal(
+                () => new ApplicationsLaunchPadView({ state }),
+                (elem, modalState) =>
+                    (elem.onclick = (ev) => modalState.cancel$.next(ev)),
+            )
     }
 }

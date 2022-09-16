@@ -1,7 +1,8 @@
-import { child$, VirtualDOM } from '@youwol/flux-view'
+import { child$, children$, VirtualDOM } from '@youwol/flux-view'
 import * as OsCore from '@youwol/os-core'
 import { EnvironmentBadgesView, LaunchpadBadgeView } from './badges'
 import { sessionDetails$ } from './utils.view'
+import { CorporationBadgeView } from './badges/corporation.view'
 
 /**
  * Regular top banner of the application (no application running)
@@ -30,15 +31,15 @@ export class RegularBannerView implements VirtualDOM {
             ),
             new LaunchpadBadgeView({ state }),
             {
-                class: 'flex-grow-1 my-auto h-100',
-                children: [
-                    child$(
-                        OsCore.PreferencesFacade.getPreferences$(),
-                        (preferences) => {
-                            return preferences.desktop.topBannerView
-                        },
-                    ),
-                ],
+                class: 'flex-grow-1 my-auto h-100 d-flex justify-content-around',
+                children: children$(
+                    OsCore.PreferencesFacade.getPreferences$(),
+                    (preferences) =>
+                        OsCore.PreferencesExtractor.getTopBannerWidgets(
+                            preferences,
+                            { platformState: state },
+                        ),
+                ),
             },
             child$(sessionDetails$, (sessionInfo) => {
                 return new EnvironmentBadgesView({ sessionInfo })

@@ -1,8 +1,8 @@
 import { child$, VirtualDOM } from '@youwol/flux-view'
-import { combineLatest } from 'rxjs'
 import * as OsCore from '@youwol/os-core'
 import { SettingsTabsState } from './settings-tabs'
 import { createEditor, UserSettingsTabBase } from './common'
+import { ProfilesState } from './profiles.state'
 
 const bottomNavClasses = 'fv-bg-background fv-x-lighter w-100 overflow-auto'
 const bottomNavStyle = {
@@ -48,13 +48,10 @@ export class InstallersView implements VirtualDOM {
     constructor(params: { tabsState: SettingsTabsState }) {
         this.children = [
             child$(
-                combineLatest([
-                    OsCore.Installer.getInstallerScript$(),
-                    params.tabsState.codeMirror$,
-                ]),
-                ([installerScript, mdle]) => {
+                OsCore.Installer.getInstallerScript$(),
+                (installerScript) => {
                     const view = createEditor(
-                        mdle,
+                        ProfilesState.CodeEditorModule,
                         params.tabsState,
                         installerScript.tsSrc,
                     )

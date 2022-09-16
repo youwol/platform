@@ -1,6 +1,7 @@
 import { VirtualDOM } from '@youwol/flux-view'
-import { SettingsTabsView } from './settings-tabs'
 import { Accounts } from '@youwol/http-clients'
+import { SettingsTabsView } from './settings-tabs'
+import { ProfilesState } from './profiles.state'
 
 /**
  * @category View
@@ -18,11 +19,19 @@ export class SettingsView implements VirtualDOM {
      */
     public readonly children: VirtualDOM[]
 
-    constructor({ sessionInfo }: { sessionInfo: Accounts.SessionDetails }) {
+    constructor({
+        sessionInfo,
+        profilesState,
+    }: {
+        sessionInfo: Accounts.SessionDetails
+        profilesState: ProfilesState
+    }) {
         this.children = [
             {
                 class: 'position-relative h-100 d-flex flex-column',
-                children: [new SettingsTabsView({ sessionInfo })],
+                children: [
+                    new SettingsTabsView({ sessionInfo, profilesState }),
+                ],
             },
         ]
     }

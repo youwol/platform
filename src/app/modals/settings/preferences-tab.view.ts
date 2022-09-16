@@ -1,8 +1,10 @@
 import { child$, VirtualDOM } from '@youwol/flux-view'
-import { combineLatest } from 'rxjs'
 import * as OsCore from '@youwol/os-core'
 import { SettingsTabsState } from './settings-tabs'
 import { createEditor, UserSettingsTabBase } from './common'
+import { ProfilesState } from './profiles.state'
+import { mergeMap } from 'rxjs/operators'
+import { of } from 'rxjs'
 
 const bottomNavClasses = 'fv-bg-background fv-x-lighter w-100 overflow-auto'
 const bottomNavStyle = {
@@ -48,13 +50,16 @@ export class PreferencesView implements VirtualDOM {
     constructor(params: { tabsState: SettingsTabsState }) {
         this.children = [
             child$(
-                combineLatest([
-                    OsCore.PreferencesFacade.getPreferencesScript$(),
-                    params.tabsState.codeMirror$,
-                ]),
-                ([preferencesScript, mdle]) => {
+                params.tabsState.profilesState.selectedProfile$.pipe(
+                    mergeMap((id) =>
+                        id == 'default'
+                            ? OsCore.PreferencesFacade.getPreferencesScript$()
+                            : of(params.tabsState.profilesState.getProfile(id)),
+                    ),
+                ),
+                (preferencesScript) => {
                     const view = createEditor(
-                        mdle,
+                        ProfilesState.CodeEditorModule,
                         params.tabsState,
                         preferencesScript.tsSrc,
                     )

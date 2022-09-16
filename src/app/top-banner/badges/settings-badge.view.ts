@@ -1,6 +1,6 @@
-import { SettingsView } from '../../modals/settings'
 import { popupModal } from '../../modals'
 import { Accounts } from '@youwol/http-clients'
+import { ProfilePickerView } from '../../modals/settings/profile-picker.view'
 
 export class SettingsBadgeView {
     public readonly class =
@@ -9,12 +9,7 @@ export class SettingsBadgeView {
 
     constructor(sessionInfo: Accounts.SessionDetails) {
         this.onclick = () => {
-            popupModal(
-                () =>
-                    new SettingsView({
-                        sessionInfo,
-                    }),
-            )
+            popupModal(() => new ProfilePickerView({ sessionInfo }))
         }
     }
 }

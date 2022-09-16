@@ -1,10 +1,8 @@
 import { DockableTabs } from '@youwol/fv-tabs'
 import { VirtualDOM } from '@youwol/flux-view'
-import { combineLatest, from, Observable } from 'rxjs'
-import { install } from '@youwol/cdn-client'
-import { filter, map, shareReplay, take } from 'rxjs/operators'
+import { combineLatest } from 'rxjs'
+import { filter, take } from 'rxjs/operators'
 import { Accounts } from '@youwol/http-clients'
-import { setup } from '../../../auto-generated'
 
 type NavigateMethod =
     | 'logoutAndForgetUserUrl'
@@ -30,42 +28,7 @@ export class UserSettingsTabBase extends DockableTabs.Tab {
     }
 }
 
-declare type CodeEditorModule = typeof import('@youwol/fv-code-mirror-editors')
-const fvCmEditorVersions =
-    setup.runTimeDependencies.differed['@youwol/fv-code-mirror-editors']
-
-/**
- * Lazy loading of the module `@youwol/fv-code-mirror-editors`
- *
- * @category HTTP
- */
-export const loadFvCodeEditorsModule$: () => Observable<CodeEditorModule> =
-    () =>
-        from(
-            install({
-                modules: [
-                    `@youwol/fv-code-mirror-editors#${fvCmEditorVersions}`,
-                ],
-                scripts: [
-                    'codemirror#5.52.0~mode/javascript.min.js',
-                    'codemirror#5.52.0~addons/lint/lint.js',
-                ],
-                css: [
-                    'codemirror#5.52.0~codemirror.min.css',
-                    'codemirror#5.52.0~theme/blackboard.min.css',
-                    'codemirror#5.52.0~addons/lint/lint.css',
-                ],
-                aliases: {
-                    codeMirrorEditors: setup.getDependencySymbolExported(
-                        '@youwol/fv-code-mirror-editors',
-                    ),
-                },
-            }),
-        ).pipe(
-            map((window) => window['codeMirrorEditors']),
-            shareReplay({ bufferSize: 1, refCount: true }),
-        )
-
+export type CodeEditorModule = typeof import('@youwol/fv-code-mirror-editors')
 /**
  * @category View
  */

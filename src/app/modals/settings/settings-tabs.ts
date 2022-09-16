@@ -3,7 +3,7 @@ import { BehaviorSubject, of } from 'rxjs'
 import { Accounts } from '@youwol/http-clients'
 import { PreferencesTab } from './preferences-tab.view'
 import { InstallersTab } from './installers-tab.view'
-import { loadFvCodeEditorsModule$ } from './common'
+import { ProfilesState } from './profiles.state'
 
 /**
  * @category State
@@ -13,12 +13,13 @@ export class SettingsTabsState extends DockableTabs.State {
      * @group Immutable Constants
      */
     public readonly sessionInfo: Accounts.SessionDetails
-    /**
-     * @group Observable
-     */
-    public readonly codeMirror$ = loadFvCodeEditorsModule$()
 
-    constructor(params: { sessionInfo: Accounts.SessionDetails }) {
+    public readonly profilesState: ProfilesState
+
+    constructor(params: {
+        sessionInfo: Accounts.SessionDetails
+        profilesState: ProfilesState
+    }) {
         super({
             disposition: 'top',
             viewState$: new BehaviorSubject<DockableTabs.DisplayMode>('pined'),
@@ -40,9 +41,15 @@ export class SettingsTabsView extends DockableTabs.View {
     public readonly onclick = (ev) => {
         ev.stopPropagation()
     }
-    constructor({ sessionInfo }: { sessionInfo: Accounts.SessionDetails }) {
+    constructor({
+        sessionInfo,
+        profilesState,
+    }: {
+        sessionInfo: Accounts.SessionDetails
+        profilesState: ProfilesState
+    }) {
         super({
-            state: new SettingsTabsState({ sessionInfo }),
+            state: new SettingsTabsState({ sessionInfo, profilesState }),
             styleOptions: {
                 wrapper: {
                     class: 'flex-grow-1 overflow-auto rounded',

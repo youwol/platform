@@ -18,30 +18,44 @@ export class VisitorFormState {
     /**
      * @group Observables
      */
-    public readonly email$ = new BehaviorSubject<Email>('')
+    private readonly _email$ = new BehaviorSubject<Email>('')
 
     /**
      * @group Observables
      */
-    public readonly triggerRegistration$ = new Subject<Email>()
+    private readonly _triggerRegistration$ = new Subject<Email>()
 
     /**
      * @group Observables
      */
-    public readonly httpError$ = new Subject<HTTPError>()
+    private readonly _httpError$ = new Subject<HTTPError>()
 
+    /**
+     * @group Observables
+     */
+    public readonly httpError$ = this._httpError$.asObservable()
+
+    /**
+     * @group Observables
+     */
     public readonly validEmail$: Observable<string | undefined>
 
+    /**
+     * @group Observables
+     */
     public readonly done$: Observable<Empty>
 
+    /**
+     * @group Observables
+     */
     public readonly pending$: Observable<boolean>
 
     constructor() {
-        this.email$.subscribe(() => {
-            this.httpError$.next()
+        this._email$.subscribe(() => {
+            this._httpError$.next()
         })
 
-        this.validEmail$ = this.email$.pipe(
+        this.validEmail$ = this._email$.pipe(
             map((email) => {
                 return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
                     ? email
@@ -49,19 +63,19 @@ export class VisitorFormState {
             }),
         )
 
-        this.done$ = this.triggerRegistration$.pipe(
+        this.done$ = this._triggerRegistration$.pipe(
             mergeMap((email) =>
                 new Accounts.Client().sendRegisterMail$({
                     email,
                     target_uri: window.location.href,
                 }),
             ),
-            dispatchHTTPErrors<Empty>(this.httpError$),
+            dispatchHTTPErrors<Empty>(this._httpError$),
         )
         this.pending$ = merge(
-            this.triggerRegistration$.pipe(mapTo('start')),
+            this._triggerRegistration$.pipe(mapTo('start')),
             this.done$.pipe(mapTo('OK')),
-            this.httpError$.pipe(
+            this._httpError$.pipe(
                 filter((e) => e != undefined),
                 mapTo('KO'),
             ),
@@ -69,11 +83,11 @@ export class VisitorFormState {
     }
 
     triggerRegistration() {
-        this.triggerRegistration$.next(this.email$.getValue())
+        this._triggerRegistration$.next(this._email$.getValue())
     }
 
     setEmail(email: Email) {
-        this.email$.next(email)
+        this._email$.next(email)
     }
 }
 

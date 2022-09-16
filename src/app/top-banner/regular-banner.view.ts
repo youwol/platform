@@ -20,6 +20,11 @@ export class RegularBannerView implements VirtualDOM {
 
     constructor(state: OsCore.PlatformState) {
         this.children = [
+            child$(
+                OsCore.PreferencesFacade.getPreferences$(),
+                (preferences) =>
+                    new CorporationBadgeView({ preferences, state }),
+            ),
             new LaunchpadBadgeView({ state }),
             {
                 class: 'flex-grow-1 my-auto h-100',

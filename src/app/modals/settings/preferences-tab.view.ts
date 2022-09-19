@@ -1,11 +1,7 @@
 import { child$, VirtualDOM } from '@youwol/flux-view'
-import * as OsCore from '@youwol/os-core'
 import { SettingsTabsState } from './settings-tabs'
 import { createEditor, UserSettingsTabBase } from './common'
 import { ProfilesState } from './profiles.state'
-import { mergeMap } from 'rxjs/operators'
-import { of } from 'rxjs'
-
 const bottomNavClasses = 'fv-bg-background fv-x-lighter w-100 overflow-auto'
 const bottomNavStyle = {
     height: '100%',
@@ -50,23 +46,26 @@ export class PreferencesView implements VirtualDOM {
     constructor(params: { tabsState: SettingsTabsState }) {
         this.children = [
             child$(
-                params.tabsState.profilesState.selectedProfile$.pipe(
-                    mergeMap((id) =>
-                        id == 'default'
-                            ? OsCore.PreferencesFacade.getPreferencesScript$()
-                            : of(params.tabsState.profilesState.getProfile(id)),
-                    ),
-                ),
-                (preferencesScript) => {
-                    const view = createEditor(
-                        ProfilesState.CodeEditorModule,
-                        params.tabsState,
-                        preferencesScript.tsSrc,
-                    )
-                    view.ideState.parsedSrc$.subscribe((parsed) => {
-                        OsCore.PreferencesFacade.setPreferencesScript(parsed)
+                params.tabsState.profilesState.selectedProfile$,
+                (profile) => {
+                    return createEditor({
+                        CodeEditorModule: ProfilesState.CodeEditorModule,
+                        tsSrc: profile.preferences.tsSrc,
+                        readOnly: profile.id == 'default',
+                        onRun: (editor) => {
+                            const parsed =
+                                ProfilesState.CodeEditorModule.Typescript.parseTypescript(
+                                    editor.getValue(),
+                                )
+                            return params.tabsState.profilesState.updateProfile(
+                                profile.id,
+                                {
+                                    preferences: parsed,
+                                    installers: profile.installers,
+                                },
+                            )
+                        },
                     })
-                    return view
                 },
             ),
         ]

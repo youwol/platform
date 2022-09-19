@@ -4,21 +4,31 @@ import { LoadingScreenView } from '@youwol/cdn-client'
 import { filter, mergeMap } from 'rxjs/operators'
 import { SettingsView } from './settings.view'
 import { ProfilesState } from './profiles.state'
+import { Accounts } from '@youwol/http-clients'
 
 export class ProfilePickerView {
     public readonly class =
-        'vw-25 vh-25 border fv-border-primary rounded mx-auto my-auto p-4'
+        'vw-25 vh-25 border fv-border-primary rounded mx-auto my-auto p-4 fv-bg-background-alt'
     public readonly children: VirtualDOM[]
 
-    constructor({ sessionInfo }) {
-        const state = new ProfilesState()
+    constructor({
+        sessionInfo,
+        profilesInfo,
+    }: {
+        sessionInfo: Accounts.SessionDetails
+        profilesInfo: {
+            customProfiles: { id: string; name: string }[]
+            selectedProfile: string
+        }
+    }) {
+        const state = new ProfilesState({ profilesInfo })
         const cm$ = ProfilesState.getBootstrap$().pipe(
             mergeMap(() => ProfilesState.getFvCodeMirror$()),
         )
 
         this.children = [
             {
-                class: 'd-flex align-items-center justify-content-center w-100',
+                class: 'd-flex align-items-center justify-content-center w-100 my-2',
                 children: [
                     { class: 'mx-3', innerText: 'Selected profile' },
                     {
@@ -35,9 +45,14 @@ export class ProfilePickerView {
                             state,
                         })
                     }),
-                    new EditProfileButton(state),
+                    child$(state.editionMode$, (edition) =>
+                        edition ? {} : new EditProfileButton(state),
+                    ),
                 ],
             },
+            child$(state.selectedProfile$, (profile) =>
+                profile.id == 'default' ? new ReadonlyWarningView() : {},
+            ),
             child$(state.editionMode$.pipe(filter((v) => v)), () => {
                 return new LoadingTypescriptView()
             }),
@@ -52,6 +67,15 @@ export class ProfilePickerView {
             ),
         ]
     }
+}
+
+export class ReadonlyWarningView implements VirtualDOM {
+    public readonly class = 'fv-text-focus my-2 text-center w-100'
+    public readonly style = {
+        fontWeight: 'bold',
+    }
+    public readonly innerText =
+        '⚠️The default profile is read-only: it can not be edited'
 }
 
 export class LoadingTypescriptView implements VirtualDOM {
@@ -79,7 +103,7 @@ export class EditProfileButton implements VirtualDOM {
     public readonly tag = 'button'
     public readonly type = 'button'
     public readonly class =
-        'btn btn-outline-secondary mx-3 d-flex align-items-center fv-border-secondary'
+        'btn btn-outline-secondary mx-3 d-flex align-items-center fv-border-secondary fv-text-primary'
     public readonly children: VirtualDOM[]
     public readonly onclick: (ev: MouseEvent) => void
     constructor(state: ProfilesState) {
@@ -87,9 +111,12 @@ export class EditProfileButton implements VirtualDOM {
             {
                 class: 'fas fa-pen mr-1 ',
             },
-            {
-                innerText: 'Edit profile',
-            },
+            child$(state.selectedProfile$, ({ id }) => {
+                return {
+                    innerText:
+                        id == 'default' ? 'View profile' : 'Edit profile',
+                }
+            }),
         ]
         this.onclick = () => state.edit()
     }
@@ -118,7 +145,7 @@ export class ProfilesDropDown implements VirtualDOM {
                 ariaExpanded: false,
                 innerText: attr$(
                     state.selectedProfile$,
-                    (id) => state.getProfile(id).name,
+                    (profile) => profile.name,
                 ),
             },
             {

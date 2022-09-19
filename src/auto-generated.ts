@@ -7,6 +7,7 @@ const runTimeDependencies = {
         "@youwol/flux-view": "^1.0.3",
         "@youwol/http-clients": "^1.0.2",
         "rxjs": "^6.5.5",
+        "uuid": "^8.3.2",
         "@youwol/cdn-client": "^1.0.2"
     },
     "differed": {
@@ -21,6 +22,7 @@ const externals = {
     "@youwol/flux-view": "window['@youwol/flux-view_APIv1']",
     "@youwol/http-clients": "window['@youwol/http-clients_APIv1']",
     "rxjs": "window['rxjs_APIv6']",
+    "uuid": "window['uuid_APIv8']",
     "@youwol/cdn-client": "window['@youwol/cdn-client_APIv1']",
     "@youwol/fv-code-mirror-editors": "window['@youwol/fv-code-mirror-editors_APIv01']",
     "rxjs/operators": "window['rxjs_APIv6']['operators']"
@@ -49,6 +51,10 @@ const exportedSymbols = {
     "rxjs": {
         "apiKey": "6",
         "exportedSymbol": "rxjs"
+    },
+    "uuid": {
+        "apiKey": "8",
+        "exportedSymbol": "uuid"
     },
     "@youwol/cdn-client": {
         "apiKey": "1",

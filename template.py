@@ -26,6 +26,7 @@ template = Template(
                 '@youwol/flux-view': '^1.0.3',
                 '@youwol/http-clients': '^1.0.2',
                 'rxjs': '^6.5.5',
+                'uuid': '^8.3.2',
                 '@youwol/cdn-client': '^1.0.2'
             },
             differed={

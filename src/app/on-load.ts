@@ -7,6 +7,12 @@ import { PlatformBannerView } from './top-banner'
 
 require('./style.css')
 
+const searchParams = new URLSearchParams(window.location.search)
+
+if (searchParams.has('mode') && searchParams.get('mode') == 'safe') {
+    OsCore.PlatformState.setSafeMode()
+}
+
 /**
  * @category Getting Started
  * @category View

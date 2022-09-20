@@ -20,7 +20,7 @@ export class RegisteredBadgeView implements VirtualDOM {
         backgroundColor: 'red',
         color: 'white',
         fontWeight: 'bold',
-        lineHeight: '1.6em',
+        lineHeight: '1.8em',
     }
     /**
      * @group Immutable DOM Constants

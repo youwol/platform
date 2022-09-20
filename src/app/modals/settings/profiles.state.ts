@@ -78,24 +78,26 @@ export class ProfilesState {
     }
 
     newProfile(name: string) {
-        const profiles = this.profiles$.value
         const profileId = v4()
-        const defaults: SettingsContent = {
-            preferences: PreferencesFacade.getDefaultPreferences(),
-            installers: OsCore.Installer.getDefaultInstaller(),
-        }
-        this.profiles$.next([...profiles, { name, id: profileId }])
-        PreferencesFacade.getDefaultPreferences()
+        this.profiles$.next([...this.profiles$.value, { name, id: profileId }])
+
         this.syncProfileInfo(profileId)
+
         this.cdnSessionStorage
             .postData$({
                 packageName: setup.name,
                 dataName: `customProfile_${profileId}`,
-                body: { name, id: profileId, ...defaults },
+                body: {
+                    name,
+                    id: profileId,
+                    preferences: PreferencesFacade.getDefaultPreferences(),
+                    installers: OsCore.Installer.getDefaultInstaller(),
+                },
             })
-            .subscribe()
-        this.selectProfile(profileId)
-        this.edit()
+            .subscribe(() => {
+                this.selectProfile(profileId)
+                this.edit()
+            })
     }
 
     selectProfile(profileId: string) {

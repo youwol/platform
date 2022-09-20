@@ -56,10 +56,15 @@ export class ProfileItemView {
         profile: { id: string; name: string }
         state: ProfilesState
     }) {
+        const trashView = {
+            class: 'fas fa-trash fv-text-error fv-hover-xx-lighter fv-hover-border-primary rounded p-1',
+            onclick: () => state.deleteProfile(profile.id),
+        }
         this.children = [
             {
                 innerText: profile.name,
             },
+            profile.id != 'default' ? trashView : undefined,
         ]
         this.onclick = () => state.selectProfile(profile.id)
     }

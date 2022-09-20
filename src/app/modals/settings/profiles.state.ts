@@ -116,6 +116,20 @@ export class ProfilesState {
             })
     }
 
+    deleteProfile(profileId: string) {
+        this.selectProfile('default')
+        this.profiles$.next(
+            [...this.profiles$.value].filter(({ id }) => id != profileId),
+        )
+        this.syncProfileInfo(profileId)
+        this.cdnSessionStorage
+            .deleteData$({
+                packageName: setup.name,
+                dataName: `customProfile_${profileId}`,
+            })
+            .subscribe()
+    }
+
     updateProfile(profileId: string, settingsContent: SettingsContent) {
         if (profileId == 'default') {
             return

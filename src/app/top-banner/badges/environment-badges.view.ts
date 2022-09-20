@@ -1,7 +1,7 @@
 import { VirtualDOM } from '@youwol/flux-view'
 import { Accounts } from '@youwol/http-clients'
 import { UserBadgeView } from './user-badge.view'
-import { SettingsBadgeView } from './settings-badge.view'
+import { ProfilesBadgeView } from './profiles-badge.view'
 
 /**
  *
@@ -13,7 +13,7 @@ export class EnvironmentBadgesView implements VirtualDOM {
     constructor({ sessionInfo }: { sessionInfo: Accounts.SessionDetails }) {
         this.children = [
             new UserBadgeView(sessionInfo),
-            new SettingsBadgeView(sessionInfo),
+            new ProfilesBadgeView(sessionInfo),
         ]
     }
 }

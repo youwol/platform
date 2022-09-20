@@ -11,7 +11,7 @@ import { child$, VirtualDOM } from '@youwol/flux-view'
 import { Observable } from 'rxjs'
 import { map } from 'rxjs/operators'
 
-export class SettingsBadgeView {
+export class ProfilesBadgeView {
     public readonly class =
         'fas fa-cogs rounded fv-pointer py-2 px-1 fv-hover-bg-background-alt h-100'
     public readonly onclick: () => void

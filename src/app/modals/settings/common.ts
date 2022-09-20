@@ -1,19 +1,5 @@
 import { DockableTabs } from '@youwol/fv-tabs'
-import { child$, VirtualDOM } from '@youwol/flux-view'
-import { Accounts } from '@youwol/http-clients'
-import { Observable, Subject } from 'rxjs'
-import { SrcHighlight } from '@youwol/fv-code-mirror-editors'
-import CodeMirror from 'codemirror'
-
-type NavigateMethod =
-    | 'logoutAndForgetUserUrl'
-    | 'logoutUrl'
-    | 'loginAsUserUrl'
-    | 'loginAsTempUserUrl'
-
-export function redirectWith(method: NavigateMethod) {
-    window.location.replace(new Accounts.Client()[method](window.location.href))
-}
+import { VirtualDOM } from '@youwol/flux-view'
 
 /**
  * @category View

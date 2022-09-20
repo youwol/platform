@@ -1,7 +1,8 @@
 import { child$, VirtualDOM } from '@youwol/flux-view'
 import { SettingsTabsState } from './settings-tabs'
-import { createEditor, UserSettingsTabBase } from './common'
+import { UserSettingsTabBase } from './common'
 import { ProfilesState } from './profiles.state'
+import { CodeEditorView } from './code-editor.view'
 
 const bottomNavClasses = 'fv-bg-background fv-x-lighter w-100 overflow-auto'
 const bottomNavStyle = {
@@ -49,7 +50,7 @@ export class InstallersView implements VirtualDOM {
             child$(
                 params.tabsState.profilesState.selectedProfile$,
                 (profile) => {
-                    return createEditor({
+                    return new CodeEditorView({
                         CodeEditorModule: ProfilesState.CodeEditorModule,
                         tsSrc: profile.installers.tsSrc,
                         readOnly: profile.id == 'default',

@@ -68,7 +68,7 @@ const exportedSymbols = {
 export const setup = {
     name:'@youwol/platform',
         assetId:'QHlvdXdvbC9wbGF0Zm9ybQ==',
-    version:'0.1.2',
+    version:'0.1.3',
     shortDescription:"OS like frontend application of YouWol platform.",
     developerDocumentation:'https://platform.youwol.com/applications/@youwol/cdn-explorer/latest?package=@youwol/platform',
     npmPackage:'https://www.npmjs.com/package/@youwol/platform',

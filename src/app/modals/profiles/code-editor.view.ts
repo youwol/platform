@@ -1,10 +1,8 @@
 import { Observable, Subject } from 'rxjs'
 import { child$, VirtualDOM } from '@youwol/flux-view'
-import { SrcHighlight } from '@youwol/fv-code-mirror-editors'
+import { Common, TsCodeEditorModule } from '@youwol/fv-code-mirror-editors'
 
 import CodeMirror from 'codemirror'
-
-export type CodeEditorModule = typeof import('@youwol/fv-code-mirror-editors')
 
 /**
  * @category View
@@ -25,12 +23,12 @@ export class CodeEditorView implements VirtualDOM {
         readOnly,
         onRun,
     }: {
-        CodeEditorModule: CodeEditorModule
+        CodeEditorModule: TsCodeEditorModule
         tsSrc: string
         readOnly: boolean
         onRun: (editor) => Promise<unknown>
     }) {
-        const ideState = new CodeEditorModule.Typescript.IdeState({
+        const ideState = new CodeEditorModule.IdeState({
             files: [
                 {
                     path: './index.ts',
@@ -48,7 +46,7 @@ export class CodeEditorView implements VirtualDOM {
                     console.error('An error occurred', e)
                 })
 
-        const codeEditorView = new CodeEditorModule.Typescript.CodeEditorView({
+        const codeEditorView = new CodeEditorModule.CodeEditorView({
             ideState,
             path: './index.ts',
             config: {
@@ -90,7 +88,7 @@ export class ToolbarView implements VirtualDOM {
         editor,
         error$,
     }: {
-        highlights$: Observable<SrcHighlight[]>
+        highlights$: Observable<Common.SrcHighlight[]>
         onRun: (editor: CodeMirror.Editor) => Promise<unknown>
         editor: CodeMirror.Editor
         error$

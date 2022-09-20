@@ -55,7 +55,7 @@ export class PreferencesView implements VirtualDOM {
                         readOnly: profile.id == 'default',
                         onRun: (editor) => {
                             const parsed =
-                                ProfilesState.CodeEditorModule.Typescript.parseTypescript(
+                                ProfilesState.CodeEditorModule.parseTypescript(
                                     editor.getValue(),
                                 )
                             return params.tabsState.profilesState.updateProfile(

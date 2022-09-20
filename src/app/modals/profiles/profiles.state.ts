@@ -1,12 +1,12 @@
 import { BehaviorSubject, from, Observable, of, ReplaySubject } from 'rxjs'
 import { CdnEvent, install } from '@youwol/cdn-client'
-import { CodeEditorModule } from './code-editor.view'
-import { map, shareReplay, tap } from 'rxjs/operators'
+import { mergeMap, shareReplay, tap } from 'rxjs/operators'
 import { setup } from '../../../auto-generated'
 import { PreferencesFacade } from '@youwol/os-core'
 import { CdnSessionsStorage, raiseHTTPErrors } from '@youwol/http-clients'
 import { v4 } from 'uuid'
 import * as OsCore from '@youwol/os-core'
+import { TsCodeEditorModule } from '@youwol/fv-code-mirror-editors'
 
 const cmInstall = {
     modules: [
@@ -38,6 +38,7 @@ export type SettingsContent = Record<
     { tsSrc: string; jsSrc: string }
 >
 
+export type toto = TsCodeEditorModule
 export type Profile = { id: string; name: string } & SettingsContent
 
 /**
@@ -72,7 +73,7 @@ export class ProfilesState {
     /**
      * @group Observables
      */
-    static fvCodeMirror$: Observable<CodeEditorModule>
+    static fvCodeMirror$: Observable<TsCodeEditorModule>
 
     /**
      *
@@ -86,7 +87,7 @@ export class ProfilesState {
      * @group Lazy Dependencies
      * @private
      */
-    static CodeEditorModule: CodeEditorModule
+    static CodeEditorModule: TsCodeEditorModule
 
     constructor(params: {
         profilesInfo: {
@@ -231,13 +232,18 @@ export class ProfilesState {
         return ProfilesState.getBootstrap$()
     }
 
-    static getFvCodeMirror$(): Observable<CodeEditorModule> {
+    static getFvCodeMirror$() {
         if (ProfilesState.fvCodeMirror$) {
             return ProfilesState.fvCodeMirror$
         }
         ProfilesState.fvCodeMirror$ = from(install(cmInstall)).pipe(
-            map((window) => window['codeMirrorEditors']),
-            tap((cm) => (ProfilesState.CodeEditorModule = cm)),
+            mergeMap((window) =>
+                from(window['codeMirrorEditors'].TypescriptModule()),
+            ),
+            tap(
+                (cm: TsCodeEditorModule) =>
+                    (ProfilesState.CodeEditorModule = cm),
+            ),
             shareReplay({ bufferSize: 1, refCount: true }),
         )
         return ProfilesState.getFvCodeMirror$()

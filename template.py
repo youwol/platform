@@ -30,7 +30,7 @@ template = Template(
                 '@youwol/cdn-client': '^1.0.2'
             },
             differed={
-                '@youwol/fv-code-mirror-editors': '^0.1.1'
+                '@youwol/fv-code-mirror-editors': '^0.2.0'
             }
         ),
         devTime={

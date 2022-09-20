@@ -6,7 +6,7 @@ import { SettingsView } from './settings.view'
 import { ProfilesState } from './profiles.state'
 import { Accounts } from '@youwol/http-clients'
 
-export class ProfilePickerView {
+export class ProfilesView {
     public readonly class =
         'vw-25 vh-25 border fv-border-primary rounded mx-auto my-auto p-4 fv-bg-background-alt'
     public readonly children: VirtualDOM[]

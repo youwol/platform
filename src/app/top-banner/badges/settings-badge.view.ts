@@ -5,7 +5,7 @@ import {
     HTTPError,
     raiseHTTPErrors,
 } from '@youwol/http-clients'
-import { ProfilePickerView } from '../../modals/settings/profile-picker.view'
+import { ProfilesView } from '../../modals/settings/profiles.view'
 import { setup } from '../../../auto-generated'
 import { child$, VirtualDOM } from '@youwol/flux-view'
 import { Observable } from 'rxjs'
@@ -43,7 +43,7 @@ export class SettingsBadgeView {
                         ),
                     ),
                     (profilesInfo) =>
-                        new ProfilePickerView({ sessionInfo, profilesInfo }),
+                        new ProfilesView({ sessionInfo, profilesInfo }),
                     {
                         untilFirst: {
                             class: 'fas fa-spinner fa-spin',

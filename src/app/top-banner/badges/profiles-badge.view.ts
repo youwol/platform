@@ -11,9 +11,19 @@ import { child$, VirtualDOM } from '@youwol/flux-view'
 import { Observable } from 'rxjs'
 import { map } from 'rxjs/operators'
 
+/**
+ * @category View
+ */
 export class ProfilesBadgeView {
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly class =
         'fas fa-cogs rounded fv-pointer py-2 px-1 fv-hover-bg-background-alt h-100'
+
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly onclick: () => void
 
     constructor(sessionInfo: Accounts.SessionDetails) {

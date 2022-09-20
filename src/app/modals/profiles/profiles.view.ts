@@ -7,9 +7,18 @@ import { ProfilesState } from './profiles.state'
 import { Accounts } from '@youwol/http-clients'
 import { ProfilesDropDownView } from './profiles-dropdown.view'
 
+/**
+ * @category View
+ */
 export class ProfilesView {
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly class =
         'vw-25 vh-25 border fv-border-primary rounded mx-auto my-auto p-4 fv-bg-background-alt'
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly children: VirtualDOM[]
 
     constructor({
@@ -70,21 +79,45 @@ export class ProfilesView {
     }
 }
 
+/**
+ * @category View
+ */
 export class ReadonlyWarningView implements VirtualDOM {
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly class = 'fv-text-focus my-2 text-center w-100'
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly style = {
         fontWeight: 'bold',
     }
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly innerText =
         '⚠️The default profile is read-only: it can not be edited'
 }
 
+/**
+ * @category View
+ */
 export class LoadingTypescriptView implements VirtualDOM {
+    /**
+     * @group Immutable DOM Constants
+     */
     class = attr$(ProfilesState.getFvCodeMirror$(), () => 'd-none')
+    /**
+     * @group Immutable DOM Constants
+     */
     style = {
         maxWidth: '500px',
         maxHeight: '500px',
     }
+    /**
+     * @group Immutable DOM Constants
+     */
     connectedCallback = (elemHTML: HTMLDivElement) => {
         const loadingScreen = new LoadingScreenView({
             container: elemHTML,
@@ -100,13 +133,31 @@ export class LoadingTypescriptView implements VirtualDOM {
     }
 }
 
+/**
+ * @category View
+ */
 export class EditProfileButton implements VirtualDOM {
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly tag = 'button'
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly type = 'button'
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly class =
         'btn btn-outline-secondary mx-3 d-flex align-items-center fv-border-secondary fv-text-primary'
     public readonly children: VirtualDOM[]
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly onclick: (ev: MouseEvent) => void
+    /**
+     * @group Immutable DOM Constants
+     */
     constructor(state: ProfilesState) {
         this.children = [
             {

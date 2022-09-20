@@ -7,7 +7,7 @@ import { CorporationBadgeView } from './badges/corporation.view'
 /**
  * Regular top banner of the application (no application running)
  *
- * @category View.TopBanner
+ * @category View
  */
 export class RegularBannerView implements VirtualDOM {
     /**
@@ -18,7 +18,9 @@ export class RegularBannerView implements VirtualDOM {
      * @group Immutable DOM Constants
      */
     public readonly children: VirtualDOM[]
-
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly style = {
         height: '40px',
     }

@@ -3,8 +3,17 @@ import { Accounts } from '@youwol/http-clients'
 import { VisitorFormView, RegisteredFormView } from '../../modals/user'
 import { popupModal } from '../../modals'
 
+/**
+ * @category View
+ */
 export class RegisteredBadgeView implements VirtualDOM {
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly class = 'rounded text-center'
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly style = {
         width: '25px',
         height: '25px',
@@ -13,16 +22,29 @@ export class RegisteredBadgeView implements VirtualDOM {
         fontWeight: 'bold',
         lineHeight: '1.6em',
     }
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly innerText: string
+
     constructor(userInfos: Accounts.UserInfos) {
         this.innerText = userInfos.name[0]
     }
 }
 
+/**
+ * @category View
+ */
 export class VisitorBadgeView implements VirtualDOM {
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly style = {
         transform: 'scale(1.3)',
     }
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly class: string = 'fas fa-user px-1'
 }
 

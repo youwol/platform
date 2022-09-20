@@ -6,8 +6,17 @@ import CodeMirror from 'codemirror'
 
 export type CodeEditorModule = typeof import('@youwol/fv-code-mirror-editors')
 
+/**
+ * @category View
+ */
 export class CodeEditorView implements VirtualDOM {
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly class: string = 'w-100 h-100 d-flex flex-column'
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly children: VirtualDOM[]
 
     constructor({

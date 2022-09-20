@@ -5,7 +5,7 @@ import { RegularBannerView } from './regular-banner.view'
 
 /**
  *
- * @category View.TopBanner
+ * @category View
  */
 export class PlatformBannerView implements VirtualDOM {
     /**

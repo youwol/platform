@@ -40,20 +40,53 @@ export type SettingsContent = Record<
 
 export type Profile = { id: string; name: string } & SettingsContent
 
+/**
+ * @category State
+ */
 export class ProfilesState {
+    /**
+     * @group Observables
+     */
     public readonly profiles$: BehaviorSubject<{ id: string; name: string }[]>
 
+    /**
+     * @group Observables
+     */
     public readonly selectedProfile$ = new ReplaySubject<Profile>(1)
 
+    /**
+     * @group Observables
+     */
     public readonly editionMode$ = new BehaviorSubject<boolean>(false)
 
+    /**
+     * @group Observables
+     */
     static bootstrap$: Observable<Window>
 
+    /**
+     * @group Observables
+     */
     static cdnEvents$ = new ReplaySubject<CdnEvent>()
 
+    /**
+     * @group Observables
+     */
     static fvCodeMirror$: Observable<CodeEditorModule>
 
+    /**
+     *
+     * @group HTTP
+     * @private
+     */
     private cdnSessionStorage = new CdnSessionsStorage.Client()
+
+    /**
+     *
+     * @group Lazy Dependencies
+     * @private
+     */
+    static CodeEditorModule: CodeEditorModule
 
     constructor(params: {
         profilesInfo: {
@@ -197,8 +230,6 @@ export class ProfilesState {
         ).pipe(shareReplay({ bufferSize: 1, refCount: true }))
         return ProfilesState.getBootstrap$()
     }
-
-    static CodeEditorModule: CodeEditorModule
 
     static getFvCodeMirror$(): Observable<CodeEditorModule> {
         if (ProfilesState.fvCodeMirror$) {

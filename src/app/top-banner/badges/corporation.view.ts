@@ -3,9 +3,21 @@ import { VirtualDOM } from '@youwol/flux-view'
 import * as OsCore from '@youwol/os-core'
 import { CorporationView } from '../../modals/corporation'
 
+/**
+ * @category View
+ */
 export class CorporationBadgeView {
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly class: string
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly children: VirtualDOM[] = []
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly onclick: () => void
 
     constructor({

@@ -6,14 +6,23 @@ import { ApplicationsLaunchPadView } from '../../modals/launchpad'
 
 /**
  *
- * @category View.TopBanner
+ * @category View
  */
 export class LaunchpadBadgeView implements VirtualDOM {
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly class =
         'd-flex my-auto  p-1 rounded fv-hover-bg-background-alt fv-pointer top-banner-menu-view'
 
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly children: VirtualDOM[]
 
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly onclick: (ev: MouseEvent) => void
 
     constructor({ state }: { state: OsCore.PlatformState }) {

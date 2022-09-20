@@ -2,8 +2,17 @@ import { attr$, children$, VirtualDOM } from '@youwol/flux-view'
 import { ProfilesState } from './profiles.state'
 import { BehaviorSubject } from 'rxjs'
 
+/**
+ * @category View
+ */
 export class ProfilesDropDownView implements VirtualDOM {
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly class = 'dropdown'
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly children: VirtualDOM[]
 
     constructor({ state }: { state: ProfilesState }) {
@@ -45,10 +54,23 @@ export class ProfilesDropDownView implements VirtualDOM {
 const baseClassesItemView =
     'dropdown-item fv-pointer fv-hover-bg-background-alt fv-hover-text-primary'
 
+/**
+ * @category View
+ */
 export class ProfileItemView {
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly class = `${baseClassesItemView} d-flex align-items-center justify-content-between`
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly children: VirtualDOM[]
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly onclick: (ev: MouseEvent) => void
+
     constructor({
         profile,
         state,
@@ -70,9 +92,21 @@ export class ProfileItemView {
     }
 }
 
+/**
+ * @category View
+ */
 export class NewProfileItemView {
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly class = `${baseClassesItemView}`
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly children: VirtualDOM[]
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly onclick: (ev: MouseEvent) => void
 
     constructor({ state }: { state: ProfilesState }) {

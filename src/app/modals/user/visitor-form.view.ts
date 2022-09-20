@@ -116,8 +116,17 @@ export class VisitorFormView extends BaseUserFormView {
     }
 }
 
+/**
+ * @category View
+ */
 class RegisterForm implements VirtualDOM {
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly class = 'w-100'
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly children: VirtualDOM[]
 
     constructor(state: VisitorFormState) {
@@ -145,9 +154,18 @@ class RegisterForm implements VirtualDOM {
     }
 }
 
+/**
+ * @category View
+ */
 class EmailInputRow implements VirtualDOM {
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly class =
         'w-100 d-flex align-items-center justify-content-around'
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly children: VirtualDOM[]
 
     constructor(state: VisitorFormState) {
@@ -165,17 +183,35 @@ class EmailInputRow implements VirtualDOM {
     }
 }
 
+/**
+ * @category View
+ */
 class RegisterButton implements VirtualDOM {
     static classButtonEnabled =
         'fv-pointer  fv-bg-secondary fv-hover-xx-lighter'
     static classButtonDisabled = 'fv-bg-disabled'
 
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly class: Stream$<string, string>
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly style = {
         width: 'fit-content',
     }
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly enable
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly onclick
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly children: VirtualDOM[]
 
     constructor(state: VisitorFormState) {

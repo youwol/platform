@@ -7,11 +7,6 @@ export class ProfilesDropDownView implements VirtualDOM {
     public readonly children: VirtualDOM[]
 
     constructor({ state }: { state: ProfilesState }) {
-        const value$ = new BehaviorSubject('')
-        // If not use and a direct call 'newProfile' is done in 'keydown' => the dropdown does not close
-        // There is certainly better to do
-        let plusBtn: HTMLDivElement
-
         this.children = [
             {
                 tag: 'button',
@@ -35,46 +30,78 @@ export class ProfilesDropDownView implements VirtualDOM {
                 },
                 children: children$(state.profiles$, (profiles) => {
                     return [
-                        ...profiles.map((profile) => ({
-                            class: 'dropdown-item fv-pointer fv-hover-bg-background-alt fv-hover-text-primary',
-                            innerText: profile.name,
-                            onclick: () => state.selectProfile(profile.id),
-                        })),
-                        {
-                            class: 'dropdown-item fv-pointer fv-hover-bg-background-alt fv-hover-text-primary',
-                            children: [
-                                {
-                                    tag: 'input',
-                                    type: 'text',
-                                    value: value$.getValue(),
-                                    placeholder: "enter profile's name",
-                                    oninput: (ev) => {
-                                        value$.next(ev.target.value)
-                                    },
-                                    onkeydown: (ev: KeyboardEvent) => {
-                                        ev.key == 'Enter' &&
-                                            plusBtn.dispatchEvent(
-                                                new MouseEvent('click', {
-                                                    bubbles: true,
-                                                }),
-                                            )
-                                    },
-                                },
-                                {
-                                    class: 'fas fa-plus mx-2',
-                                    onclick: () => {
-                                        state.newProfile(value$.value)
-                                    },
-                                    connectedCallback: (
-                                        elem: HTMLDivElement,
-                                    ) => {
-                                        plusBtn = elem
-                                    },
-                                },
-                            ],
-                        },
+                        ...profiles.map(
+                            (profile) =>
+                                new ProfileItemView({ profile, state }),
+                        ),
+                        new NewProfileItemView({ state }),
                     ]
                 }),
+            },
+        ]
+    }
+}
+
+const baseClassesItemView =
+    'dropdown-item fv-pointer fv-hover-bg-background-alt fv-hover-text-primary'
+
+export class ProfileItemView {
+    public readonly class = `${baseClassesItemView} d-flex align-items-center justify-content-between`
+    public readonly children: VirtualDOM[]
+    public readonly onclick: (ev: MouseEvent) => void
+    constructor({
+        profile,
+        state,
+    }: {
+        profile: { id: string; name: string }
+        state: ProfilesState
+    }) {
+        this.children = [
+            {
+                innerText: profile.name,
+            },
+        ]
+        this.onclick = () => state.selectProfile(profile.id)
+    }
+}
+
+export class NewProfileItemView {
+    public readonly class = `${baseClassesItemView}`
+    public readonly children: VirtualDOM[]
+    public readonly onclick: (ev: MouseEvent) => void
+
+    constructor({ state }: { state: ProfilesState }) {
+        const value$ = new BehaviorSubject('')
+        // If not use and a direct call 'newProfile' is done in 'keydown' => the dropdown does not close
+        // There is certainly better to do
+        let plusBtn: HTMLDivElement
+
+        this.children = [
+            {
+                tag: 'input',
+                type: 'text',
+                value: value$.getValue(),
+                placeholder: "enter profile's name",
+                oninput: (ev) => {
+                    value$.next(ev.target.value)
+                },
+                onkeydown: (ev: KeyboardEvent) => {
+                    ev.key == 'Enter' &&
+                        plusBtn.dispatchEvent(
+                            new MouseEvent('click', {
+                                bubbles: true,
+                            }),
+                        )
+                },
+            },
+            {
+                class: 'fas fa-plus mx-2',
+                onclick: () => {
+                    state.newProfile(value$.value)
+                },
+                connectedCallback: (elem: HTMLDivElement) => {
+                    plusBtn = elem
+                },
             },
         ]
     }

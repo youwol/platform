@@ -1,6 +1,6 @@
 import { BehaviorSubject, from, Observable, of, ReplaySubject } from 'rxjs'
 import { CdnEvent, install } from '@youwol/cdn-client'
-import { CodeEditorModule } from './common'
+import { CodeEditorModule } from './code-editor.view'
 import { map, shareReplay, tap } from 'rxjs/operators'
 import { setup } from '../../../auto-generated'
 import { PreferencesFacade } from '@youwol/os-core'

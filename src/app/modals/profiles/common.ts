@@ -14,5 +14,3 @@ export class UserSettingsTabBase extends DockableTabs.Tab {
         super({ ...params, id: params.id })
     }
 }
-
-export type CodeEditorModule = typeof import('@youwol/fv-code-mirror-editors')

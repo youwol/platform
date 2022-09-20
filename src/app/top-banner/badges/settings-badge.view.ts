@@ -5,7 +5,7 @@ import {
     HTTPError,
     raiseHTTPErrors,
 } from '@youwol/http-clients'
-import { ProfilesView } from '../../modals/profiles/profiles.view'
+import { ProfilesView } from '../../modals/profiles'
 import { setup } from '../../../auto-generated'
 import { child$, VirtualDOM } from '@youwol/flux-view'
 import { Observable } from 'rxjs'

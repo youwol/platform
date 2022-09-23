@@ -2,7 +2,7 @@ import shutil
 from pathlib import Path
 
 from youwol.pipelines.pipeline_typescript_weback_npm import Template, PackageType, Dependencies, \
-    RunTimeDeps, generate_template, DevServer
+    RunTimeDeps, generate_template, DevServer, Bundles, MainModule
 from youwol_utils import parse_json
 
 folder_path = Path(__file__).parent
@@ -19,18 +19,17 @@ template = Template(
     author=pkg_json['author'],
     dependencies=Dependencies(
         runTime=RunTimeDeps(
-            load={
+            externals={
                 '@youwol/fv-tabs': '^0.2.1',
-                '@youwol/os-core': '^0.1.1',
+                '@youwol/os-core': '^0.1.2',
                 '@youwol/fv-group': '^0.2.1',
                 '@youwol/flux-view': '^1.0.3',
-                '@youwol/http-clients': '^1.0.2',
+                '@youwol/http-clients': '^1.0.3',
                 'rxjs': '^6.5.5',
                 'uuid': '^8.3.2',
-                '@youwol/cdn-client': '^1.0.2'
-            },
-            differed={
-                '@youwol/fv-code-mirror-editors': '^0.2.0'
+                '@youwol/cdn-client': '^1.0.2',
+                'codemirror': '^5.52.0',
+                '@youwol/fv-code-mirror-editors': '^0.2.1'
             }
         ),
         devTime={
@@ -38,6 +37,13 @@ template = Template(
             "@types/lz-string": "^1.3.34",
             "lz-string": "^1.4.4"
         }
+    ),
+    bundles=Bundles(
+        mainModule=MainModule(
+            entryFile='./app/index.html',
+            loadDependencies=['@youwol/fv-tabs', '@youwol/os-core', '@youwol/fv-group', '@youwol/flux-view',
+                              '@youwol/http-clients', 'rxjs', 'uuid', '@youwol/cdn-client']
+        )
     ),
     userGuide=True,
     devServer=DevServer(

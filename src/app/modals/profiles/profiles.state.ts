@@ -10,7 +10,7 @@ import { TsCodeEditorModule } from '@youwol/fv-code-mirror-editors'
 
 const cmInstall = {
     modules: [
-        `@youwol/fv-code-mirror-editors#${setup.runTimeDependencies.differed['@youwol/fv-code-mirror-editors']}`,
+        `@youwol/fv-code-mirror-editors#${setup.runTimeDependencies.externals['@youwol/fv-code-mirror-editors']}`,
     ],
     scripts: [
         'codemirror#5.52.0~mode/javascript.min.js',

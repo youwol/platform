@@ -1,4 +1,11 @@
-import { attr$, child$, render, Stream$, VirtualDOM } from '@youwol/flux-view'
+import {
+    attr$,
+    child$,
+    children$,
+    render,
+    Stream$,
+    VirtualDOM,
+} from '@youwol/flux-view'
 import * as OsCore from '@youwol/os-core'
 import { RunningApp } from '@youwol/os-core'
 
@@ -6,6 +13,12 @@ import { RunningAppView } from './running-apps'
 import { PlatformBannerView } from './top-banner'
 
 require('./style.css')
+
+const searchParams = new URLSearchParams(window.location.search)
+
+if (searchParams.has('mode') && searchParams.get('mode') == 'safe') {
+    OsCore.PlatformState.setSafeMode()
+}
 
 /**
  * @category Getting Started
@@ -99,7 +112,7 @@ export class DesktopWidgetsView {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly children: VirtualDOM[]
+    public readonly children //: VirtualDOM[]
     /**
      * @group States
      */
@@ -110,19 +123,19 @@ export class DesktopWidgetsView {
 
         this.class = attr$(
             this.state.runningApplication$,
-            (runningApp): string => (runningApp ? 'd-none' : 'd-flex'),
+            (runningApp): string =>
+                runningApp ? 'd-none' : 'd-flex flex-column',
             {
                 wrapper: (d) => `w-100 h-100 p-2 ${d}`,
             },
         )
-        this.children = [
-            child$(
-                OsCore.PreferencesFacade.getPreferences$(),
-                (preferences) => {
-                    return preferences.desktop['widgets'] || {}
-                },
-            ),
-        ]
+        this.children = children$(
+            OsCore.PreferencesFacade.getPreferences$(),
+            (preferences) =>
+                OsCore.PreferencesExtractor.getDesktopWidgets(preferences, {
+                    platformState: this.state,
+                }),
+        )
     }
 }
 

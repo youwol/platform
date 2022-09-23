@@ -1,6 +1,0 @@
-export * from './all-settings.view'
-export * from './common'
-export * from './installers-tab.view'
-export * from './preferences-tab.view'
-export * from './profile-tab.view'
-export * from './settings-tabs'

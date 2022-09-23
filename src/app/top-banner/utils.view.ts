@@ -1,25 +1,6 @@
-/**
- * @category View
- */
-export class TitleMenuView {
-    /**
-     * @group Immutable DOM Constants
-     */
-    public readonly class =
-        'justify-content-center fv-text-focus fv-border-bottom-focus d-flex align-items-center w-100'
-    /**
-     * @group Immutable DOM Constants
-     */
-    public readonly style = {
-        fontSize: 'x-large',
-        fontWeight: 'bolder',
-    }
-    /**
-     * @group Immutable DOM Constants
-     */
-    public readonly innerText: string
+import { AssetsGateway, raiseHTTPErrors } from '@youwol/http-clients'
+import { shareReplay } from 'rxjs/operators'
 
-    constructor({ title }: { title: string }) {
-        this.innerText = title
-    }
-}
+export const sessionDetails$ = new AssetsGateway.Client().accounts
+    .getSessionDetails$()
+    .pipe(raiseHTTPErrors(), shareReplay({ bufferSize: 1, refCount: true }))

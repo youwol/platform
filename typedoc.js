@@ -8,8 +8,6 @@ module.exports = {
         'Getting Started',
         'State',
         'View',
-        'View.Tab',
-        'View.TopBanner',
         'Configuration',
         'HTTP',
         '*',

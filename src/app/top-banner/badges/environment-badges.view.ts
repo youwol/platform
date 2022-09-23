@@ -1,18 +1,17 @@
 import { VirtualDOM } from '@youwol/flux-view'
-import { UserSettingsTabsView } from './settings-tabs'
 import { Accounts } from '@youwol/http-clients'
+import { UserBadgeView } from './user-badge.view'
+import { ProfilesBadgeView } from './profiles-badge.view'
 
 /**
+ *
  * @category View
  */
-export class UserAllSettingsView implements VirtualDOM {
+export class EnvironmentBadgesView implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly style = {
-        width: '75vw',
-        height: '75vh',
-    }
+    public readonly class = 'my-auto d-flex align-items-center'
     /**
      * @group Immutable DOM Constants
      */
@@ -20,10 +19,8 @@ export class UserAllSettingsView implements VirtualDOM {
 
     constructor({ sessionInfo }: { sessionInfo: Accounts.SessionDetails }) {
         this.children = [
-            {
-                class: 'position-relative h-100 d-flex flex-column',
-                children: [new UserSettingsTabsView({ sessionInfo })],
-            },
+            new UserBadgeView(sessionInfo),
+            new ProfilesBadgeView(sessionInfo),
         ]
     }
 }

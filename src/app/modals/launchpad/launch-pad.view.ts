@@ -1,7 +1,8 @@
 import { attr$, child$, children$, VirtualDOM } from '@youwol/flux-view'
 import * as OsCore from '@youwol/os-core'
-import { BehaviorSubject, combineLatest, Observable } from 'rxjs'
 import { map } from 'rxjs/operators'
+import { LaunchpadBadgeView } from '../../top-banner/badges'
+import { Modal } from '@youwol/fv-group'
 
 /**
  * @category View
@@ -10,7 +11,8 @@ export class ApplicationsLaunchPadView implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly class = 'd-flex flex-wrap justify-content-center'
+    public readonly class =
+        'd-flex flex-column border rounded fv-bg-background-alt'
     /**
      * @group Immutable DOM Constants
      */
@@ -23,22 +25,56 @@ export class ApplicationsLaunchPadView implements VirtualDOM {
      */
     public readonly state: OsCore.PlatformState
     /**
+     * @group States
+     */
+    public readonly modalState: Modal.State
+    /**
      * @group Immutable DOM Constants
      */
     public readonly children
 
-    constructor(params: { state: OsCore.PlatformState }) {
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly onclick = (ev: MouseEvent) => ev.stopPropagation()
+
+    constructor(params: {
+        state: OsCore.PlatformState
+        modalState: Modal.State
+    }) {
         Object.assign(this, params)
         this.children = [
             {
-                class: 'h-100 w-100 d-flex',
+                class: 'fv-bg-background w-100 d-flex align-items-center',
+                children: [
+                    new LaunchpadBadgeView({ state: this.state }),
+                    {
+                        class: 'mx-1',
+                        innerText: 'Application Launcher',
+                    },
+                ],
+            },
+            {
+                class: 'flex-grow-1 w-100 d-flex p-3',
+                style: {
+                    minHeight: '0px',
+                },
                 children: [
                     child$(this.state.runningApplications$, (apps) =>
                         apps.length > 0
-                            ? new RunningAppsView({ state: this.state })
+                            ? new RunningAppsView({
+                                  state: this.state,
+                                  modalState: this.modalState,
+                              })
                             : {},
                     ),
-                    new NewAppsView({ state: this.state }),
+                    child$(this.state.runningApplications$, (apps) =>
+                        apps.length > 0 ? { class: 'mx-3 border-right' } : {},
+                    ),
+                    new NewAppsView({
+                        state: this.state,
+                        modalState: this.modalState,
+                    }),
                 ],
             },
         ]
@@ -52,7 +88,11 @@ class NewAppsView implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly class = 'w-100 flex-grow-1 overflow-auto'
+    public readonly class = 'w-100 flex-grow-1 d-flex flex-column '
+
+    public readonly style = {
+        minHeight: '0px',
+    }
     /**
      * @group Immutable DOM Constants
      */
@@ -61,8 +101,15 @@ class NewAppsView implements VirtualDOM {
      * @group State
      */
     public readonly state: OsCore.PlatformState
+    /**
+     * @group State
+     */
+    public readonly modalState: Modal.State
 
-    constructor(params: { state: OsCore.PlatformState }) {
+    constructor(params: {
+        state: OsCore.PlatformState
+        modalState: Modal.State
+    }) {
         Object.assign(this, params)
         const spinner = child$(
             OsCore.Installer.getApplicationsInfo$(),
@@ -78,37 +125,42 @@ class NewAppsView implements VirtualDOM {
 
         this.children = [
             {
-                class: 'justify-content-center fv-text-focus d-flex align-items-center',
+                class: 'fv-text-primary d-flex align-items-center',
                 children: [
                     {
                         innerText: 'Applications',
                     },
                     spinner,
                 ],
-                style: {
-                    fontSize: 'x-large',
-                    fontWeight: 'bolder',
-                },
             },
             {
-                class: 'd-flex flex-wrap justify-content-center',
-                children: children$(
-                    OsCore.Installer.getApplicationsInfo$().pipe(
-                        map((apps) => {
-                            return apps.filter(
-                                (app) => app.execution.standalone,
-                            )
-                        }),
-                    ),
-                    (apps) => {
-                        return apps.map((app) => {
-                            return new NewAppView({
-                                state: this.state,
-                                app,
-                            })
-                        })
+                class: 'flex-grow-1 overflow-auto',
+                style: {
+                    minHeight: '0px',
+                },
+                children: [
+                    {
+                        class: 'd-flex flex-wrap justify-content-center',
+                        children: children$(
+                            OsCore.Installer.getApplicationsInfo$().pipe(
+                                map((apps) => {
+                                    return apps.filter(
+                                        (app) => app.execution.standalone,
+                                    )
+                                }),
+                            ),
+                            (apps) => {
+                                return apps.map((app) => {
+                                    return new NewAppView({
+                                        state: this.state,
+                                        modalState: this.modalState,
+                                        app,
+                                    })
+                                })
+                            },
+                        ),
                     },
-                ),
+                ],
             },
         ]
     }
@@ -122,12 +174,16 @@ class NewAppView implements VirtualDOM {
      * @group Immutable DOM Constants
      */
     public readonly class =
-        'border rounded mx-3 my-2 fv-hover-xx-lighter fv-pointer fv-text-primary fv-hover-bg-background-alt'
+        'm-1 fv-hover-xx-lighter fv-pointer fv-text-primary fv-hover-bg-background-alt p-2 rounded'
 
     /**
      * @group States
      */
     public readonly state: OsCore.PlatformState
+    /**
+     * @group States
+     */
+    public readonly modalState: Modal.State
     /**
      * @group Immutable Constants
      */
@@ -136,8 +192,8 @@ class NewAppView implements VirtualDOM {
      * @group Immutable DOM Constants
      */
     public readonly style = {
-        width: '100px',
-        height: '100px',
+        width: '135px',
+        height: '135px',
         position: 'relative',
     }
     /**
@@ -148,7 +204,8 @@ class NewAppView implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly onclick = () => {
+    public readonly onclick = (ev: MouseEvent) => {
+        this.modalState.ok$.next(ev)
         this.state
             .createInstance$({
                 cdnPackage: this.app.cdnPackage,
@@ -159,24 +216,26 @@ class NewAppView implements VirtualDOM {
     }
     constructor(params: {
         state: OsCore.PlatformState
+        modalState: Modal.State
         app: OsCore.ApplicationInfo
     }) {
         Object.assign(this, params)
         this.children = [
             {
-                class: 'd-flex w-100 h-100 justify-content-center mx-auto flex-column h-100 w-100 text-center',
+                class: 'd-flex justify-content-center mx-auto flex-column text-center border rounded',
+                style: {
+                    width: '100px',
+                    height: '100px',
+                    position: 'relative',
+                },
                 children: [
                     {
                         class: 'mx-auto d-flex flex-column justify-content-center',
-                        style: {
-                            width: '40px',
-                            height: '40px',
-                        },
                         children: [this.app.graphics.appIcon],
                     },
-                    { class: 'mt-1', innerText: this.app.displayName },
                 ],
             },
+            { class: 'mt-1 text-center', innerText: this.app.displayName },
         ]
     }
 }
@@ -188,7 +247,7 @@ class RunningAppsView implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly class = 'w-25 overflow-auto border-right'
+    public readonly class = 'w-25 overflow-auto h-100 d-flex flex-column'
     /**
      * @group Immutable DOM Constants
      */
@@ -197,21 +256,25 @@ class RunningAppsView implements VirtualDOM {
      * @group States
      */
     public readonly state: OsCore.PlatformState
+    /**
+     * @group States
+     */
+    public readonly modalState: Modal.State
 
-    constructor(params: { state: OsCore.PlatformState }) {
+    constructor(params: {
+        state: OsCore.PlatformState
+        modalState: Modal.State
+    }) {
         Object.assign(this, params)
-        const expanded$ = new BehaviorSubject(false)
         this.children = [
             {
-                class: 'text-center fv-text-focus',
-                innerText: 'Running',
-                style: {
-                    fontSize: 'x-large',
-                    fontWeight: 'bolder',
-                },
+                innerText: 'Running Applications',
             },
             {
-                class: 'd-flex flex-column justify-content-center',
+                class: 'd-flex flex-column flex-grow-1',
+                style: {
+                    minHeight: '0px',
+                },
                 children: children$(
                     this.state.runningApplications$,
                     (runningApps) => {
@@ -231,8 +294,8 @@ class RunningAppsView implements VirtualDOM {
                                             app.cdnPackage ==
                                             executable.cdnPackage,
                                     ),
-                                    expanded$,
                                     state: this.state,
+                                    modalState: this.modalState,
                                 }),
                         )
                     },
@@ -249,7 +312,7 @@ export class RunningAppView implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly class = `d-flex flex-column align-items-center rounded fv-hover-bg-background-alt mx-auto p-1 fv-pointer`
+    public readonly class = `rounded d-flex flex-column align-items-center rounded w-100 p-2 my-1 fv-hover-xx-lighter fv-bg-background-alt`
     /**
      * @group Immutable DOM Constants
      */
@@ -267,9 +330,10 @@ export class RunningAppView implements VirtualDOM {
      */
     public readonly state: OsCore.PlatformState
     /**
-     * @group Observables
+     * @group States
      */
-    private readonly hovered$ = new BehaviorSubject(false)
+    public readonly modalState: Modal.State
+
     /**
      * @group Immutable DOM Constants
      */
@@ -287,108 +351,51 @@ export class RunningAppView implements VirtualDOM {
 
     constructor(params: {
         state: OsCore.PlatformState
+        modalState: Modal.State
         executable: OsCore.Executable
         instances: OsCore.RunningApp[]
-        expanded$: Observable<boolean>
     }) {
         Object.assign(this, params)
         this.children = [
-            this.headerView(),
-            child$(this.hovered$, (hoverer) => {
-                return hoverer
-                    ? new InstancesListView({
-                          state: this.state,
-                          instances: this.instances,
-                          executable: this.executable,
-                      })
-                    : {}
-            }),
+            {
+                class: 'fv-bg-background w-100 rounded px-1',
+                children: [
+                    this.headerView(),
+                    {
+                        class: 'fv-border-bottom-primary w-100',
+                    },
+                    new InstancesListView({
+                        state: this.state,
+                        modalState: this.modalState,
+                        instances: this.instances,
+                        executable: this.executable,
+                    }),
+                ],
+            },
         ]
-        this.onmouseenter = () => this.hovered$.next(true)
-        this.onmouseleave = () => this.hovered$.next(false)
     }
 
     headerView() {
         return {
-            class: `fv-text-primary d-flex align-items-center position-relative`,
+            class: `w-100 fv-text-primary d-flex align-items-center justify-content-between position-relative`,
             children: [
                 child$(this.executable.appMetadata$, (d) => ({
                     class: 'p-2',
                     children: [d.graphics.appIcon],
                 })),
-                child$(
-                    combineLatest([
-                        this.hovered$,
-                        this.state.runningApplication$,
-                    ]),
-                    ([hovered, runningApp]) => {
-                        return hovered
-                            ? {
-                                  tag: 'span',
-                                  style: {
-                                      fontWeight: 'bolder',
-                                  },
-                                  class: 'mx-2 fv-text-success',
-                                  innerText: attr$(
-                                      this.executable.appMetadata$,
-                                      (d) => d.displayName,
-                                  ),
-                              }
-                            : new RunningAppBullet({
-                                  runningApp,
-                                  instances: this.instances,
-                              })
+                {
+                    tag: 'span',
+                    style: {
+                        fontWeight: 'bolder',
                     },
-                ),
+                    class: 'mx-2',
+                    innerText: attr$(
+                        this.executable.appMetadata$,
+                        (d) => d.displayName,
+                    ),
+                },
             ],
         }
-    }
-}
-
-/**
- * @category View
- */
-class RunningAppBullet implements VirtualDOM {
-    /**
-     * @group Immutable DOM Constants
-     */
-    public readonly class =
-        'w-100 h-100 position-absolute d-flex justify-content-around'
-    /**
-     * @group Immutable DOM Constants
-     */
-    public readonly style = {
-        top: '0px',
-        left: '0px',
-    }
-    /**
-     * @group Immutable DOM Constants
-     */
-    public readonly children: VirtualDOM[]
-    /**
-     * @group Immutable Constants
-     */
-    public readonly runningApp: OsCore.RunningApp
-    /**
-     * @group Immutable Constants
-     */
-    public readonly instances: OsCore.RunningApp[]
-
-    constructor(params: { runningApp; instances }) {
-        Object.assign(this, params)
-        this.children = this.instances.map((app) => {
-            return {
-                class:
-                    this.runningApp &&
-                    this.runningApp.instanceId == app.instanceId
-                        ? 'fv-bg-secondary rounded border'
-                        : 'fv-bg-primary rounded border',
-                style: {
-                    width: '7px',
-                    height: '7px',
-                },
-            }
-        })
     }
 }
 
@@ -400,6 +407,12 @@ class InstancesListView implements VirtualDOM {
      * @group States
      */
     public readonly state: OsCore.PlatformState
+
+    /**
+     * @group States
+     */
+    public readonly modalState: Modal.State
+
     /**
      * @group Immutable DOM Constants
      */
@@ -424,6 +437,7 @@ class InstancesListView implements VirtualDOM {
 
     constructor(params: {
         state: OsCore.PlatformState
+        modalState: Modal.State
         executable: OsCore.Executable
         instances: OsCore.RunningApp[]
     }) {
@@ -442,15 +456,18 @@ class InstancesListView implements VirtualDOM {
                         (selected: OsCore.RunningApp): string => {
                             return selected &&
                                 selected.instanceId == app.instanceId
-                                ? 'fv-text-focus fv-border-focus'
-                                : 'fv-text-primary fv-border-primary'
+                                ? 'fv-text-focus '
+                                : 'fv-text-primary '
                         },
                         {
                             wrapper: (d) =>
-                                `${d} fv-pointer px-1 my-1 rounded fv-hover-bg-secondary fv-hover-text-primary d-flex align-items-center justify-content-between`,
+                                `${d} fv-pointer px-1 my-2 rounded fv-hover-bg-background-alt d-flex align-items-center justify-content-between`,
                         },
                     ),
-                    onclick: () => this.state.focus(app.instanceId),
+                    onclick: (ev) => {
+                        this.modalState.ok$.next(ev)
+                        this.state.focus(app.instanceId)
+                    },
                     children: [
                         {
                             class: 'px-1',

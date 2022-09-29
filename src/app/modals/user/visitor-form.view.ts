@@ -100,8 +100,8 @@ export class VisitorFormView extends BaseUserFormView {
      */
     public readonly children: VirtualDOM[]
 
-    constructor() {
-        super()
+    constructor(params: { class?: string } = {}) {
+        super({ class: params.class })
         const state = new VisitorFormState()
 
         this.children = [

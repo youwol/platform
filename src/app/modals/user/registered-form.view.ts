@@ -18,6 +18,8 @@ export class RegisteredFormView extends BaseUserFormView {
             manageIdentityView,
             separatorView,
             otherProfilesView,
+            separatorView,
+            logoutView,
         ]
     }
 }
@@ -167,4 +169,17 @@ const otherProfilesView = {
         },
         logAsVisitorView,
     ],
+}
+
+const logoutView = {
+    class: 'd-flex align-items-center justify-content-center fv-pointer fv-hover-bg-background-alt rounded',
+    children: [
+        {
+            innerText: 'logout',
+        },
+        { class: 'fas fa-sign-out-alt mx-2' },
+    ],
+    onclick: () => {
+        redirectWith('logoutUrl')
+    },
 }

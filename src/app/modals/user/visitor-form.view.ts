@@ -100,18 +100,18 @@ export class VisitorFormView extends BaseUserFormView {
      */
     public readonly children: VirtualDOM[]
 
-    constructor() {
-        super()
+    constructor(params: { class?: string } = {}) {
+        super({ class: params.class })
         const state = new VisitorFormState()
 
         this.children = [
             headerView,
             inviteSigninView,
             separatorView,
-            inviteRegisteringView,
-            new RegisterForm(state),
+            inviteRegisteringView0,
             separatorView,
-            footerNoteView,
+            inviteRegisteringView1,
+            new RegisterForm(state),
         ]
     }
 }
@@ -290,29 +290,26 @@ const inviteSigninView = {
     },
 }
 
-const inviteRegisteringView = {
+const inviteRegisteringView0 = {
     class: 'mx-auto text-justify px-4',
     tag: 'p',
     style: {
         maxWidth: '500px',
     },
     innerHTML: `
-You are using YouWol as anonymous user, you can pretty much do anything...<br><br>
+You are using YouWol as anonymous user, and you can almost do anything.<br><br>
 
-<b>However</b>: your session and related data will be <b>deleted</b> after a period of 24 hours.<br> 
-
-You can register by providing your e-mail address below and follow email instructions.<br><br>
- Registering is free and minimal. <br><br>
-`,
+However, your session and related data will be deleted after a period of 24 hours.<br>`,
 }
 
-const footerNoteView = {
+const inviteRegisteringView1 = {
     class: 'mx-auto text-justify px-4',
     tag: 'p',
     style: {
         maxWidth: '500px',
     },
     innerHTML: `
-If you like the project, even if you are not planning to use it for now, registering will help us find funds with our investors 🤫.
+You can keep your session and related data by registering.
+Just provide your email address and follow the emailed instructions. It is free and minimal.<br><br>
 `,
 }

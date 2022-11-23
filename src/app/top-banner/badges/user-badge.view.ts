@@ -45,7 +45,7 @@ export class VisitorBadgeView implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly class: string = 'fas fa-user px-1'
+    public readonly class: string = 'fas fa-user-circle px-1'
 }
 
 /**

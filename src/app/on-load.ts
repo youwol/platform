@@ -10,7 +10,12 @@ import * as OsCore from '@youwol/os-core'
 import { RunningApp } from '@youwol/os-core'
 
 import { RunningAppView } from './running-apps'
-import { PlatformBannerView } from './top-banner'
+import { PlatformBannerView, sessionDetails$ } from './top-banner'
+import { popupModal } from './modals'
+import {
+    WelcomeVisitorState,
+    WelcomeVisitorView,
+} from './modals/welcome-visitor/welcome-visitor.view'
 
 require('./style.css')
 
@@ -66,6 +71,14 @@ export class PlatformView implements VirtualDOM {
                 ],
             },
         ]
+
+        sessionDetails$.subscribe((sessionInfo) => {
+            if (!sessionInfo.userInfo.temp) {
+                return
+            }
+            WelcomeVisitorState.isShowAgainMode() &&
+                popupModal(() => new WelcomeVisitorView())
+        })
     }
 }
 

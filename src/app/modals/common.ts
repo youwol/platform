@@ -4,13 +4,12 @@ import { take } from 'rxjs/operators'
 import { Modal } from '@youwol/fv-group'
 
 export function popupModal(
-    contentView: () => VirtualDOM,
+    contentView: (modalState: Modal.State) => VirtualDOM,
     sideEffect = (_htmlElement: HTMLDivElement, _state: Modal.State) => {
         /* noop*/
     },
 ) {
     const modalState = new Modal.State()
-
     const view = new Modal.View({
         state: modalState,
         contentView,

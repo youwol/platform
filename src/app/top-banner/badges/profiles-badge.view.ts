@@ -19,7 +19,7 @@ export class ProfilesBadgeView {
      * @group Immutable DOM Constants
      */
     public readonly class =
-        'fas fa-cogs rounded fv-pointer py-2 px-1 fv-hover-bg-background-alt h-100'
+        'fas fa-cog rounded fv-pointer py-2 px-1 fv-hover-bg-background-alt h-100'
 
     /**
      * @group Immutable DOM Constants

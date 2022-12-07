@@ -3,7 +3,6 @@
  *
  * @module Application
  */
-export * from './on-load'
 export * as RunningApp from './running-apps'
 export * as TopBanner from './top-banner'
 export * as Modal from './modals'

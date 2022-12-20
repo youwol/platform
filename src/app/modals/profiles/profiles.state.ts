@@ -48,6 +48,10 @@ export class ProfilesState {
     /**
      * @group Observables
      */
+    public readonly profileProcessing$ = new BehaviorSubject(false)
+    /**
+     * @group Observables
+     */
     public readonly profiles$: BehaviorSubject<{ id: string; name: string }[]>
 
     /**
@@ -116,7 +120,7 @@ export class ProfilesState {
         this.profiles$.next([...this.profiles$.value, { name, id: profileId }])
 
         this.syncProfileInfo(profileId)
-
+        this.profileProcessing$.next(true)
         this.cdnSessionStorage
             .postData$({
                 packageName: setup.name,
@@ -131,6 +135,7 @@ export class ProfilesState {
             .subscribe(() => {
                 this.selectProfile(profileId)
                 this.edit()
+                this.profileProcessing$.next(false)
             })
     }
 

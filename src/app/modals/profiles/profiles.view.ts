@@ -75,6 +75,21 @@ export class ProfilesView {
                     })
                 },
             ),
+            {
+                class: 'w-100 d-flex justify-content-center',
+                children: [
+                    {
+                        class: attr$(
+                            state.profileProcessing$,
+                            (isProcessing) => {
+                                return isProcessing
+                                    ? 'fas fa-spinner fa-spin p-1'
+                                    : ''
+                            },
+                        ),
+                    },
+                ],
+            },
         ]
     }
 }
@@ -155,6 +170,7 @@ export class EditProfileButton implements VirtualDOM {
      * @group Immutable DOM Constants
      */
     public readonly onclick: (ev: MouseEvent) => void
+
     /**
      * @group Immutable DOM Constants
      */

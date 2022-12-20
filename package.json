@@ -1,7 +1,7 @@
 {
     "name": "@youwol/platform",
     "description": "OS like frontend application of YouWol platform.",
-    "version": "0.1.4",
+    "version": "0.1.5-wip",
     "author": "greinisch@youwol.com",
     "homepage": "https://github.com/youwol/platform#README.md",
     "main": "dist/index.html",
@@ -44,7 +44,7 @@
         "@types/webpack": "^5.28.0",
         "del-cli": "^5.0.0",
         "@youwol/prettier-config": "^0.0.2",
-        "@youwol/eslint-config": "^0.0.2",
+        "@youwol/eslint-config": "^0.0.4",
         "@youwol/tsconfig": "^0.0.2",
         "prettier": "^2.7.1",
         "prettier-plugin-properties": "^0.2.0",

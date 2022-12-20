@@ -113,7 +113,6 @@ export class NewProfileItemView {
         const value$ = new BehaviorSubject('')
         // If not use and a direct call 'newProfile' is done in 'keydown' => the dropdown does not close
         // There is certainly better to do
-        let plusBtn: HTMLDivElement
 
         this.children = [
             {
@@ -125,21 +124,13 @@ export class NewProfileItemView {
                     value$.next(ev.target.value)
                 },
                 onkeydown: (ev: KeyboardEvent) => {
-                    ev.key == 'Enter' &&
-                        plusBtn.dispatchEvent(
-                            new MouseEvent('click', {
-                                bubbles: true,
-                            }),
-                        )
+                    ev.key == 'Enter' && state.newProfile(value$.value)
                 },
             },
             {
                 class: 'fas fa-plus mx-2',
                 onclick: () => {
                     state.newProfile(value$.value)
-                },
-                connectedCallback: (elem: HTMLDivElement) => {
-                    plusBtn = elem
                 },
             },
         ]

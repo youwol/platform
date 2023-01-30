@@ -2,6 +2,7 @@ import { attr$, VirtualDOM } from '@youwol/flux-view'
 import { VisitorFormView } from '../user'
 import { separatorView } from '../user/common'
 import { BehaviorSubject } from 'rxjs'
+import { Modal } from '@youwol/fv-group'
 
 /**
  * @category State
@@ -67,10 +68,10 @@ export class WelcomeVisitorView implements VirtualDOM {
      */
     public readonly children: VirtualDOM[]
 
-    constructor() {
+    constructor({ modalState }: { modalState: Modal.State }) {
         const state = new WelcomeVisitorState()
         this.children = [
-            new VisitorFormView({ class: '' }),
+            new VisitorFormView({ modalState, class: '' }),
             separatorView,
             new DoNotShowAgainView({ state }),
         ]

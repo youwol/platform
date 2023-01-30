@@ -8,6 +8,7 @@ import {
     HTTPError,
 } from '@youwol/http-clients'
 import { BaseUserFormView, separatorView, redirectWith } from './common'
+import { Modal } from '@youwol/fv-group'
 
 type Email = string
 
@@ -15,6 +16,11 @@ type Email = string
  * @category State
  */
 export class VisitorFormState {
+    /**
+     * @group States
+     */
+    public readonly modalState: Modal.State
+
     /**
      * @group Observables
      */
@@ -50,7 +56,8 @@ export class VisitorFormState {
      */
     public readonly pending$: Observable<boolean>
 
-    constructor() {
+    constructor(params: { modalState: Modal.State }) {
+        Object.assign(this, params)
         this._email$.subscribe(() => {
             this._httpError$.next()
         })
@@ -100,13 +107,13 @@ export class VisitorFormView extends BaseUserFormView {
      */
     public readonly children: VirtualDOM[]
 
-    constructor(params: { class?: string } = {}) {
+    constructor(params: { modalState: Modal.State; class?: string }) {
         super({ class: params.class })
-        const state = new VisitorFormState()
+        const state = new VisitorFormState({ modalState: params.modalState })
 
         this.children = [
             headerView,
-            inviteSigninView,
+            new InviteLoginView({ visitorFormState: state }),
             separatorView,
             inviteRegisteringView0,
             separatorView,
@@ -272,22 +279,69 @@ const headerView = {
     ],
 }
 
-const inviteSigninView = {
-    class: 'd-flex align-items-center mx-auto rounded border fv-pointer fv-bg-background-alt fv-hover-xx-lighter p-2',
-    style: {
+/**
+ * @category View
+ */
+export class InviteButtonView implements VirtualDOM {
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly class =
+        'd-flex align-items-center mx-auto rounded border fv-pointer fv-bg-background-alt fv-hover-xx-lighter p-2'
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly style = {
         width: 'fit-content',
-    },
-    children: [
-        {
-            innerText: 'I have an account',
-        },
-        {
-            class: 'fas fa-sign-in-alt fv-pointer p-1 rounded fv-hover-bg-background-alt',
-        },
-    ],
-    onclick: () => {
-        redirectWith('loginAsUserUrl')
-    },
+    }
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly children: VirtualDOM[]
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly onclick: () => void
+
+    constructor(params: { title: string; onclick: () => void }) {
+        Object.assign(this, params)
+        this.children = [
+            {
+                innerText: params.title,
+            },
+            {
+                class: 'fas fa-sign-in-alt fv-pointer p-1 rounded fv-hover-bg-background-alt',
+            },
+        ]
+        this.onclick = params.onclick
+    }
+}
+
+/**
+ * @category View
+ */
+export class InviteLoginView implements VirtualDOM {
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly class = 'd-flex justify-content-center'
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly children = []
+
+    constructor(params: { visitorFormState: VisitorFormState }) {
+        this.children = [
+            new InviteButtonView({
+                title: 'I have an account',
+                onclick: () => redirectWith('loginAsUserUrl'),
+            }),
+            new InviteButtonView({
+                title: 'Continue as visitor',
+                onclick: () => params.visitorFormState.modalState.ok$.next(),
+            }),
+        ]
+    }
 }
 
 const inviteRegisteringView0 = {

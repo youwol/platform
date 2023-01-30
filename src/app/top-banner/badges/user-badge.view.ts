@@ -79,9 +79,9 @@ export class UserBadgeView implements VirtualDOM {
         ]
 
         this.onclick = () =>
-            popupModal(() =>
+            popupModal((modalState) =>
                 this.sessionInfo.userInfo.temp
-                    ? new VisitorFormView()
+                    ? new VisitorFormView({ modalState })
                     : new RegisteredFormView(sessionInfo.userInfo),
             )
     }

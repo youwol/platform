@@ -1267,13 +1267,6 @@
     "@youwol/flux-view" "^1.0.3"
     rxjs "^6.5.5"
 
-"@youwol/http-clients@^1.0.3":
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/@youwol/http-clients/-/http-clients-1.0.4.tgz#0171f24724abd8f1224413e3c44fdf7b3f8c75f0"
-  integrity sha512-kbT0BwwIoz1bNt+EAJie11Qx+8jxx20aWStrWJzLYGioGpV+pwOd3qcbYXvX36qGeGIA5q3/WwZYzPLHEU1Neg==
-  dependencies:
-    rxjs "^6.5.5"
-
 "@youwol/http-clients@^2.0.1":
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/@youwol/http-clients/-/http-clients-2.0.3.tgz#204fcc4072133449ad1489c645339a1b83fa9dbf"

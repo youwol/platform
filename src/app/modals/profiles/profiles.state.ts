@@ -3,7 +3,8 @@ import { CdnEvent, install } from '@youwol/cdn-client'
 import { mergeMap, shareReplay, tap } from 'rxjs/operators'
 import { setup } from '../../../auto-generated'
 import { PreferencesFacade } from '@youwol/os-core'
-import { CdnSessionsStorage, raiseHTTPErrors } from '@youwol/http-clients'
+import { CdnSessionsStorage } from '@youwol/http-clients'
+import { raiseHTTPErrors } from '@youwol/http-primitives'
 import { v4 } from 'uuid'
 import * as OsCore from '@youwol/os-core'
 import { TsCodeEditorModule } from '@youwol/fv-code-mirror-editors'
@@ -38,7 +39,6 @@ export type SettingsContent = Record<
     { tsSrc: string; jsSrc: string }
 >
 
-export type toto = TsCodeEditorModule
 export type Profile = { id: string; name: string } & SettingsContent
 
 /**

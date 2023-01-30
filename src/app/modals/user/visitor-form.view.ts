@@ -1,12 +1,8 @@
 import { attr$, child$, Stream$, VirtualDOM } from '@youwol/flux-view'
 import { BehaviorSubject, merge, Observable, Subject } from 'rxjs'
 import { filter, map, mapTo, mergeMap } from 'rxjs/operators'
-import {
-    Accounts,
-    dispatchHTTPErrors,
-    Empty,
-    HTTPError,
-} from '@youwol/http-clients'
+import { Accounts } from '@youwol/http-clients'
+import { dispatchHTTPErrors, Empty, HTTPError } from '@youwol/http-primitives'
 import { BaseUserFormView, separatorView, redirectWith } from './common'
 import { Modal } from '@youwol/fv-group'
 

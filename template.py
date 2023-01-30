@@ -24,7 +24,7 @@ template = Template(
                 '@youwol/os-core': '^0.1.2',
                 '@youwol/fv-group': '^0.2.1',
                 '@youwol/flux-view': '^1.0.3',
-                '@youwol/http-clients': '^1.0.3',
+                '@youwol/http-clients':  '^2.0.1',
                 'rxjs': '^6.5.5',
                 'uuid': '^8.3.2',
                 '@youwol/cdn-client': '^1.0.2',

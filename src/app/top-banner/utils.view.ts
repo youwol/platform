@@ -1,4 +1,5 @@
-import { AssetsGateway, raiseHTTPErrors } from '@youwol/http-clients'
+import { AssetsGateway } from '@youwol/http-clients'
+import { raiseHTTPErrors } from '@youwol/http-primitives'
 import { shareReplay } from 'rxjs/operators'
 
 export const sessionDetails$ = new AssetsGateway.Client().accounts

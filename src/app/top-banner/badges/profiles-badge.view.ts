@@ -1,10 +1,6 @@
 import { popupModal } from '../../modals'
-import {
-    Accounts,
-    CdnSessionsStorage,
-    HTTPError,
-    raiseHTTPErrors,
-} from '@youwol/http-clients'
+import { Accounts, CdnSessionsStorage } from '@youwol/http-clients'
+import { HTTPError, raiseHTTPErrors } from '@youwol/http-primitives'
 import { ProfilesView } from '../../modals/profiles'
 import { setup } from '../../../auto-generated'
 import { child$, VirtualDOM } from '@youwol/flux-view'

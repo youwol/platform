@@ -65,6 +65,9 @@ export class PlatformView implements VirtualDOM {
             }),
             {
                 class: 'd-flex align-items-center flex-grow-1 w-100',
+                style: {
+                    minHeight: '0px',
+                },
                 children: [
                     new RunningAppView({ state: this.state }),
                     new DesktopWidgetsView({ state: this.state }),
@@ -77,7 +80,9 @@ export class PlatformView implements VirtualDOM {
                 return
             }
             WelcomeVisitorState.isShowAgainMode() &&
-                popupModal(() => new WelcomeVisitorView())
+                popupModal(
+                    (modalState) => new WelcomeVisitorView({ modalState }),
+                )
         })
     }
 }

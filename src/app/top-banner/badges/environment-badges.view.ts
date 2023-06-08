@@ -1,7 +1,6 @@
 import { VirtualDOM } from '@youwol/flux-view'
 import { Accounts } from '@youwol/http-clients'
-import { UserBadgeView } from './user-badge.view'
-import { ProfilesBadgeView } from './profiles-badge.view'
+import { UserBadgeDropdownView } from '../customize-dropdown/user-badge-dropdown.view'
 
 /**
  *
@@ -18,9 +17,6 @@ export class EnvironmentBadgesView implements VirtualDOM {
     public readonly children: VirtualDOM[]
 
     constructor({ sessionInfo }: { sessionInfo: Accounts.SessionDetails }) {
-        this.children = [
-            new UserBadgeView(sessionInfo),
-            new ProfilesBadgeView(sessionInfo),
-        ]
+        this.children = [new UserBadgeDropdownView(sessionInfo)]
     }
 }

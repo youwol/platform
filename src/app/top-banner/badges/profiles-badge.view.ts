@@ -10,12 +10,16 @@ import { map } from 'rxjs/operators'
 /**
  * @category View
  */
-export class ProfilesBadgeView {
+export class ProfilesBadgeView implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
     public readonly class =
-        'fas fa-cog rounded fv-pointer py-2 px-1 fv-hover-bg-background-alt h-100'
+        'mt-2 p-1 fv-text-primary yw-text-primary  text-center fv-hover-bg-background-alt fv-pointer rounded d-flex align-items-center'
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly children: VirtualDOM[]
 
     /**
      * @group Immutable DOM Constants
@@ -33,6 +37,14 @@ export class ProfilesBadgeView {
               }
             | HTTPError
         >
+        this.children = [
+            {
+                class: 'fas fa-cog  mx-3',
+            },
+            {
+                innerText: 'Preference',
+            },
+        ]
 
         this.onclick = () => {
             popupModal(() =>

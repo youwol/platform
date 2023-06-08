@@ -1,7 +1,5 @@
 import { VirtualDOM } from '@youwol/flux-view'
 import { Accounts } from '@youwol/http-clients'
-import { VisitorFormView, RegisteredFormView } from '../../modals/user'
-import { popupModal } from '../../modals'
 
 /**
  * @category View
@@ -46,43 +44,4 @@ export class VisitorBadgeView implements VirtualDOM {
      * @group Immutable DOM Constants
      */
     public readonly class: string = 'fas fa-user-circle px-1'
-}
-
-/**
- * @category View
- */
-export class UserBadgeView implements VirtualDOM {
-    /**
-     * @group Immutable DOM Constants
-     */
-    public readonly class =
-        'rounded fv-pointer py-1 px-1 fv-hover-bg-background-alt '
-    /**
-     * @group Immutable DOM Constants
-     */
-    public readonly children: VirtualDOM[]
-    /**
-     * @group Immutable Constants
-     */
-    public readonly sessionInfo: Accounts.SessionDetails
-    /**
-     * @group Immutable DOM Constants
-     */
-    public readonly onclick: (ev: MouseEvent) => void
-
-    constructor(sessionInfo: Accounts.SessionDetails) {
-        Object.assign(this, { sessionInfo })
-        this.children = [
-            sessionInfo.userInfo.temp
-                ? new VisitorBadgeView()
-                : new RegisteredBadgeView(this.sessionInfo.userInfo),
-        ]
-
-        this.onclick = () =>
-            popupModal((modalState) =>
-                this.sessionInfo.userInfo.temp
-                    ? new VisitorFormView({ modalState })
-                    : new RegisteredFormView(sessionInfo.userInfo),
-            )
-    }
 }

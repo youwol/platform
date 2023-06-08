@@ -1,21 +1,26 @@
 import { VirtualDOM } from '@youwol/flux-view'
 import { Accounts } from '@youwol/http-clients'
-import { BaseUserFormView, separatorView, redirectWith } from './common'
+import { separatorView, redirectWith } from './common'
+import { ProfilesBadgeView } from '../../top-banner/badges'
 
 /**
  * @category View
  */
-export class RegisteredFormView extends BaseUserFormView {
+export class RegisteredFormView {
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly class =
+        'dropdown-item bg-transparent fv-hover-bg-background'
     /**
      * @group Immutable DOM Constants
      */
     public readonly children: VirtualDOM[]
 
-    constructor(userInfos: Accounts.UserInfos) {
-        super()
+    constructor(sessionInfo: Accounts.SessionDetails) {
         this.children = [
-            new HeaderView(userInfos),
             manageIdentityView,
+            new ProfilesBadgeView(sessionInfo),
             separatorView,
             otherProfilesView,
             separatorView,
@@ -124,11 +129,11 @@ class AvatarPickerView implements VirtualDOM {
     }
 }
 
-const manageIdentityView = {
-    class: 'container mt-4 fv-text-primary text-center fv-hover-bg-background-alt fv-pointer rounded d-flex align-items-center ',
+export const manageIdentityView = {
+    class: 'mt-2 p-1 fv-text-primary yw-text-primary  text-center fv-hover-bg-background-alt fv-pointer rounded d-flex align-items-center ',
     children: [
         {
-            class: 'fas fa-key mx-3',
+            class: 'fas fa-address-card mx-3',
         },
         {
             innerText: 'Manage your identity',
@@ -144,14 +149,14 @@ const manageIdentityView = {
     },
 }
 
-const logAsVisitorView = {
-    class: 'd-flex align-items-center my-2 fv-pointer fv-hover-bg-background-alt rounded',
+export const logAsVisitorView = {
+    class: 'mt-2 p-1 fv-text-primary yw-text-primary  text-center fv-hover-bg-background-alt fv-pointer rounded d-flex align-items-center',
     children: [
         {
-            class: 'fas fa-user mx-2',
+            class: 'fas fa-users mx-2',
         },
         {
-            innerText: 'visitor',
+            innerText: 'Visitor',
         },
     ],
 
@@ -160,7 +165,7 @@ const logAsVisitorView = {
     },
 }
 
-const otherProfilesView = {
+export const otherProfilesView = {
     class: 'container fv-text-primary text-center',
     children: [
         {
@@ -171,13 +176,13 @@ const otherProfilesView = {
     ],
 }
 
-const logoutView = {
-    class: 'd-flex align-items-center justify-content-center fv-pointer fv-hover-bg-background-alt rounded',
+export const logoutView = {
+    class: 'd-flex fv-text-primary yw-text-primary bg-danger bg-gradient p-1 align-items-center justify-content-center fv-pointer  rounded',
     children: [
-        {
-            innerText: 'logout',
-        },
         { class: 'fas fa-sign-out-alt mx-2' },
+        {
+            innerText: 'Logout',
+        },
     ],
     onclick: () => {
         redirectWith('logoutUrl')

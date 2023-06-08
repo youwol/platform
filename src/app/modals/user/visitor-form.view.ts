@@ -3,7 +3,7 @@ import { BehaviorSubject, merge, Observable, Subject } from 'rxjs'
 import { filter, map, mapTo, mergeMap } from 'rxjs/operators'
 import { Accounts } from '@youwol/http-clients'
 import { dispatchHTTPErrors, Empty, HTTPError } from '@youwol/http-primitives'
-import { BaseUserFormView, separatorView, redirectWith } from './common'
+import { separatorView, redirectWith } from './common'
 import { Modal } from '@youwol/fv-group'
 
 type Email = string
@@ -97,14 +97,16 @@ export class VisitorFormState {
 /**
  * @category View
  */
-export class VisitorFormView extends BaseUserFormView {
+export class VisitorFormView {
+    public readonly class =
+        'dropdown-item fv-pointer fv-hover-bg-background-alt fv-hover-text-primary'
+
     /**
      * @group Immutable DOM Constants
      */
     public readonly children: VirtualDOM[]
 
     constructor(params: { modalState: Modal.State; class?: string }) {
-        super({ class: params.class })
         const state = new VisitorFormState({ modalState: params.modalState })
 
         this.children = [

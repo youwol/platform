@@ -32,6 +32,11 @@ export class LaunchpadBadgeView implements VirtualDOM {
                 style: {
                     width: '25px',
                 },
+                customAttributes: {
+                    dataToggle: 'tooltip',
+                    dataPlacement: 'right',
+                    title: 'Application Launcher',
+                },
                 children: children$(
                     state.runningApplications$.pipe(
                         map(

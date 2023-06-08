@@ -56,7 +56,7 @@ export class PlatformView implements VirtualDOM {
             new BackgroundView(),
             new PlatformBannerView({
                 state: this.state,
-                class: 'fv-bg-background',
+                class: 'fv-bg-background yw-box-shadow',
                 style: {
                     background:
                         'linear-gradient(rgba(0,0,0,0.9), rgba(0,0,0,0.7))',

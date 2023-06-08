@@ -12,7 +12,7 @@ export class ApplicationsLaunchPadView implements VirtualDOM {
      * @group Immutable DOM Constants
      */
     public readonly class =
-        'd-flex flex-column border rounded fv-bg-background-alt'
+        'd-flex flex-column  rounded fv-bg-background-alt yw-box-shadow yw-animate-in'
     /**
      * @group Immutable DOM Constants
      */
@@ -45,7 +45,10 @@ export class ApplicationsLaunchPadView implements VirtualDOM {
         Object.assign(this, params)
         this.children = [
             {
-                class: 'fv-bg-background w-100 d-flex align-items-center',
+                class: 'fv-bg-background w-100 d-flex align-items-center disabled ',
+                style: {
+                    pointerEvents: 'none',
+                },
                 children: [
                     new LaunchpadBadgeView({ state: this.state }),
                     {
@@ -140,7 +143,7 @@ class NewAppsView implements VirtualDOM {
                 },
                 children: [
                     {
-                        class: 'd-flex flex-wrap justify-content-center',
+                        class: 'd-flex p-2 m-2 flex-wrap justify-content-center',
                         children: children$(
                             OsCore.Installer.getApplicationsInfo$().pipe(
                                 map((apps) => {
@@ -174,8 +177,7 @@ class NewAppView implements VirtualDOM {
      * @group Immutable DOM Constants
      */
     public readonly class =
-        'm-1 fv-hover-xx-lighter fv-pointer fv-text-primary fv-hover-bg-background-alt p-2 rounded'
-
+        'm-1 fv-hover-xx-lighter fv-pointer fv-text-primary app-icon-motion fv-hover-bg-background-alt p-2 rounded'
     /**
      * @group States
      */

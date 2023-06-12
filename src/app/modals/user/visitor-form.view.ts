@@ -99,7 +99,7 @@ export class VisitorFormState {
  */
 export class VisitorFormView {
     public readonly class =
-        'dropdown-item fv-pointer fv-hover-bg-background-alt fv-hover-text-primary'
+        'dropdown-item  fv-hover-bg-background-alt fv-hover-text-primary fv-text-primary  bg-transparent fv-hover-bg-background '
 
     /**
      * @group Immutable DOM Constants
@@ -231,7 +231,7 @@ class RegisterButton implements VirtualDOM {
                     : RegisterButton.classButtonDisabled,
             {
                 wrapper: (classes) =>
-                    `${classes} p-2 border  rounded d-flex align-items-center`,
+                    `${classes} p-2 border  rounded d-flex align-items-center `,
             },
         )
         this.children = [
@@ -256,7 +256,7 @@ const headerView = {
             class: 'd-flex align-items-center  fv-text-focus',
             children: [
                 {
-                    class: 'px-2',
+                    class: 'px-1',
                     innerText: 'Visitor',
                 },
             ],
@@ -268,7 +268,7 @@ const headerView = {
                     class: 'd-flex align-items-center my-2',
                     children: [
                         {
-                            class: 'fas fa-2x fa-user',
+                            class: 'fas fa-2x fa-users',
                         },
                     ],
                 },
@@ -285,7 +285,7 @@ export class InviteButtonView implements VirtualDOM {
      * @group Immutable DOM Constants
      */
     public readonly class =
-        'd-flex align-items-center mx-auto rounded border fv-pointer fv-bg-background-alt fv-hover-xx-lighter p-2'
+        'd-flex align-items-center fv-pointer btn btn-light app-icon-motion p-2 m-1 yw-hover-btn-fill-color'
     /**
      * @group Immutable DOM Constants
      */
@@ -343,7 +343,7 @@ export class InviteLoginView implements VirtualDOM {
 }
 
 const inviteRegisteringView0 = {
-    class: 'mx-auto text-justify px-4',
+    class: 'mx-auto text-justify px-2 text-wrap',
     tag: 'p',
     style: {
         maxWidth: '500px',
@@ -355,7 +355,7 @@ However, your session and related data will be deleted after a period of 24 hour
 }
 
 const inviteRegisteringView1 = {
-    class: 'mx-auto text-justify px-4',
+    class: 'mx-auto text-justify px-2 text-wrap',
     tag: 'p',
     style: {
         maxWidth: '500px',

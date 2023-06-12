@@ -32,45 +32,6 @@ export class RegisteredFormView {
 /**
  * @category View
  */
-class HeaderView implements VirtualDOM {
-    /**
-     * @group Immutable DOM Constants
-     */
-    public readonly class =
-        'd-flex flex-column align-items-center px-4 py-2 justify-content-center fv-text-focus'
-    /**
-     * @group Immutable DOM Constants
-     */
-    public readonly style = {
-        fontSize: 'x-large',
-    }
-    /**
-     * @group Immutable DOM Constants
-     */
-    public readonly children: VirtualDOM[]
-
-    constructor(userInfos: Accounts.UserInfos) {
-        this.children = [
-            {
-                class: 'd-flex align-items-center',
-                children: [
-                    {
-                        class: 'px-2',
-                        innerText: userInfos.name,
-                    },
-                ],
-            },
-            {
-                class: 'd-flex align-items-center my-2',
-                children: [new AvatarView(userInfos)],
-            },
-        ]
-    }
-}
-
-/**
- * @category View
- */
 export class AvatarView implements VirtualDOM {
     /**
      * @group Immutable DOM Constants

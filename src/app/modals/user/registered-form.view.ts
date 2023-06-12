@@ -71,11 +71,11 @@ class HeaderView implements VirtualDOM {
 /**
  * @category View
  */
-class AvatarView implements VirtualDOM {
+export class AvatarView implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly class = 'd-flex align-items-center my-2'
+    public readonly class = 'd-flex align-items-center mr-2'
     /**
      * @group Immutable DOM Constants
      */
@@ -86,44 +86,18 @@ class AvatarView implements VirtualDOM {
             {
                 class: 'rounded text-center',
                 style: {
-                    width: '50px',
-                    height: '50px',
+                    width: '35px',
+                    height: 'auto',
                     backgroundColor: 'red',
                     color: 'white',
                     fontWeight: 'bold',
-                    fontSize: '32px',
+                    fontSize: '18px',
+                    padding: '5px',
                 },
-                innerText: userInfos.name[0],
-            },
-            new AvatarPickerView(),
-        ]
-    }
-}
-
-/**
- * @category View
- */
-class AvatarPickerView implements VirtualDOM {
-    /**
-     * @group Immutable DOM Constants
-     */
-    public readonly class =
-        'd-flex flex-column align-items-center fv-text-primary'
-    /**
-     * @group Immutable DOM Constants
-     */
-    public readonly style = {
-        fontSize: 'large',
-    }
-    /**
-     * @group Immutable DOM Constants
-     */
-    public readonly children: VirtualDOM[]
-
-    constructor() {
-        this.children = [
-            {
-                class: 'fas fa-palette fv-pointer fv-hover-bg-background-alt p-1 rounded',
+                innerText: userInfos.name
+                    .split(' ')
+                    .map((name) => name.charAt(0))
+                    .join(''),
             },
         ]
     }

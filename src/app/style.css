@@ -2,23 +2,28 @@
     height: 100%;
 }
 
-.yw-text-primary:hover{
-    color: #F2BF5E !important;
+.yw-text-primary:hover {
+    color: #f2bf5e !important;
 }
-.yw-btn-no-focus-shadow:focus{
+
+.yw-btn-no-focus-shadow:focus {
     box-shadow: none !important;
 }
 
-.yw-btn-focus:focus{
-    color: #F2BF5E !important;
+.yw-btn-focus:focus {
+    color: #f2bf5e !important;
 }
 
-.yw-box-shadow{
-    box-shadow: rgb(0, 0, 0) 1px 3px 5px
+.yw-box-shadow {
+    box-shadow: rgb(0, 0, 0) 1px 3px 5px;
 }
 
-.yw-animate-in{
-    animation: fadeIn 0.5s ease  normal forwards;
+.yw-hover-btn-fill-color:hover {
+    animation: fillBgColor 0.5s ease normal forwards;
+}
+
+.yw-animate-in {
+    animation: fadeIn 0.5s ease normal forwards;
 }
 
 @keyframes fadeIn {
@@ -27,12 +32,25 @@
         opacity: 0.1%;
         top: 1px;
         left: -5px;
-        transform-origin: top ;
+        transform-origin: top;
     }
 
     100% {
         top: 1px;
         left: -5px;
+    }
+}
 
+@keyframes fillBgColor {
+    0% {
+        background-color: rgba(255, 127, 80, 0);
+        color: rgba(213, 133, 18, 0.84);
+        border: none;
+    }
+
+    100% {
+        background-color: #d58512;
+        color: white;
+        border: none;
     }
 }

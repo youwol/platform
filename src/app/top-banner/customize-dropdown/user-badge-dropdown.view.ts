@@ -1,7 +1,7 @@
 import { VirtualDOM } from '@youwol/flux-view'
 import { Accounts } from '@youwol/http-clients'
 import { Modal } from '@youwol/fv-group'
-import { VisitorBadgeView } from '../badges'
+import { RegisteredBadgeView, VisitorBadgeView } from '../badges'
 import { ProfilesState } from '../../modals/profiles'
 import { RegisteredFormView, VisitorFormView } from '../../modals/user'
 
@@ -33,7 +33,7 @@ export class UserBadgeDropdownView implements VirtualDOM {
         this.children = [
             {
                 tag: 'button',
-                class: 'btn  d-flex align-items-center  fv-text-primary yw-text-primary dropdown-toggle yw-btn-focus yw-btn-no-focus-shadow',
+                class: 'btn p-0 d-flex align-items-center  fv-text-primary yw-text-primary dropdown-toggle yw-btn-focus yw-btn-no-focus-shadow',
                 type: 'button',
                 id: 'dropdownMenuButton',
                 customAttributes: {
@@ -43,14 +43,9 @@ export class UserBadgeDropdownView implements VirtualDOM {
                 ariaExpanded: false,
 
                 children: [
-                    {
-                        class: 'fa fa-user-circle fa-2x mr-2',
-                    },
-                    {
-                        innerText: sessionInfo.userInfo.temp
-                            ? new VisitorBadgeView()
-                            : this.sessionInfo.userInfo.name,
-                    },
+                    sessionInfo.userInfo.temp
+                        ? new VisitorBadgeView()
+                        : new RegisteredBadgeView(this.sessionInfo.userInfo),
                 ],
             },
             {

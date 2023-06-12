@@ -1,5 +1,6 @@
 import { VirtualDOM } from '@youwol/flux-view'
 import { Accounts } from '@youwol/http-clients'
+import { AvatarView } from '../../modals/user'
 
 /**
  * @category View
@@ -8,25 +9,25 @@ export class RegisteredBadgeView implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly class = 'rounded text-center'
+    public readonly class = 'd-flex align-items-center'
+
     /**
      * @group Immutable DOM Constants
      */
-    public readonly style = {
-        width: '25px',
-        height: '25px',
-        backgroundColor: 'red',
-        color: 'white',
-        fontWeight: 'bold',
-        lineHeight: '1.8em',
-    }
-    /**
-     * @group Immutable DOM Constants
-     */
-    public readonly innerText: string
+    public readonly children: VirtualDOM[]
+    public readonly customAttributes
 
     constructor(userInfos: Accounts.UserInfos) {
-        this.innerText = userInfos.name[0]
+        this.customAttributes = {
+            dataToggle: 'tooltip',
+            title: userInfos.name,
+        }
+        this.children = [
+            new AvatarView(userInfos),
+            {
+                innerText: userInfos.name,
+            },
+        ]
     }
 }
 
@@ -37,11 +38,25 @@ export class VisitorBadgeView implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly style = {
-        transform: 'scale(1.3)',
+    public readonly class: string = 'd-flex align-items-center'
+
+    public readonly children: VirtualDOM[]
+
+    constructor() {
+        this.children = [
+            {
+                class: 'fa fa-users fa-2x mr-2',
+                customAttributes: {
+                    dataToggle: 'tooltip',
+                    // dataPlacement: '*',
+                    title: 'You are a visitor',
+                    dataCustom: 'custom-tooltip',
+                },
+            },
+
+            // {
+            //     innerText: 'Visitor',
+            // },
+        ]
     }
-    /**
-     * @group Immutable DOM Constants
-     */
-    public readonly class: string = 'fas fa-user-circle px-1'
 }

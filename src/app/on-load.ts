@@ -58,13 +58,12 @@ export class PlatformView implements VirtualDOM {
                 state: this.state,
                 class: 'fv-bg-background yw-box-shadow',
                 style: {
-                    background:
-                        'linear-gradient(rgba(0,0,0,0.9), rgba(0,0,0,0.7))',
-                    zIndex: 0,
+                    background: '#070707',
+                    zIndex: 99,
                 },
             }),
             {
-                class: 'd-flex align-items-center flex-grow-1 w-100',
+                class: 'd-flex align-items-center flex-grow-1 w-100 yw-iframe-border-none',
                 style: {
                     minHeight: '0px',
                 },
@@ -107,6 +106,7 @@ export class BackgroundView implements VirtualDOM {
      * @group Immutable DOM Constants
      */
     public readonly children: VirtualDOM[]
+
     constructor() {
         this.children = [
             child$(

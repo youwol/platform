@@ -10,7 +10,8 @@ export class EnvironmentBadgesView implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly class = 'my-auto d-flex align-items-center'
+    public readonly class =
+        'my-auto mr-2 fv-hover-bg-background-alt my-auto  p-1 rounded  fv-pointer top-banner-menu-view d-flex align-items-center'
     /**
      * @group Immutable DOM Constants
      */

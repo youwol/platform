@@ -15,7 +15,7 @@ export class ProfilesView {
      * @group Immutable DOM Constants
      */
     public readonly class =
-        'vw-25 vh-25 rounded mx-auto my-auto p-4 fv-bg-background-alt yw-box-shadow'
+        'vw-25 vh-25 rounded mx-auto my-auto p-4 fv-bg-background-alt yw-box-shadow yw-animate-in '
 
     /**
      * @group Immutable DOM Constants

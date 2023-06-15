@@ -285,7 +285,7 @@ export class InviteButtonView implements VirtualDOM {
      * @group Immutable DOM Constants
      */
     public readonly class =
-        'd-flex align-items-center fv-pointer btn btn-light app-icon-motion p-2 m-1 yw-hover-btn-fill-color'
+        'd-flex align-items-center fv-pointer btn btn-light  p-2 m-1 yw-hover-btn-fill-color'
     /**
      * @group Immutable DOM Constants
      */

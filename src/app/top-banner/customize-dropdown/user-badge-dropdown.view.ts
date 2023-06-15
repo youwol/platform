@@ -13,7 +13,9 @@ export class UserBadgeDropdownView implements VirtualDOM {
      * @group Immutable DOM Constants
      */
     public readonly class = 'dropdown '
-
+    public readonly style = {
+        height: '25px',
+    }
     /**
      * @group Immutable DOM Constants
      */
@@ -33,7 +35,7 @@ export class UserBadgeDropdownView implements VirtualDOM {
         this.children = [
             {
                 tag: 'button',
-                class: 'btn p-0 d-flex align-items-center  fv-text-primary yw-text-primary dropdown-toggle yw-btn-focus yw-btn-no-focus-shadow',
+                class: 'btn p-0  fv-font-size-regular fv-font-family-regular d-flex align-items-center  fv-text-primary yw-text-primary dropdown-toggle fv-hover-bg-background-alt yw-btn-focus yw-btn-no-focus-shadow',
                 type: 'button',
                 id: 'dropdownMenuButton',
                 customAttributes: {
@@ -49,10 +51,9 @@ export class UserBadgeDropdownView implements VirtualDOM {
                 ],
             },
             {
-                class: 'dropdown-menu fv-bg-background yw-animate-in  yw-box-shadow',
+                class: 'dropdown-menu fv-bg-background yw-animate-in  yw-box-shadow  fv-font-size-regular fv-font-family-regular',
                 style: {
-                    background:
-                        'linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.9))',
+                    background: '#070707',
                 },
                 customAttributes: {
                     ariaLabelledby: 'dropdownMenuButton',

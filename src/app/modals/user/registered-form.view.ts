@@ -47,13 +47,12 @@ export class AvatarView implements VirtualDOM {
             {
                 class: 'rounded text-center',
                 style: {
-                    width: '35px',
+                    width: '25px',
                     height: 'auto',
                     backgroundColor: 'red',
                     color: 'white',
                     fontWeight: 'bold',
-                    fontSize: '18px',
-                    padding: '5px',
+                    padding: '2px 4px 2px 4px',
                 },
                 innerText: userInfos.name
                     .split(' ')
@@ -112,7 +111,7 @@ export const otherProfilesView = {
 }
 
 export const logoutView = {
-    class: 'd-flex fv-text-primary yw-text-primary bg-danger bg-gradient p-1 align-items-center justify-content-center fv-pointer  rounded',
+    class: 'd-flex yw-hover-app fv-text-primary yw-text-primary bg-danger bg-gradient p-1 align-items-center justify-content-center fv-pointer  rounded',
     children: [
         { class: 'fas fa-sign-out-alt mx-2' },
         {

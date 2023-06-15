@@ -38,7 +38,7 @@ export class RunningAppView implements VirtualDOM {
         Object.assign(this, params)
         this.class = attr$(this.state.runningApplication$, (app) =>
             app == undefined
-                ? 'd-none'
+                ? 'd-none '
                 : 'h-100 flex-grow-1 d-flex yw-animate-in',
         )
         this.children = childrenAppendOnly$(

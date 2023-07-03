@@ -3,7 +3,7 @@ import { BehaviorSubject, merge, Observable, Subject } from 'rxjs'
 import { filter, map, mapTo, mergeMap } from 'rxjs/operators'
 import { Accounts } from '@youwol/http-clients'
 import { dispatchHTTPErrors, Empty, HTTPError } from '@youwol/http-primitives'
-import { BaseUserFormView, separatorView, redirectWith } from './common'
+import { separatorView, redirectWith } from './common'
 import { Modal } from '@youwol/fv-group'
 
 type Email = string
@@ -97,14 +97,16 @@ export class VisitorFormState {
 /**
  * @category View
  */
-export class VisitorFormView extends BaseUserFormView {
+export class VisitorFormView {
+    public readonly class =
+        'dropdown-item  fv-hover-bg-background-alt fv-hover-text-primary fv-text-primary  bg-transparent fv-hover-bg-background '
+
     /**
      * @group Immutable DOM Constants
      */
     public readonly children: VirtualDOM[]
 
     constructor(params: { modalState: Modal.State; class?: string }) {
-        super({ class: params.class })
         const state = new VisitorFormState({ modalState: params.modalState })
 
         this.children = [
@@ -229,7 +231,7 @@ class RegisterButton implements VirtualDOM {
                     : RegisterButton.classButtonDisabled,
             {
                 wrapper: (classes) =>
-                    `${classes} p-2 border  rounded d-flex align-items-center`,
+                    `${classes} p-2 border  rounded d-flex align-items-center `,
             },
         )
         this.children = [
@@ -254,7 +256,7 @@ const headerView = {
             class: 'd-flex align-items-center  fv-text-focus',
             children: [
                 {
-                    class: 'px-2',
+                    class: 'px-1',
                     innerText: 'Visitor',
                 },
             ],
@@ -266,7 +268,7 @@ const headerView = {
                     class: 'd-flex align-items-center my-2',
                     children: [
                         {
-                            class: 'fas fa-2x fa-user',
+                            class: 'fas fa-2x fa-users',
                         },
                     ],
                 },
@@ -283,7 +285,7 @@ export class InviteButtonView implements VirtualDOM {
      * @group Immutable DOM Constants
      */
     public readonly class =
-        'd-flex align-items-center mx-auto rounded border fv-pointer fv-bg-background-alt fv-hover-xx-lighter p-2'
+        'd-flex align-items-center fv-pointer btn btn-light  p-2 m-1 yw-hover-btn-fill-color'
     /**
      * @group Immutable DOM Constants
      */
@@ -341,7 +343,7 @@ export class InviteLoginView implements VirtualDOM {
 }
 
 const inviteRegisteringView0 = {
-    class: 'mx-auto text-justify px-4',
+    class: 'mx-auto text-justify px-2 text-wrap',
     tag: 'p',
     style: {
         maxWidth: '500px',
@@ -353,7 +355,7 @@ However, your session and related data will be deleted after a period of 24 hour
 }
 
 const inviteRegisteringView1 = {
-    class: 'mx-auto text-justify px-4',
+    class: 'mx-auto text-justify px-2 text-wrap',
     tag: 'p',
     style: {
         maxWidth: '500px',

@@ -33,6 +33,7 @@ export class WelcomeVisitorState {
         config['show-visitor-welcome-page'] = showAgain
         localStorage.setItem('youwol-storage-config', JSON.stringify(config))
     }
+
     /**
      * @group Observables
      */
@@ -62,7 +63,7 @@ export class WelcomeVisitorView implements VirtualDOM {
      * @group Immutable DOM Constants
      */
     public readonly class: string =
-        'fv-border-primary rounded p-3 fv-text-primary fv-bg-background'
+        'yw-box-shadow rounded p-3 fv-text-primary fv-bg-background'
     /**
      * @group Immutable DOM Constants
      */

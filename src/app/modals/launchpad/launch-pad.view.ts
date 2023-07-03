@@ -12,7 +12,7 @@ export class ApplicationsLaunchPadView implements VirtualDOM {
      * @group Immutable DOM Constants
      */
     public readonly class =
-        'd-flex flex-column border rounded fv-bg-background-alt'
+        'd-flex flex-column  rounded fv-bg-background-alt yw-box-shadow yw-animate-in'
     /**
      * @group Immutable DOM Constants
      */
@@ -45,7 +45,11 @@ export class ApplicationsLaunchPadView implements VirtualDOM {
         Object.assign(this, params)
         this.children = [
             {
-                class: 'fv-bg-background w-100 d-flex align-items-center',
+                class: 'fv-bg-background w-100 d-flex align-items-center disabled ',
+                style: {
+                    background: '#070707',
+                    pointerEvents: 'none',
+                },
                 children: [
                     new LaunchpadBadgeView({ state: this.state }),
                     {
@@ -140,7 +144,7 @@ class NewAppsView implements VirtualDOM {
                 },
                 children: [
                     {
-                        class: 'd-flex flex-wrap justify-content-center',
+                        class: 'd-flex p-2 m-2 flex-wrap justify-content-start',
                         children: children$(
                             OsCore.Installer.getApplicationsInfo$().pipe(
                                 map((apps) => {
@@ -174,8 +178,7 @@ class NewAppView implements VirtualDOM {
      * @group Immutable DOM Constants
      */
     public readonly class =
-        'm-1 fv-hover-xx-lighter fv-pointer fv-text-primary fv-hover-bg-background-alt p-2 rounded'
-
+        'm-3  fv-pointer fv-text-primary app-icon-motion p-2 rounded  yw-hover-app yw-webkit-align-center'
     /**
      * @group States
      */
@@ -188,14 +191,6 @@ class NewAppView implements VirtualDOM {
      * @group Immutable Constants
      */
     public readonly app: OsCore.ApplicationInfo
-    /**
-     * @group Immutable DOM Constants
-     */
-    public readonly style = {
-        width: '135px',
-        height: '135px',
-        position: 'relative',
-    }
     /**
      * @group Immutable DOM Constants
      */
@@ -214,6 +209,7 @@ class NewAppView implements VirtualDOM {
             })
             .subscribe()
     }
+
     constructor(params: {
         state: OsCore.PlatformState
         modalState: Modal.State
@@ -222,18 +218,7 @@ class NewAppView implements VirtualDOM {
         Object.assign(this, params)
         this.children = [
             {
-                class: 'd-flex justify-content-center mx-auto flex-column text-center border rounded',
-                style: {
-                    width: '100px',
-                    height: '100px',
-                    position: 'relative',
-                },
-                children: [
-                    {
-                        class: 'mx-auto d-flex flex-column justify-content-center',
-                        children: [this.app.graphics.appIcon],
-                    },
-                ],
+                children: [this.app.graphics.appIcon],
             },
             { class: 'mt-1 text-center', innerText: this.app.displayName },
         ]
@@ -312,7 +297,7 @@ export class RunningAppView implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly class = `rounded d-flex flex-column align-items-center rounded w-100 p-2 my-1 fv-hover-xx-lighter fv-bg-background-alt`
+    public readonly class = `rounded d-flex flex-column align-items-center rounded w-100 p-2 my-1  fv-bg-background-alt`
     /**
      * @group Immutable DOM Constants
      */
@@ -377,7 +362,7 @@ export class RunningAppView implements VirtualDOM {
 
     headerView() {
         return {
-            class: `w-100 fv-text-primary d-flex align-items-center justify-content-between position-relative`,
+            class: `w-100 fv-text-primary d-flex align-items-center justify-content-between position-relative yw-minimized-app`,
             children: [
                 child$(this.executable.appMetadata$, (d) => ({
                     class: 'p-2',

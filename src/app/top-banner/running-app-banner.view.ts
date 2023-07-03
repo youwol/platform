@@ -2,6 +2,7 @@ import { child$, VirtualDOM } from '@youwol/flux-view'
 import * as OsCore from '@youwol/os-core'
 import { EnvironmentBadgesView, LaunchpadBadgeView } from './badges'
 import { sessionDetails$ } from './utils.view'
+import { CorporationBadgeView } from './badges/corporation.view'
 
 /**
  * Top banner when an application is running
@@ -16,10 +17,20 @@ export class RunningAppBannerView implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
+    public readonly style = { height: '40px' }
+
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly children: VirtualDOM[]
 
     constructor(state: OsCore.PlatformState, app: OsCore.RunningApp) {
         this.children = [
+            child$(
+                OsCore.PreferencesFacade.getPreferences$(),
+                (preferences) =>
+                    new CorporationBadgeView({ preferences, state, app }),
+            ),
             new LaunchpadBadgeView({ state }),
             {
                 class: 'my-auto d-flex justify-content-between flex-grow-1',
@@ -59,7 +70,7 @@ class RunningAppTitleView implements VirtualDOM {
      * @group Immutable DOM Constants
      */
     public readonly style = {
-        height: 'fit-content',
+        height: '30px',
         fontSize: '13px',
     }
     /**
@@ -72,7 +83,7 @@ class RunningAppTitleView implements VirtualDOM {
 
         this.children = [
             {
-                class: 'd-flex align-items-center',
+                class: 'd-flex align-items-center yw-opened-app',
                 children: [
                     child$(
                         app.appMetadata$,

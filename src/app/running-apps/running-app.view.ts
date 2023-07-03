@@ -37,7 +37,9 @@ export class RunningAppView implements VirtualDOM {
     constructor(params: { state: OsCore.PlatformState }) {
         Object.assign(this, params)
         this.class = attr$(this.state.runningApplication$, (app) =>
-            app == undefined ? 'd-none' : 'h-100 flex-grow-1 d-flex',
+            app == undefined
+                ? 'd-none '
+                : 'h-100 flex-grow-1 d-flex yw-animate-in',
         )
         this.children = childrenAppendOnly$(
             this.state.runningApplication$.pipe(

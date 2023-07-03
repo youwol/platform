@@ -15,7 +15,8 @@ export class ProfilesView {
      * @group Immutable DOM Constants
      */
     public readonly class =
-        'vw-25 vh-25 border fv-border-primary rounded mx-auto my-auto p-4 fv-bg-background-alt'
+        'vw-25 vh-25 rounded mx-auto my-auto p-4 fv-bg-background-alt yw-box-shadow yw-animate-in '
+
     /**
      * @group Immutable DOM Constants
      */
@@ -165,6 +166,9 @@ export class EditProfileButton implements VirtualDOM {
      */
     public readonly class =
         'btn btn-outline-secondary mx-3 d-flex align-items-center fv-border-secondary fv-text-primary'
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly children: VirtualDOM[]
     /**
      * @group Immutable DOM Constants

@@ -13,7 +13,7 @@ export class RegularBannerView implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly class = 'd-flex'
+    public readonly class = 'd-flex yw-home-icon'
     /**
      * @group Immutable DOM Constants
      */
@@ -24,6 +24,7 @@ export class RegularBannerView implements VirtualDOM {
     public readonly style = {
         height: '40px',
     }
+
     constructor(state: OsCore.PlatformState) {
         this.children = [
             child$(

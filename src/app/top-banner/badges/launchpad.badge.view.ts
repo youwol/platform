@@ -31,6 +31,12 @@ export class LaunchpadBadgeView implements VirtualDOM {
                 class: 'd-flex flex-wrap',
                 style: {
                     width: '25px',
+                    height: '25px',
+                },
+                customAttributes: {
+                    dataToggle: 'tooltip',
+                    dataPlacement: 'right',
+                    title: 'Application Launcher',
                 },
                 children: children$(
                     state.runningApplications$.pipe(
@@ -47,7 +53,7 @@ export class LaunchpadBadgeView implements VirtualDOM {
                                     class:
                                         'rounded ' +
                                         (i < distinctApps.size
-                                            ? 'fv-bg-success fv-border-success'
+                                            ? 'yw-bg-orange  fv-border-orange'
                                             : 'fv-bg-primary fv-border-primary'),
                                     style: {
                                         width: '6px',

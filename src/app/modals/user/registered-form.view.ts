@@ -1,21 +1,26 @@
 import { VirtualDOM } from '@youwol/flux-view'
 import { Accounts } from '@youwol/http-clients'
-import { BaseUserFormView, separatorView, redirectWith } from './common'
+import { separatorView, redirectWith } from './common'
+import { ProfilesBadgeView } from '../../top-banner/badges'
 
 /**
  * @category View
  */
-export class RegisteredFormView extends BaseUserFormView {
+export class RegisteredFormView {
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly class =
+        'dropdown-item bg-transparent fv-hover-bg-background'
     /**
      * @group Immutable DOM Constants
      */
     public readonly children: VirtualDOM[]
 
-    constructor(userInfos: Accounts.UserInfos) {
-        super()
+    constructor(sessionInfo: Accounts.SessionDetails) {
         this.children = [
-            new HeaderView(userInfos),
             manageIdentityView,
+            new ProfilesBadgeView(sessionInfo),
             separatorView,
             otherProfilesView,
             separatorView,
@@ -27,50 +32,11 @@ export class RegisteredFormView extends BaseUserFormView {
 /**
  * @category View
  */
-class HeaderView implements VirtualDOM {
+export class AvatarView implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly class =
-        'd-flex flex-column align-items-center px-4 py-2 justify-content-center fv-text-focus'
-    /**
-     * @group Immutable DOM Constants
-     */
-    public readonly style = {
-        fontSize: 'x-large',
-    }
-    /**
-     * @group Immutable DOM Constants
-     */
-    public readonly children: VirtualDOM[]
-
-    constructor(userInfos: Accounts.UserInfos) {
-        this.children = [
-            {
-                class: 'd-flex align-items-center',
-                children: [
-                    {
-                        class: 'px-2',
-                        innerText: userInfos.name,
-                    },
-                ],
-            },
-            {
-                class: 'd-flex align-items-center my-2',
-                children: [new AvatarView(userInfos)],
-            },
-        ]
-    }
-}
-
-/**
- * @category View
- */
-class AvatarView implements VirtualDOM {
-    /**
-     * @group Immutable DOM Constants
-     */
-    public readonly class = 'd-flex align-items-center my-2'
+    public readonly class = 'd-flex align-items-center mr-2'
     /**
      * @group Immutable DOM Constants
      */
@@ -81,54 +47,27 @@ class AvatarView implements VirtualDOM {
             {
                 class: 'rounded text-center',
                 style: {
-                    width: '50px',
-                    height: '50px',
+                    width: '25px',
+                    height: 'auto',
                     backgroundColor: 'red',
                     color: 'white',
                     fontWeight: 'bold',
-                    fontSize: '32px',
+                    padding: '2px 4px 2px 4px',
                 },
-                innerText: userInfos.name[0],
-            },
-            new AvatarPickerView(),
-        ]
-    }
-}
-
-/**
- * @category View
- */
-class AvatarPickerView implements VirtualDOM {
-    /**
-     * @group Immutable DOM Constants
-     */
-    public readonly class =
-        'd-flex flex-column align-items-center fv-text-primary'
-    /**
-     * @group Immutable DOM Constants
-     */
-    public readonly style = {
-        fontSize: 'large',
-    }
-    /**
-     * @group Immutable DOM Constants
-     */
-    public readonly children: VirtualDOM[]
-
-    constructor() {
-        this.children = [
-            {
-                class: 'fas fa-palette fv-pointer fv-hover-bg-background-alt p-1 rounded',
+                innerText: userInfos.name
+                    .split(' ')
+                    .map((name) => name.charAt(0))
+                    .join(''),
             },
         ]
     }
 }
 
-const manageIdentityView = {
-    class: 'container mt-4 fv-text-primary text-center fv-hover-bg-background-alt fv-pointer rounded d-flex align-items-center ',
+export const manageIdentityView = {
+    class: 'mt-2 p-1 fv-text-primary yw-text-primary  text-center fv-hover-bg-background-alt fv-pointer rounded d-flex align-items-center ',
     children: [
         {
-            class: 'fas fa-key mx-3',
+            class: 'fas fa-address-card mx-3',
         },
         {
             innerText: 'Manage your identity',
@@ -144,14 +83,14 @@ const manageIdentityView = {
     },
 }
 
-const logAsVisitorView = {
-    class: 'd-flex align-items-center my-2 fv-pointer fv-hover-bg-background-alt rounded',
+export const logAsVisitorView = {
+    class: 'mt-2 p-1 fv-text-primary yw-text-primary  text-center fv-hover-bg-background-alt fv-pointer rounded d-flex align-items-center',
     children: [
         {
-            class: 'fas fa-user mx-2',
+            class: 'fas fa-users mx-2',
         },
         {
-            innerText: 'visitor',
+            innerText: 'Visitor',
         },
     ],
 
@@ -160,7 +99,7 @@ const logAsVisitorView = {
     },
 }
 
-const otherProfilesView = {
+export const otherProfilesView = {
     class: 'container fv-text-primary text-center',
     children: [
         {
@@ -171,13 +110,13 @@ const otherProfilesView = {
     ],
 }
 
-const logoutView = {
-    class: 'd-flex align-items-center justify-content-center fv-pointer fv-hover-bg-background-alt rounded',
+export const logoutView = {
+    class: 'd-flex yw-hover-app fv-text-primary yw-text-primary bg-danger bg-gradient p-1 align-items-center justify-content-center fv-pointer  rounded',
     children: [
-        {
-            innerText: 'logout',
-        },
         { class: 'fas fa-sign-out-alt mx-2' },
+        {
+            innerText: 'Logout',
+        },
     ],
     onclick: () => {
         redirectWith('logoutUrl')

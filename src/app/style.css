@@ -1,3 +1,113 @@
 .CodeMirror.cm-s-default {
     height: 100%;
 }
+
+.yw-text-primary:hover {
+    color: white !important;
+}
+
+.yw-btn-no-focus-shadow:focus {
+    box-shadow: none !important;
+}
+
+.yw-btn-focus:focus {
+    background-color: #444 !important;
+}
+
+.yw-box-shadow {
+    box-shadow: rgb(0, 0, 0) 1px 3px 5px;
+}
+
+.yw-hover-btn-fill-color:hover {
+    animation: fillBgColor 0.5s ease normal forwards;
+}
+
+.yw-bg-orange {
+    background-color: orange;
+}
+
+.fv-border-orange {
+    border-color: orange;
+}
+
+.yw-hover-app {
+    transition: transform 450ms;
+    transform: scale(1);
+}
+
+.yw-hover-app:hover {
+    transform: scale(1.1);
+}
+
+.yw-hover-app:hover ~ .yw-hover-app {
+    transition: transform 450ms;
+    transform: scale(1);
+}
+
+.yw-iframe-border-none iframe {
+    border: none !important;
+}
+
+.yw-home-icon .yw-disable-click {
+    pointer-events: none;
+}
+
+.yw-animate-in {
+    animation: fadeIn 0.25s ease normal forwards;
+}
+
+.yw-animate-out {
+    animation: fadeOut 0.5s ease normal forwards;
+}
+
+.yw-opened-app .appIcon,
+.yw-minimized-app .appIcon {
+    height: 30px !important;
+    width: 30px !important;
+    background-size: contain !important;
+    background-repeat: no-repeat !important;
+    filter: unset !important;
+}
+
+@keyframes fadeIn {
+    0% {
+        transform: scale(0.1);
+        opacity: 0.1%;
+        top: 1px;
+        left: -5px;
+        transform-origin: top;
+    }
+
+    100% {
+        top: 1px;
+        left: -5px;
+    }
+}
+
+@keyframes fadeOut {
+    0% {
+        top: 1px;
+        left: -5px;
+    }
+    100% {
+        transform: scale(0.1);
+        opacity: 0.1%;
+        top: 1px;
+        left: -5px;
+        transform-origin: top;
+    }
+}
+
+@keyframes fillBgColor {
+    0% {
+        background-color: rgba(255, 127, 80, 0);
+        color: rgba(213, 133, 18, 0.84);
+        border: none;
+    }
+
+    100% {
+        background-color: #d58512;
+        color: white;
+        border: none;
+    }
+}

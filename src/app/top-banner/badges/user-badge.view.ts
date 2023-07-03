@@ -1,7 +1,6 @@
 import { VirtualDOM } from '@youwol/flux-view'
 import { Accounts } from '@youwol/http-clients'
-import { VisitorFormView, RegisteredFormView } from '../../modals/user'
-import { popupModal } from '../../modals'
+import { AvatarView } from '../../modals/user'
 
 /**
  * @category View
@@ -10,25 +9,25 @@ export class RegisteredBadgeView implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly class = 'rounded text-center'
+    public readonly class = 'd-flex align-items-center'
+
     /**
      * @group Immutable DOM Constants
      */
-    public readonly style = {
-        width: '25px',
-        height: '25px',
-        backgroundColor: 'red',
-        color: 'white',
-        fontWeight: 'bold',
-        lineHeight: '1.8em',
-    }
-    /**
-     * @group Immutable DOM Constants
-     */
-    public readonly innerText: string
+    public readonly children: VirtualDOM[]
+    public readonly customAttributes
 
     constructor(userInfos: Accounts.UserInfos) {
-        this.innerText = userInfos.name[0]
+        this.customAttributes = {
+            dataToggle: 'tooltip',
+            title: userInfos.name,
+        }
+        this.children = [
+            new AvatarView(userInfos),
+            {
+                innerText: userInfos.name,
+            },
+        ]
     }
 }
 
@@ -39,50 +38,25 @@ export class VisitorBadgeView implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly style = {
-        transform: 'scale(1.3)',
-    }
-    /**
-     * @group Immutable DOM Constants
-     */
-    public readonly class: string = 'fas fa-user-circle px-1'
-}
+    public readonly class: string = 'd-flex align-items-center'
 
-/**
- * @category View
- */
-export class UserBadgeView implements VirtualDOM {
-    /**
-     * @group Immutable DOM Constants
-     */
-    public readonly class =
-        'rounded fv-pointer py-1 px-1 fv-hover-bg-background-alt '
-    /**
-     * @group Immutable DOM Constants
-     */
     public readonly children: VirtualDOM[]
-    /**
-     * @group Immutable Constants
-     */
-    public readonly sessionInfo: Accounts.SessionDetails
-    /**
-     * @group Immutable DOM Constants
-     */
-    public readonly onclick: (ev: MouseEvent) => void
 
-    constructor(sessionInfo: Accounts.SessionDetails) {
-        Object.assign(this, { sessionInfo })
+    constructor() {
         this.children = [
-            sessionInfo.userInfo.temp
-                ? new VisitorBadgeView()
-                : new RegisteredBadgeView(this.sessionInfo.userInfo),
-        ]
+            {
+                class: 'fa fa-users fa-2x mr-2',
+                customAttributes: {
+                    dataToggle: 'tooltip',
+                    // dataPlacement: '*',
+                    title: 'You are a visitor',
+                    dataCustom: 'custom-tooltip',
+                },
+            },
 
-        this.onclick = () =>
-            popupModal((modalState) =>
-                this.sessionInfo.userInfo.temp
-                    ? new VisitorFormView({ modalState })
-                    : new RegisteredFormView(sessionInfo.userInfo),
-            )
+            // {
+            //     innerText: 'Visitor',
+            // },
+        ]
     }
 }

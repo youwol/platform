@@ -1,6 +1,6 @@
 import { attr$, child$, Stream$, VirtualDOM } from '@youwol/flux-view'
 import { BehaviorSubject, merge, Observable, Subject } from 'rxjs'
-import { filter, map, mapTo, mergeMap } from 'rxjs/operators'
+import { filter, map, mapTo, mergeMap, tap } from 'rxjs/operators'
 import { Accounts } from '@youwol/http-clients'
 import { dispatchHTTPErrors, Empty, HTTPError } from '@youwol/http-primitives'
 import { separatorView, redirectWith } from './common'
@@ -51,6 +51,7 @@ export class VisitorFormState {
      * @group Observables
      */
     public readonly pending$: Observable<boolean>
+    private readonly _pendingHandler = new BehaviorSubject<string>('')
 
     constructor(params: { modalState: Modal.State }) {
         Object.assign(this, params)
@@ -74,11 +75,13 @@ export class VisitorFormState {
                 }),
             ),
             dispatchHTTPErrors<Empty>(this._httpError$),
+            tap(() => this._pendingHandler.next('OK')),
         )
         this.pending$ = merge(
             this._triggerRegistration$.pipe(mapTo('start')),
-            this.done$.pipe(mapTo('OK')),
+            this._pendingHandler.pipe(mapTo('end')),
             this._httpError$.pipe(
+                tap((v) => console.log('err inside the _http obs', v)),
                 filter((e) => e != undefined),
                 mapTo('KO'),
             ),
@@ -137,10 +140,18 @@ class RegisterForm implements VirtualDOM {
     constructor(state: VisitorFormState) {
         const message$ = merge(
             state.done$.pipe(
-                mapTo('Registration done, please follow email instruction'),
+                map((registerStatus) =>
+                    registerStatus.status === 409
+                        ? registerStatus.body['errorMessage']
+                        : 'Registration done, please follow email instruction',
+                ),
             ),
             state.httpError$.pipe(
-                map((e) => (e ? 'Error while submitting registration' : '')),
+                tap((e) => console.log('ee :', e)),
+                map((e) => {
+                    console.log('ee :', e)
+                    e ? 'Error while submitting registration' : ''
+                }),
             ),
         )
 
@@ -203,17 +214,15 @@ class RegisterButton implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly style = {
-        width: 'fit-content',
-    }
+    public readonly style
     /**
      * @group Immutable DOM Constants
      */
-    public readonly enable
     /**
      * @group Immutable DOM Constants
      */
     public readonly onclick
+
     /**
      * @group Immutable DOM Constants
      */
@@ -237,12 +246,17 @@ class RegisterButton implements VirtualDOM {
         this.children = [
             {
                 innerText: 'Register',
-                enable: attr$(state.validEmail$, (email) => email != undefined),
+                // enable: attr$(state.validEmail$, (email) => email != undefined),
             },
             child$(state.pending$, (pending) =>
                 pending ? { class: 'fas fa-spinner fa-spin' } : {},
             ),
         ]
+        this.style = attr$(state.validEmail$, (email) =>
+            email != undefined
+                ? { pointerEvents: 'auto' }
+                : { pointerEvents: 'none' },
+        )
     }
 }
 

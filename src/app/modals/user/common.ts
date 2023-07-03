@@ -7,7 +7,7 @@ type NavigateMethod =
     | 'loginAsTempUserUrl'
 
 export const separatorView = {
-    class: 'flex-grow-1 fv-border-top-primary my-4',
+    class: 'flex-grow-1 fv-border-top-primary mt-1 mb-1',
     style: { opacity: '0.5' },
 }
 

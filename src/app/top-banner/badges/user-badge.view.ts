@@ -17,15 +17,15 @@ export class RegisteredBadgeView implements VirtualDOM {
     public readonly children: VirtualDOM[]
     public readonly customAttributes
 
-    constructor(userInfos: Accounts.UserInfos) {
+    constructor(userDetails: Accounts.SessionDetails) {
         this.customAttributes = {
             dataToggle: 'tooltip',
-            title: userInfos.name,
+            title: userDetails.userInfo.name,
         }
         this.children = [
-            new AvatarView(userInfos),
+            new AvatarView(userDetails.userInfo),
             {
-                innerText: userInfos.name,
+                innerText: userDetails.userInfo.name,
             },
         ]
     }
@@ -53,10 +53,6 @@ export class VisitorBadgeView implements VirtualDOM {
                     dataCustom: 'custom-tooltip',
                 },
             },
-
-            // {
-            //     innerText: 'Visitor',
-            // },
         ]
     }
 }

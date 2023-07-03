@@ -1,7 +1,9 @@
-import { VirtualDOM } from '@youwol/flux-view'
+import { children$, Stream$, VirtualDOM } from '@youwol/flux-view'
 import { Accounts } from '@youwol/http-clients'
 import { separatorView, redirectWith } from './common'
 import { ProfilesBadgeView } from '../../top-banner/badges'
+
+import { NewProfileItemView, ProfileItemView, ProfilesState } from '../profiles'
 
 /**
  * @category View
@@ -10,19 +12,32 @@ export class RegisteredFormView {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly class =
-        'dropdown-item bg-transparent fv-hover-bg-background'
+    public readonly class = ' bg-transparent fv-hover-bg-background'
     /**
      * @group Immutable DOM Constants
      */
     public readonly children: VirtualDOM[]
 
-    constructor(sessionInfo: Accounts.SessionDetails) {
+    constructor({
+        sessionInfo,
+        profilesInfo,
+    }: {
+        sessionInfo: Accounts.SessionDetails
+        profilesInfo: {
+            customProfiles: { id: string; name: string }[]
+            selectedProfile: string
+        }
+    }) {
+        const state = new ProfilesState({ profilesInfo })
         this.children = [
+            new AccountBadge(sessionInfo.userInfo),
             manageIdentityView,
-            new ProfilesBadgeView(sessionInfo),
             separatorView,
             otherProfilesView,
+            new ProfilesBadgeView({ sessionInfo, state }),
+            new AllProfilesView({ state }),
+            separatorView,
+            logAsVisitorView,
             separatorView,
             logoutView,
         ]
@@ -36,7 +51,16 @@ export class AvatarView implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly class = 'd-flex align-items-center mr-2'
+    public readonly class =
+        'd-flex justify-content-center align-items-center rounded mr-2'
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly style = {
+        width: '25px',
+        height: '25px',
+        backgroundColor: 'red',
+    }
     /**
      * @group Immutable DOM Constants
      */
@@ -47,12 +71,9 @@ export class AvatarView implements VirtualDOM {
             {
                 class: 'rounded text-center',
                 style: {
-                    width: '25px',
-                    height: 'auto',
-                    backgroundColor: 'red',
                     color: 'white',
                     fontWeight: 'bold',
-                    padding: '2px 4px 2px 4px',
+                    fontSize: '13px',
                 },
                 innerText: userInfos.name
                     .split(' ')
@@ -63,20 +84,30 @@ export class AvatarView implements VirtualDOM {
     }
 }
 
+export const baseDropdownItemsClass =
+    'dropdown-item  fv-text-primary yw-hover-text-primary  text-center fv-hover-bg-background-alt fv-pointer rounded d-flex align-items-center mb-1 px-3'
 export const manageIdentityView = {
-    class: 'mt-2 p-1 fv-text-primary yw-text-primary  text-center fv-hover-bg-background-alt fv-pointer rounded d-flex align-items-center ',
+    class: baseDropdownItemsClass,
     children: [
         {
-            class: 'fas fa-address-card mx-3',
+            class: 'd-flex justify-content-center align-items-center mr-2 ',
+            style: {
+                width: '25px',
+            },
+            children: [
+                {
+                    class: 'fas fa-address-card fa-lg  ',
+                },
+            ],
         },
         {
-            innerText: 'Manage your identity',
+            innerText: 'Manage account',
         },
     ],
     onclick: () => {
         window
             .open(
-                'https://platform.youwol.com/auth/realms/youwol/account/#/',
+                'https://platform.int.youwol.com/auth/realms/youwol/account/#/',
                 '_blank',
             )
             .focus()
@@ -84,10 +115,18 @@ export const manageIdentityView = {
 }
 
 export const logAsVisitorView = {
-    class: 'mt-2 p-1 fv-text-primary yw-text-primary  text-center fv-hover-bg-background-alt fv-pointer rounded d-flex align-items-center',
+    class: baseDropdownItemsClass,
     children: [
         {
-            class: 'fas fa-users mx-2',
+            class: 'd-flex justify-content-center align-items-center mr-2 ',
+            style: {
+                width: '25px',
+            },
+            children: [
+                {
+                    class: 'fas fa-user-circle fa-lg ',
+                },
+            ],
         },
         {
             innerText: 'Visitor',
@@ -100,20 +139,25 @@ export const logAsVisitorView = {
 }
 
 export const otherProfilesView = {
-    class: 'container fv-text-primary text-center',
+    class: 'container p-0 m-0 fv-text-primary text-center',
     children: [
         {
-            innerText: 'Other profiles',
+            innerText: 'Profiles',
             style: { opacity: '0.5' },
         },
-        logAsVisitorView,
     ],
 }
 
 export const logoutView = {
-    class: 'd-flex yw-hover-app fv-text-primary yw-text-primary bg-danger bg-gradient p-1 align-items-center justify-content-center fv-pointer  rounded',
+    class: baseDropdownItemsClass,
     children: [
-        { class: 'fas fa-sign-out-alt mx-2' },
+        {
+            class: 'd-flex justify-content-center align-items-center mr-2 ',
+            style: {
+                width: '25px',
+            },
+            children: [{ class: 'fas fa-sign-out-alt fa-lg ' }],
+        },
         {
             innerText: 'Logout',
         },
@@ -121,4 +165,55 @@ export const logoutView = {
     onclick: () => {
         redirectWith('logoutUrl')
     },
+}
+
+class AllProfilesView implements VirtualDOM {
+    public readonly class = 'w-100 '
+
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly children: Stream$<
+        { id: string; name: string }[],
+        VirtualDOM[]
+    >
+
+    constructor({ state }: { state: ProfilesState }) {
+        // const state = new ProfilesState({ profilesInfo })
+
+        this.children = children$(state.profiles$, (profiles) => {
+            return [
+                ...profiles.map(
+                    (profile) => new ProfileItemView({ profile, state }),
+                ),
+                new NewProfileItemView({ state }),
+            ]
+        })
+    }
+}
+
+export class AccountBadge implements VirtualDOM {
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly class =
+        'dropdown-item  fv-text-primary yw-text-primary  text-center fv-hover-bg-background-alt fv-pointer rounded d-flex align-items-center px-3'
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly style = {
+        pointerEvents: 'none',
+    }
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly children: VirtualDOM[]
+
+    constructor(userInfos: Accounts.UserInfos) {
+
+        this.children = [
+            new AvatarView(userInfos),
+            { innerText: userInfos.name },
+        ]
+    }
 }

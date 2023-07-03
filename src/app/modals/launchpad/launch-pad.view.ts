@@ -232,7 +232,14 @@ class RunningAppsView implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly class = 'w-25 overflow-auto h-100 d-flex flex-column'
+    public readonly class =
+        'w-25 overflow-auto h-100 d-flex testsScroll flex-column yw-scrollbar'
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly style = {
+        position: 'relative',
+    }
     /**
      * @group Immutable DOM Constants
      */
@@ -253,6 +260,15 @@ class RunningAppsView implements VirtualDOM {
         Object.assign(this, params)
         this.children = [
             {
+                style: {
+                    position: 'sticky',
+                    top: '0px',
+                    textAlignLast: 'left',
+                    width: '100%',
+                    backgroundColor: '#444444',
+                    paddingBottom: '5px',
+                    zIndex: '1',
+                },
                 innerText: 'Running Applications',
             },
             {
@@ -297,7 +313,7 @@ export class RunningAppView implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly class = `rounded d-flex flex-column align-items-center rounded w-100 p-2 my-1  fv-bg-background-alt`
+    public readonly class = `rounded text-break d-flex flex-column align-items-center rounded w-100  my-1  fv-bg-background-alt`
     /**
      * @group Immutable DOM Constants
      */
@@ -434,6 +450,9 @@ class InstancesListView implements VirtualDOM {
     instancesListView() {
         return {
             class: 'w-100',
+            style: {
+                width: 'fit-content',
+            },
             children: this.instances.map((app) => {
                 return {
                     class: attr$(

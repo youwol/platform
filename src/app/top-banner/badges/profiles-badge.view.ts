@@ -1,11 +1,12 @@
 import { popupModal } from '../../modals'
 import { Accounts, CdnSessionsStorage } from '@youwol/http-clients'
 import { HTTPError, raiseHTTPErrors } from '@youwol/http-primitives'
-import { ProfilesView } from '../../modals/profiles'
+import { ProfilesState, ProfilesView } from '../../modals/profiles'
 import { setup } from '../../../auto-generated'
 import { child$, VirtualDOM } from '@youwol/flux-view'
 import { Observable } from 'rxjs'
 import { map } from 'rxjs/operators'
+import { baseDropdownItemsClass } from '../../modals/user'
 
 /**
  * @category View
@@ -14,8 +15,7 @@ export class ProfilesBadgeView implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly class =
-        'mt-2 p-1 fv-text-primary yw-text-primary  text-center fv-hover-bg-background-alt fv-pointer rounded d-flex align-items-center'
+    public readonly class = baseDropdownItemsClass
     /**
      * @group Immutable DOM Constants
      */
@@ -26,7 +26,13 @@ export class ProfilesBadgeView implements VirtualDOM {
      */
     public readonly onclick: () => void
 
-    constructor(sessionInfo: Accounts.SessionDetails) {
+    constructor({
+        sessionInfo,
+        state,
+    }: {
+        sessionInfo: Accounts.SessionDetails
+        state: ProfilesState
+    }) {
         const getData$ = new CdnSessionsStorage.Client().getData$({
             packageName: setup.name,
             dataName: 'profilesInfo',
@@ -39,10 +45,18 @@ export class ProfilesBadgeView implements VirtualDOM {
         >
         this.children = [
             {
-                class: 'fas fa-cog  mx-3',
+                class: 'd-flex justify-content-center align-items-center mr-2 ',
+                style: {
+                    width: '25px',
+                },
+                children: [
+                    {
+                        class: 'fas fa-cog fa-lg ',
+                    },
+                ],
             },
             {
-                innerText: 'Preference',
+                innerText: 'Edit active profile',
             },
         ]
 
@@ -60,8 +74,7 @@ export class ProfilesBadgeView implements VirtualDOM {
                                   },
                         ),
                     ),
-                    (profilesInfo) =>
-                        new ProfilesView({ sessionInfo, profilesInfo }),
+                    () => new ProfilesView({ sessionInfo, state }),
                     {
                         untilFirst: {
                             class: 'fas fa-spinner fa-spin',

@@ -24,15 +24,12 @@ export class ProfilesView {
 
     constructor({
         sessionInfo,
-        profilesInfo,
+        state,
     }: {
         sessionInfo: Accounts.SessionDetails
-        profilesInfo: {
-            customProfiles: { id: string; name: string }[]
-            selectedProfile: string
-        }
+
+        state: ProfilesState
     }) {
-        const state = new ProfilesState({ profilesInfo })
         const cm$ = ProfilesState.getBootstrap$().pipe(
             mergeMap(() => ProfilesState.getFvCodeMirror$()),
         )
@@ -41,7 +38,7 @@ export class ProfilesView {
             {
                 class: 'd-flex align-items-center justify-content-center w-100 my-2',
                 children: [
-                    { class: 'mx-3', innerText: 'Selected profile' },
+                    { class: 'mx-3', innerText: 'Selected profile :' },
                     {
                         class: attr$(
                             ProfilesState.getBootstrap$(),
@@ -183,12 +180,6 @@ export class EditProfileButton implements VirtualDOM {
             {
                 class: 'fas fa-pen mr-1 ',
             },
-            child$(state.selectedProfile$, ({ id }) => {
-                return {
-                    innerText:
-                        id == 'default' ? 'View profile' : 'Edit profile',
-                }
-            }),
         ]
         this.onclick = () => state.edit()
     }

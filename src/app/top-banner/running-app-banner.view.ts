@@ -42,7 +42,7 @@ export class RunningAppBannerView implements VirtualDOM {
                         style: { minWidth: '0px' },
                         children: [
                             child$(app.topBannerActions$, (vDOM) => {
-                                vDOM.style = { maxHeight: '32px' }
+                                vDOM.style = { maxHeight: 'fit-content' }
                                 return vDOM
                             }),
                         ],
@@ -70,7 +70,7 @@ class RunningAppTitleView implements VirtualDOM {
      * @group Immutable DOM Constants
      */
     public readonly style = {
-        height: '30px',
+        height: '33px',
         fontSize: '13px',
     }
     /**
@@ -89,23 +89,27 @@ class RunningAppTitleView implements VirtualDOM {
                         app.appMetadata$,
                         (appInfo) => appInfo.graphics.appIcon,
                     ),
-                    { class: 'mx-1' },
+                    // { class: 'mx-1' },
                     child$(app.header$, (view) => view),
                 ],
             },
             {
-                class: 'd-flex align-items-center border rounded p-1 fv-xx-darker fv-bg-background-alt',
+                class: 'd-flex align-items-center  rounded p-1 ml-2  ',
                 style: {
-                    fontSize: '11px',
+                    fontSize: 'medium',
                 },
                 children: [
                     {
-                        class: `${baseClass} fa-minus-square fv-xx-lighter `,
+                        class: `${baseClass} fa-minus  `,
                         onclick: () => state.minimize(app.instanceId),
                     },
                     {
-                        class: `${baseClass} fa-external-link-alt`,
-                        onclick: () => state.expand(app.instanceId),
+                        class: `${baseClass} fa-clone`,
+
+                        onclick: () => {
+                            state.expand(app.instanceId)
+                            state.minimize(app.instanceId)
+                        },
                     },
                     {
                         class: `${baseClass} fa-times`,

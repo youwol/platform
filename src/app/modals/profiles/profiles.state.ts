@@ -62,7 +62,7 @@ export class ProfilesState {
     /**
      * @group Observables
      */
-    public readonly editionMode$ = new BehaviorSubject<boolean>(false)
+    public readonly editionMode$ = new BehaviorSubject<boolean>(true)
 
     /**
      * @group Observables

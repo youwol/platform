@@ -51,7 +51,10 @@ export class VisitorFormState {
      * @group Observables
      */
     public readonly pending$: Observable<boolean>
-    private readonly _pendingHandler = new BehaviorSubject<string>('')
+    /**
+     * @group Observables
+     */
+    private readonly pendingHandler$ = new BehaviorSubject<string>('')
 
     constructor(params: { modalState: Modal.State }) {
         Object.assign(this, params)
@@ -75,11 +78,11 @@ export class VisitorFormState {
                 }),
             ),
             dispatchHTTPErrors<Empty>(this._httpError$),
-            tap(() => this._pendingHandler.next('OK')),
+            tap(() => this.pendingHandler$.next('OK')),
         )
         this.pending$ = merge(
             this._triggerRegistration$.pipe(mapTo('start')),
-            this._pendingHandler.pipe(mapTo('end')),
+            this.pendingHandler$.pipe(mapTo('end')),
             this._httpError$.pipe(
                 tap((v) => console.log('err inside the _http obs', v)),
                 filter((e) => e != undefined),

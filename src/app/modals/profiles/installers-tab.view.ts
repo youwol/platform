@@ -47,29 +47,27 @@ export class InstallersView implements VirtualDOM {
 
     constructor(params: { tabsState: SettingsTabsState }) {
         this.children = [
-            child$(
-                params.tabsState.profilesState.selectedProfile$,
-                (profile) => {
-                    return new CodeEditorView({
-                        CodeEditorModule: ProfilesState.CodeEditorModule,
-                        tsSrc: profile.installers.tsSrc,
-                        readOnly: profile.id == 'default',
-                        onRun: (editor) => {
-                            const parsed =
-                                ProfilesState.CodeEditorModule.parseTypescript(
-                                    editor.getValue(),
-                                )
-                            return params.tabsState.profilesState.updateProfile(
-                                profile.id,
-                                {
-                                    preferences: profile.preferences,
-                                    installers: parsed,
-                                },
+            child$(params.tabsState.profilesState.editedProfile$, (profile) => {
+                return new CodeEditorView({
+                    profileState: params.tabsState.profilesState,
+                    CodeEditorModule: ProfilesState.CodeEditorModule,
+                    tsSrc: profile.installers.tsSrc,
+                    readOnly: profile.id == 'default',
+                    onRun: (editor) => {
+                        const parsed =
+                            ProfilesState.CodeEditorModule.parseTypescript(
+                                editor.getValue(),
                             )
-                        },
-                    })
-                },
-            ),
+                        return params.tabsState.profilesState.updateProfile(
+                            profile.id,
+                            {
+                                preferences: profile.preferences,
+                                installers: parsed,
+                            },
+                        )
+                    },
+                })
+            }),
         ]
     }
 }

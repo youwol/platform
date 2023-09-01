@@ -13,7 +13,9 @@ export class SettingsTabsState extends DockableTabs.State {
      * @group Immutable Constants
      */
     public readonly sessionInfo: Accounts.SessionDetails
-
+    /**
+     * @group States
+     */
     public readonly profilesState: ProfilesState
 
     constructor(params: {
@@ -41,6 +43,7 @@ export class SettingsTabsView extends DockableTabs.View {
     public readonly onclick = (ev) => {
         ev.stopPropagation()
     }
+
     constructor({
         sessionInfo,
         profilesState,

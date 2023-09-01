@@ -1,8 +1,9 @@
-import { Observable, Subject } from 'rxjs'
+import { combineLatest, Observable, Subject } from 'rxjs'
 import { child$, VirtualDOM } from '@youwol/flux-view'
 import { Common, TsCodeEditorModule } from '@youwol/fv-code-mirror-editors'
 
 import CodeMirror from 'codemirror'
+import { ProfilesState } from './profiles.state'
 
 /**
  * @category View
@@ -18,11 +19,13 @@ export class CodeEditorView implements VirtualDOM {
     public readonly children: VirtualDOM[]
 
     constructor({
+        profileState,
         CodeEditorModule,
         tsSrc,
         readOnly,
         onRun,
     }: {
+        profileState: ProfilesState
         CodeEditorModule: TsCodeEditorModule
         tsSrc: string
         readOnly: boolean
@@ -63,6 +66,7 @@ export class CodeEditorView implements VirtualDOM {
                       codeEditorView.nativeEditor$,
                       (editor) =>
                           new ToolbarView({
+                              profileState: profileState,
                               highlights$: codeEditorView.highlights$,
                               onRun: onRunWithErrors,
                               editor,
@@ -78,32 +82,55 @@ export class CodeEditorView implements VirtualDOM {
 }
 
 export class ToolbarView implements VirtualDOM {
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly class: string =
         'w-100 fv-bg-background d-flex justify-content-center align-items-center'
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly children: VirtualDOM[]
 
     constructor({
+        profileState,
         highlights$,
         onRun,
         editor,
         error$,
     }: {
+        profileState: ProfilesState
         highlights$: Observable<Common.SrcHighlight[]>
         onRun: (editor: CodeMirror.Editor) => Promise<unknown>
         editor: CodeMirror.Editor
         error$
     }) {
         this.children = [
-            child$(highlights$, (highlights) => {
-                return highlights.length > 0
-                    ? {
-                          class: 'fas fa-exclamation fv-text-error  p-1',
-                      }
-                    : {
-                          class: 'fas fa-play mx-1 fv-text-success fv-hover-xx-lighter fv-pointer rounded p-1',
-                          onclick: () => onRun(editor),
-                      }
-            }),
+            child$(
+                combineLatest([
+                    highlights$,
+                    profileState.editedProfile$,
+                    profileState.selectedProfile$,
+                ]),
+                ([highlights, editProfile, selectedProfile]) => {
+                    return highlights.length > 0
+                        ? {
+                              class: 'fas fa-exclamation fv-text-error  p-1',
+                          }
+                        : {
+                              class: 'fas fa-save mx-1 fv-text-success fv-hover-xx-lighter fv-pointer rounded p-1',
+                              onclick: () => {
+                                  onRun(editor).then(() =>
+                                      editProfile.id === selectedProfile.id
+                                          ? profileState.selectProfile(
+                                                selectedProfile.id,
+                                            )
+                                          : {},
+                                  )
+                              },
+                          }
+                },
+            ),
             child$(error$, (error) => {
                 return error
                     ? { class: 'fas fa-times fv-text-error  p-1' }

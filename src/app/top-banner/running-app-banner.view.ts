@@ -3,6 +3,7 @@ import * as OsCore from '@youwol/os-core'
 import { EnvironmentBadgesView, LaunchpadBadgeView } from './badges'
 import { sessionDetails$ } from './utils.view'
 import { CorporationBadgeView } from './badges/corporation.view'
+import { ProfilesState } from '../modals/profiles'
 
 /**
  * Top banner when an application is running
@@ -18,13 +19,16 @@ export class RunningAppBannerView implements VirtualDOM {
      * @group Immutable DOM Constants
      */
     public readonly style = { height: '40px' }
-
     /**
      * @group Immutable DOM Constants
      */
     public readonly children: VirtualDOM[]
 
-    constructor(state: OsCore.PlatformState, app: OsCore.RunningApp) {
+    constructor(
+        state: OsCore.PlatformState,
+        profileState: ProfilesState,
+        app: OsCore.RunningApp,
+    ) {
         this.children = [
             child$(
                 OsCore.PreferencesFacade.getPreferences$(),
@@ -50,7 +54,7 @@ export class RunningAppBannerView implements VirtualDOM {
                 ],
             },
             child$(sessionDetails$, (sessionInfo) => {
-                return new EnvironmentBadgesView({ sessionInfo })
+                return new EnvironmentBadgesView({ sessionInfo, profileState })
             }),
         ]
     }
@@ -94,7 +98,7 @@ class RunningAppTitleView implements VirtualDOM {
                 ],
             },
             {
-                class: 'd-flex align-items-center  rounded p-1 ml-2  ',
+                class: 'd-flex align-items-center  rounded p-1 ms-2  ',
                 style: {
                     fontSize: 'medium',
                 },

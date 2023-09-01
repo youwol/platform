@@ -10,7 +10,8 @@ const runTimeDependencies = {
         "uuid": "^8.3.2",
         "@youwol/cdn-client": "^1.0.2",
         "codemirror": "^5.52.0",
-        "@youwol/fv-code-mirror-editors": "^0.2.1"
+        "@youwol/fv-code-mirror-editors": "^0.2.1",
+        "@youwol/fv-context-menu": "^0.1.1"
     },
     "includedInBundle": {}
 }
@@ -25,6 +26,7 @@ const externals = {
     "@youwol/cdn-client": "window['@youwol/cdn-client_APIv1']",
     "codemirror": "window['CodeMirror_APIv5']",
     "@youwol/fv-code-mirror-editors": "window['@youwol/fv-code-mirror-editors_APIv02']",
+    "@youwol/fv-context-menu": "window['@youwol/fv-context-menu_APIv01']",
     "rxjs/operators": "window['rxjs_APIv6']['operators']"
 }
 const exportedSymbols = {
@@ -67,6 +69,10 @@ const exportedSymbols = {
     "@youwol/fv-code-mirror-editors": {
         "apiKey": "02",
         "exportedSymbol": "@youwol/fv-code-mirror-editors"
+    },
+    "@youwol/fv-context-menu": {
+        "apiKey": "01",
+        "exportedSymbol": "@youwol/fv-context-menu"
     }
 }
 
@@ -80,7 +86,8 @@ const mainEntry : {entryFile: string,loadDependencies:string[]} = {
         "@youwol/http-clients",
         "rxjs",
         "uuid",
-        "@youwol/cdn-client"
+        "@youwol/cdn-client",
+        "@youwol/fv-context-menu"
     ]
 }
 

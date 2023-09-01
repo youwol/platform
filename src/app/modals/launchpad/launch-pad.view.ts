@@ -3,6 +3,7 @@ import * as OsCore from '@youwol/os-core'
 import { map } from 'rxjs/operators'
 import { LaunchpadBadgeView } from '../../top-banner/badges'
 import { Modal } from '@youwol/fv-group'
+import { ClosePopupButtonView } from '../profiles'
 
 /**
  * @category View
@@ -31,7 +32,7 @@ export class ApplicationsLaunchPadView implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly children
+    public readonly children: VirtualDOM[]
 
     /**
      * @group Immutable DOM Constants
@@ -73,7 +74,7 @@ export class ApplicationsLaunchPadView implements VirtualDOM {
                             : {},
                     ),
                     child$(this.state.runningApplications$, (apps) =>
-                        apps.length > 0 ? { class: 'mx-3 border-right' } : {},
+                        apps.length > 0 ? { class: 'mx-3 border-end' } : {},
                     ),
                     new NewAppsView({
                         state: this.state,
@@ -81,6 +82,7 @@ export class ApplicationsLaunchPadView implements VirtualDOM {
                     }),
                 ],
             },
+            new ClosePopupButtonView(),
         ]
     }
 }
@@ -93,7 +95,9 @@ class NewAppsView implements VirtualDOM {
      * @group Immutable DOM Constants
      */
     public readonly class = 'w-100 flex-grow-1 d-flex flex-column '
-
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly style = {
         minHeight: '0px',
     }
@@ -144,7 +148,7 @@ class NewAppsView implements VirtualDOM {
                 },
                 children: [
                     {
-                        class: 'd-flex p-2 m-2 flex-wrap justify-content-start',
+                        class: 'd-flex p-2 m-2 flex-wrap justify-content-start align-items-center',
                         children: children$(
                             OsCore.Installer.getApplicationsInfo$().pipe(
                                 map((apps) => {

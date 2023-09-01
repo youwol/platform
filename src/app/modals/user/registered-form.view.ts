@@ -1,14 +1,13 @@
 import { children$, Stream$, VirtualDOM } from '@youwol/flux-view'
 import { Accounts } from '@youwol/http-clients'
 import { separatorView, redirectWith } from './common'
-import { ProfilesBadgeView } from '../../top-banner/badges'
 
 import { NewProfileItemView, ProfileItemView, ProfilesState } from '../profiles'
 
 /**
  * @category View
  */
-export class RegisteredFormView {
+export class RegisteredFormView implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
@@ -20,21 +19,16 @@ export class RegisteredFormView {
 
     constructor({
         sessionInfo,
-        profilesInfo,
+        state,
     }: {
         sessionInfo: Accounts.SessionDetails
-        profilesInfo: {
-            customProfiles: { id: string; name: string }[]
-            selectedProfile: string
-        }
+        state: ProfilesState
     }) {
-        const state = new ProfilesState({ profilesInfo })
         this.children = [
             new AccountBadge(sessionInfo.userInfo),
             manageIdentityView,
             separatorView,
             otherProfilesView,
-            new ProfilesBadgeView({ sessionInfo, state }),
             new AllProfilesView({ state }),
             separatorView,
             logAsVisitorView,
@@ -52,7 +46,7 @@ export class AvatarView implements VirtualDOM {
      * @group Immutable DOM Constants
      */
     public readonly class =
-        'd-flex justify-content-center align-items-center rounded mr-2'
+        'd-flex justify-content-center align-items-center rounded me-2'
     /**
      * @group Immutable DOM Constants
      */
@@ -90,7 +84,7 @@ export const manageIdentityView = {
     class: baseDropdownItemsClass,
     children: [
         {
-            class: 'd-flex justify-content-center align-items-center mr-2 ',
+            class: 'd-flex justify-content-center align-items-center me-2 ',
             style: {
                 width: '25px',
             },
@@ -118,7 +112,7 @@ export const logAsVisitorView = {
     class: baseDropdownItemsClass,
     children: [
         {
-            class: 'd-flex justify-content-center align-items-center mr-2 ',
+            class: 'd-flex justify-content-center align-items-center me-2 ',
             style: {
                 width: '25px',
             },
@@ -152,7 +146,7 @@ export const logoutView = {
     class: baseDropdownItemsClass,
     children: [
         {
-            class: 'd-flex justify-content-center align-items-center mr-2 ',
+            class: 'd-flex justify-content-center align-items-center me-2 ',
             style: {
                 width: '25px',
             },
@@ -167,9 +161,15 @@ export const logoutView = {
     },
 }
 
-class AllProfilesView implements VirtualDOM {
-    public readonly class = 'w-100 '
-
+export class AllProfilesView implements VirtualDOM {
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly class = 'w-100 accordion accordion-flush'
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly id = 'accordionFlushExample'
     /**
      * @group Immutable DOM Constants
      */
@@ -179,8 +179,6 @@ class AllProfilesView implements VirtualDOM {
     >
 
     constructor({ state }: { state: ProfilesState }) {
-        // const state = new ProfilesState({ profilesInfo })
-
         this.children = children$(state.profiles$, (profiles) => {
             return [
                 ...profiles.map(
@@ -210,7 +208,6 @@ export class AccountBadge implements VirtualDOM {
     public readonly children: VirtualDOM[]
 
     constructor(userInfos: Accounts.UserInfos) {
-
         this.children = [
             new AvatarView(userInfos),
             { innerText: userInfos.name },

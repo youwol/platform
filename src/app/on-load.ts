@@ -7,20 +7,38 @@ import {
     VirtualDOM,
 } from '@youwol/flux-view'
 import * as OsCore from '@youwol/os-core'
-import { RunningApp } from '@youwol/os-core'
+import { RunningApp, Preferences, isVisitor$ } from '@youwol/os-core'
 
 import { RunningAppView } from './running-apps'
-import { PlatformBannerView, sessionDetails$ } from './top-banner'
-import { popupModal } from './modals'
+
 import {
-    WelcomeVisitorState,
-    WelcomeVisitorView,
-} from './modals/welcome-visitor/welcome-visitor.view'
+    Accounts,
+    AssetsGateway,
+    CdnSessionsStorage,
+} from '@youwol/http-clients'
+import { HTTPError, raiseHTTPErrors } from '@youwol/http-primitives'
+import { map, shareReplay, tap } from 'rxjs/operators'
+import { installContextMenu } from './context-menu/context-menu.state'
+import { ContextMenuDesktopView } from './context-menu/context-menu.view'
+import { PlatformBannerView } from './top-banner'
+import { Observable } from 'rxjs'
+import { ProfilesState } from './modals/profiles'
+import { setup } from '../auto-generated'
 
 require('./style.css')
 
 const searchParams = new URLSearchParams(window.location.search)
 
+export const sessionDetails$ = new AssetsGateway.Client().accounts
+    .getSessionDetails$()
+    .pipe(
+        raiseHTTPErrors(),
+        shareReplay({
+            bufferSize: 1,
+            refCount: true,
+        }),
+        tap((v) => isVisitor$.next(v.userInfo.temp)),
+    )
 if (searchParams.has('mode') && searchParams.get('mode') == 'safe') {
     OsCore.PlatformState.setSafeMode()
 }
@@ -46,22 +64,35 @@ export class PlatformView implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
+    public readonly sessionInfo: Accounts.SessionDetails
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly style: Stream$<
         { [_key: string]: string },
         { [_key: string]: string }
     >
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly onclick: (ev) => void
 
     constructor() {
         this.children = [
             new BackgroundView(),
-            new PlatformBannerView({
-                state: this.state,
-                class: 'fv-bg-background yw-box-shadow',
-                style: {
-                    background: '#070707',
-                    zIndex: 99,
-                },
-            }),
+            child$(
+                getProfileStateData$(),
+                (profileState) =>
+                    new PlatformBannerView({
+                        state: this.state,
+                        profileState: profileState,
+                        class: 'fv-bg-background yw-box-shadow',
+                        style: {
+                            background: '#070707',
+                            zIndex: 99,
+                        },
+                    }),
+            ),
             {
                 class: 'd-flex align-items-center flex-grow-1 w-100 yw-iframe-border-none',
                 style: {
@@ -78,10 +109,6 @@ export class PlatformView implements VirtualDOM {
             if (!sessionInfo.userInfo.temp) {
                 return
             }
-            WelcomeVisitorState.isShowAgainMode() &&
-                popupModal(
-                    (modalState) => new WelcomeVisitorView({ modalState }),
-                )
         })
     }
 }
@@ -100,12 +127,16 @@ export class BackgroundView implements VirtualDOM {
     public readonly style = {
         top: '0px',
         left: '0px',
-        zIndex: '-1',
+        zIndex: '1',
     }
     /**
      * @group Immutable DOM Constants
      */
     public readonly children: VirtualDOM[]
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly connectedCallback: (elem) => void
 
     constructor() {
         this.children = [
@@ -116,6 +147,16 @@ export class BackgroundView implements VirtualDOM {
                 },
             ),
         ]
+        this.connectedCallback = (elem) => {
+            return installContextMenu({
+                div: elem,
+                children: [
+                    child$(getProfileStateData$(), (profileState) => {
+                        return new ContextMenuDesktopView({ profileState })
+                    }),
+                ],
+            })
+        }
     }
 }
 
@@ -130,7 +171,7 @@ export class DesktopWidgetsView {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly children //: VirtualDOM[]
+    public readonly children: Stream$<Preferences, VirtualDOM[]>
     /**
      * @group States
      */
@@ -155,6 +196,31 @@ export class DesktopWidgetsView {
                 }),
         )
     }
+}
+
+export function getProfileStateData$(): Observable<ProfilesState> {
+    const getData$ = new CdnSessionsStorage.Client().getData$({
+        packageName: setup.name,
+        dataName: 'profilesInfo',
+    }) as unknown as Observable<
+        | {
+              customProfiles: { id: string; name: string }[]
+              selectedProfile: string
+          }
+        | HTTPError
+    >
+    return getData$.pipe(
+        raiseHTTPErrors(),
+        map((jsonResp) =>
+            jsonResp.customProfiles
+                ? jsonResp
+                : {
+                      customProfiles: [],
+                      selectedProfile: 'default',
+                  },
+        ),
+        map((profilesInfo) => new ProfilesState({ profilesInfo })),
+    )
 }
 
 document.getElementById('content').appendChild(render(new PlatformView()))

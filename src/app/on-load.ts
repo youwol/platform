@@ -7,7 +7,7 @@ import {
     VirtualDOM,
 } from '@youwol/flux-view'
 import * as OsCore from '@youwol/os-core'
-import { RunningApp, Preferences, isVisitor$ } from '@youwol/os-core'
+import { RunningApp, Preferences } from '@youwol/os-core'
 
 import { RunningAppView } from './running-apps'
 
@@ -17,7 +17,7 @@ import {
     CdnSessionsStorage,
 } from '@youwol/http-clients'
 import { HTTPError, raiseHTTPErrors } from '@youwol/http-primitives'
-import { map, shareReplay, tap } from 'rxjs/operators'
+import { map, shareReplay } from 'rxjs/operators'
 import { installContextMenu } from './context-menu/context-menu.state'
 import { ContextMenuDesktopView } from './context-menu/context-menu.view'
 import { PlatformBannerView } from './top-banner'
@@ -37,7 +37,6 @@ export const sessionDetails$ = new AssetsGateway.Client().accounts
             bufferSize: 1,
             refCount: true,
         }),
-        tap((v) => isVisitor$.next(v.userInfo.temp)),
     )
 if (searchParams.has('mode') && searchParams.get('mode') == 'safe') {
     OsCore.PlatformState.setSafeMode()

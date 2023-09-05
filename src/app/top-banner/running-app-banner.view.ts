@@ -33,7 +33,7 @@ export class RunningAppBannerView implements VirtualDOM {
             child$(
                 OsCore.PreferencesFacade.getPreferences$(),
                 (preferences) =>
-                    new CorporationBadgeView({ preferences, state, app }),
+                    new CorporationBadgeView({ preferences, state }),
             ),
             new LaunchpadBadgeView({ state }),
             {

@@ -1,6 +1,5 @@
 import { VirtualDOM } from '@youwol/flux-view'
 import { DesktopCtxMenuView } from './desktop-ctx-menu.view'
-import { IconCtxMenuView } from './icon-ctx-menu.view'
 
 export class ContextMenuDesktopView implements VirtualDOM {
     /**
@@ -18,25 +17,6 @@ export class ContextMenuDesktopView implements VirtualDOM {
 
     constructor({ profileState }) {
         this.children = [new DesktopCtxMenuView({ profileState })]
-    }
-}
-
-export class ContextMenuYwIconView implements VirtualDOM {
-    /**
-     * @group Immutable DOM Constants
-     */
-    public readonly class = baseClassCtxMenuView
-    /**
-     * @group Immutable DOM Constants
-     */
-    public readonly style = baseStyleMenuView
-    /**
-     * @group Immutable DOM Constants
-     */
-    public readonly children: VirtualDOM[]
-
-    constructor() {
-        this.children = [new IconCtxMenuView()]
     }
 }
 

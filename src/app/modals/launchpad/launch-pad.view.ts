@@ -3,6 +3,7 @@ import * as OsCore from '@youwol/os-core'
 import { map } from 'rxjs/operators'
 import { LaunchpadBadgeView } from '../../top-banner/badges'
 import { Modal } from '@youwol/fv-group'
+import { ClosePopupButtonView } from '../profiles'
 
 /**
  * @category View
@@ -31,7 +32,7 @@ export class ApplicationsLaunchPadView implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly children
+    public readonly children: VirtualDOM[]
 
     /**
      * @group Immutable DOM Constants
@@ -73,7 +74,7 @@ export class ApplicationsLaunchPadView implements VirtualDOM {
                             : {},
                     ),
                     child$(this.state.runningApplications$, (apps) =>
-                        apps.length > 0 ? { class: 'mx-3 border-right' } : {},
+                        apps.length > 0 ? { class: 'mx-3 border-end' } : {},
                     ),
                     new NewAppsView({
                         state: this.state,
@@ -81,6 +82,7 @@ export class ApplicationsLaunchPadView implements VirtualDOM {
                     }),
                 ],
             },
+            new ClosePopupButtonView(),
         ]
     }
 }
@@ -93,7 +95,9 @@ class NewAppsView implements VirtualDOM {
      * @group Immutable DOM Constants
      */
     public readonly class = 'w-100 flex-grow-1 d-flex flex-column '
-
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly style = {
         minHeight: '0px',
     }
@@ -144,7 +148,7 @@ class NewAppsView implements VirtualDOM {
                 },
                 children: [
                     {
-                        class: 'd-flex p-2 m-2 flex-wrap justify-content-start',
+                        class: 'd-flex p-2 m-2 flex-wrap justify-content-start align-items-center',
                         children: children$(
                             OsCore.Installer.getApplicationsInfo$().pipe(
                                 map((apps) => {
@@ -232,7 +236,14 @@ class RunningAppsView implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly class = 'w-25 overflow-auto h-100 d-flex flex-column'
+    public readonly class =
+        'w-25 overflow-auto h-100 d-flex testsScroll flex-column yw-scrollbar'
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly style = {
+        position: 'relative',
+    }
     /**
      * @group Immutable DOM Constants
      */
@@ -253,6 +264,15 @@ class RunningAppsView implements VirtualDOM {
         Object.assign(this, params)
         this.children = [
             {
+                style: {
+                    position: 'sticky',
+                    top: '0px',
+                    textAlignLast: 'left',
+                    width: '100%',
+                    backgroundColor: '#444444',
+                    paddingBottom: '5px',
+                    zIndex: '1',
+                },
                 innerText: 'Running Applications',
             },
             {
@@ -297,7 +317,7 @@ export class RunningAppView implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly class = `rounded d-flex flex-column align-items-center rounded w-100 p-2 my-1  fv-bg-background-alt`
+    public readonly class = `rounded text-break d-flex flex-column align-items-center rounded w-100  my-1  fv-bg-background-alt`
     /**
      * @group Immutable DOM Constants
      */
@@ -434,6 +454,9 @@ class InstancesListView implements VirtualDOM {
     instancesListView() {
         return {
             class: 'w-100',
+            style: {
+                width: 'fit-content',
+            },
             children: this.instances.map((app) => {
                 return {
                     class: attr$(

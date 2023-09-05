@@ -10,7 +10,8 @@ const runTimeDependencies = {
         "uuid": "^8.3.2",
         "@youwol/cdn-client": "^1.0.2",
         "codemirror": "^5.52.0",
-        "@youwol/fv-code-mirror-editors": "^0.2.1"
+        "@youwol/fv-code-mirror-editors": "^0.2.1",
+        "@youwol/fv-context-menu": "^0.1.1"
     },
     "includedInBundle": {}
 }
@@ -25,6 +26,7 @@ const externals = {
     "@youwol/cdn-client": "window['@youwol/cdn-client_APIv1']",
     "codemirror": "window['CodeMirror_APIv5']",
     "@youwol/fv-code-mirror-editors": "window['@youwol/fv-code-mirror-editors_APIv02']",
+    "@youwol/fv-context-menu": "window['@youwol/fv-context-menu_APIv01']",
     "rxjs/operators": "window['rxjs_APIv6']['operators']"
 }
 const exportedSymbols = {
@@ -67,6 +69,10 @@ const exportedSymbols = {
     "@youwol/fv-code-mirror-editors": {
         "apiKey": "02",
         "exportedSymbol": "@youwol/fv-code-mirror-editors"
+    },
+    "@youwol/fv-context-menu": {
+        "apiKey": "01",
+        "exportedSymbol": "@youwol/fv-context-menu"
     }
 }
 
@@ -80,7 +86,8 @@ const mainEntry : {entryFile: string,loadDependencies:string[]} = {
         "@youwol/http-clients",
         "rxjs",
         "uuid",
-        "@youwol/cdn-client"
+        "@youwol/cdn-client",
+        "@youwol/fv-context-menu"
     ]
 }
 
@@ -93,7 +100,7 @@ const entries = {
 export const setup = {
     name:'@youwol/platform',
         assetId:'QHlvdXdvbC9wbGF0Zm9ybQ==',
-    version:'0.1.6',
+    version:'0.1.7-wip',
     shortDescription:"OS like frontend application of YouWol platform.",
     developerDocumentation:'https://platform.youwol.com/applications/@youwol/cdn-explorer/latest?package=@youwol/platform&tab=doc',
     npmPackage:'https://www.npmjs.com/package/@youwol/platform',
@@ -139,7 +146,7 @@ export const setup = {
         const parameters = installParameters || {}
         const scripts = [
             ...(parameters.scripts || []),
-            `@youwol/platform#0.1.6~dist/@youwol/platform/${entry.name}.js`
+            `@youwol/platform#0.1.7-wip~dist/@youwol/platform/${entry.name}.js`
         ]
         const modules = [
             ...(parameters.modules || []),

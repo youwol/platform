@@ -3,6 +3,7 @@ import { children$, VirtualDOM } from '@youwol/flux-view'
 import { map } from 'rxjs/operators'
 import { popupModal } from '../../modals'
 import { ApplicationsLaunchPadView } from '../../modals/launchpad'
+import { TooltipsView } from '../../tooltips/tooltips.view'
 
 /**
  *
@@ -12,14 +13,17 @@ export class LaunchpadBadgeView implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly class =
-        'd-flex my-auto  p-1 rounded fv-hover-bg-background-alt fv-pointer top-banner-menu-view'
-
+    public readonly class = 'd-flex top-banner-menu-view'
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly style = {
+        position: 'relative',
+    }
     /**
      * @group Immutable DOM Constants
      */
     public readonly children: VirtualDOM[]
-
     /**
      * @group Immutable DOM Constants
      */
@@ -28,14 +32,14 @@ export class LaunchpadBadgeView implements VirtualDOM {
     constructor({ state }: { state: OsCore.PlatformState }) {
         this.children = [
             {
-                class: 'd-flex flex-wrap',
+                class: 'd-flex flex-wrap  my-auto  p-1 rounded fv-hover-bg-background-alt fv-pointer ',
                 style: {
-                    width: '25px',
-                    height: '25px',
+                    width: '33px',
+                    height: '33px',
                 },
                 customAttributes: {
-                    dataToggle: 'tooltip',
-                    dataPlacement: 'right',
+                    dataBsToggle: 'tooltip',
+                    dataBsPlacement: 'right',
                     title: 'Application Launcher',
                 },
                 children: children$(
@@ -63,14 +67,28 @@ export class LaunchpadBadgeView implements VirtualDOM {
                                 }
                             }),
                 ),
+                onclick: () =>
+                    popupModal(
+                        (modalState) =>
+                            new ApplicationsLaunchPadView({
+                                state,
+                                modalState,
+                            }),
+                        (elem, modalState) =>
+                            (elem.onclick = (ev) =>
+                                modalState.cancel$.next(ev)),
+                    ),
             },
+            new TooltipsView({
+                tooltipPlace: { top: 2, right: -10 },
+                tooltipArrow: {
+                    arrowLength: 30,
+                    leftRightMove: 1,
+                    arrowWidth: 10,
+                },
+                divId: 'desktop-launchpad',
+                tooltipText: 'Click here to start the Application Launcher',
+            }),
         ]
-        this.onclick = () =>
-            popupModal(
-                (modalState) =>
-                    new ApplicationsLaunchPadView({ state, modalState }),
-                (elem, modalState) =>
-                    (elem.onclick = (ev) => modalState.cancel$.next(ev)),
-            )
     }
 }

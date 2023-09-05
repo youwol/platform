@@ -3,6 +3,7 @@ import * as OsCore from '@youwol/os-core'
 import { EnvironmentBadgesView, LaunchpadBadgeView } from './badges'
 import { sessionDetails$ } from './utils.view'
 import { CorporationBadgeView } from './badges/corporation.view'
+import { ProfilesState } from '../modals/profiles'
 
 /**
  * Regular top banner of the application (no application running)
@@ -25,7 +26,7 @@ export class RegularBannerView implements VirtualDOM {
         height: '40px',
     }
 
-    constructor(state: OsCore.PlatformState) {
+    constructor(state: OsCore.PlatformState, profileState: ProfilesState) {
         this.children = [
             child$(
                 OsCore.PreferencesFacade.getPreferences$(),
@@ -45,7 +46,7 @@ export class RegularBannerView implements VirtualDOM {
                 ),
             },
             child$(sessionDetails$, (sessionInfo) => {
-                return new EnvironmentBadgesView({ sessionInfo })
+                return new EnvironmentBadgesView({ sessionInfo, profileState })
             }),
         ]
     }

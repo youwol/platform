@@ -1,6 +1,6 @@
 import { attr$, child$, Stream$, VirtualDOM } from '@youwol/flux-view'
 import { BehaviorSubject, merge, Observable, Subject } from 'rxjs'
-import { filter, map, mapTo, mergeMap } from 'rxjs/operators'
+import { filter, map, mapTo, mergeMap, tap } from 'rxjs/operators'
 import { Accounts } from '@youwol/http-clients'
 import { dispatchHTTPErrors, Empty, HTTPError } from '@youwol/http-primitives'
 import { separatorView, redirectWith } from './common'
@@ -51,6 +51,10 @@ export class VisitorFormState {
      * @group Observables
      */
     public readonly pending$: Observable<boolean>
+    /**
+     * @group Observables
+     */
+    private readonly pendingHandler$ = new BehaviorSubject<string>('')
 
     constructor(params: { modalState: Modal.State }) {
         Object.assign(this, params)
@@ -74,11 +78,13 @@ export class VisitorFormState {
                 }),
             ),
             dispatchHTTPErrors<Empty>(this._httpError$),
+            tap(() => this.pendingHandler$.next('OK')),
         )
         this.pending$ = merge(
             this._triggerRegistration$.pipe(mapTo('start')),
-            this.done$.pipe(mapTo('OK')),
+            this.pendingHandler$.pipe(mapTo('end')),
             this._httpError$.pipe(
+                tap((v) => console.log('err inside the _http obs', v)),
                 filter((e) => e != undefined),
                 mapTo('KO'),
             ),
@@ -98,9 +104,11 @@ export class VisitorFormState {
  * @category View
  */
 export class VisitorFormView {
+    /**
+     * @group Immutable DOM Constants
+     */
     public readonly class =
-        'dropdown-item  fv-hover-bg-background-alt fv-hover-text-primary fv-text-primary  bg-transparent fv-hover-bg-background '
-
+        'dropdown-item yw-bg-dark fv-hover-bg-background-alt  w-100 fv-hover-text-primary p-3 fv-text-primary  bg-transparent fv-hover-bg-background '
     /**
      * @group Immutable DOM Constants
      */
@@ -111,12 +119,12 @@ export class VisitorFormView {
 
         this.children = [
             headerView,
-            new InviteLoginView({ visitorFormState: state }),
-            separatorView,
             inviteRegisteringView0,
             separatorView,
             inviteRegisteringView1,
             new RegisterForm(state),
+            separatorView,
+            new InviteLoginView(),
         ]
     }
 }
@@ -128,32 +136,31 @@ class RegisterForm implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly class = 'w-100'
-    /**
-     * @group Immutable DOM Constants
-     */
     public readonly children: VirtualDOM[]
 
     constructor(state: VisitorFormState) {
         const message$ = merge(
             state.done$.pipe(
-                mapTo('Registration done, please follow email instruction'),
+                map((registerStatus) =>
+                    registerStatus.status === 409
+                        ? registerStatus.body['errorMessage']
+                        : 'Registration done, please follow email instruction',
+                ),
             ),
             state.httpError$.pipe(
-                map((e) => (e ? 'Error while submitting registration' : '')),
+                tap((e) => console.log('ee :', e)),
+                map((e) => {
+                    console.log('ee :', e)
+                    e ? 'Error while submitting registration' : ''
+                }),
             ),
         )
 
         this.children = [
+            new EmailInputRow(state),
             {
-                class: 'w-100 ',
-                children: [
-                    new EmailInputRow(state),
-                    {
-                        class: 'w-100 text-center',
-                        innerText: attr$(message$, (v) => v),
-                    },
-                ],
+                class: 'w-100 text-center',
+                innerText: attr$(message$, (v) => v),
             },
         ]
     }
@@ -167,7 +174,7 @@ class EmailInputRow implements VirtualDOM {
      * @group Immutable DOM Constants
      */
     public readonly class =
-        'w-100 d-flex align-items-center justify-content-around'
+        'w-100 d-flex flex-column align-items-center justify-content-around'
     /**
      * @group Immutable DOM Constants
      */
@@ -176,13 +183,21 @@ class EmailInputRow implements VirtualDOM {
     constructor(state: VisitorFormState) {
         this.children = [
             {
-                innerText: 'E-mail',
+                class: 'd-flex w-100',
+                children: [
+                    {
+                        innerText: 'E-mail',
+                    },
+                    {
+                        class: 'w-100 mx-3',
+                        tag: 'input',
+                        value: '',
+                        placeholder: 'ex: example@domain.com',
+                        oninput: (event) => state.setEmail(event.target.value),
+                    },
+                ],
             },
-            {
-                tag: 'input',
-                value: '',
-                oninput: (event) => state.setEmail(event.target.value),
-            },
+
             new RegisterButton(state),
         ]
     }
@@ -192,10 +207,15 @@ class EmailInputRow implements VirtualDOM {
  * @category View
  */
 class RegisterButton implements VirtualDOM {
+    /**
+     * @group Immutable DOM Constants
+     */
     static classButtonEnabled =
-        'fv-pointer  fv-bg-secondary fv-hover-xx-lighter'
-    static classButtonDisabled = 'fv-bg-disabled'
-
+        'fv-pointer fv-text-primary yw-bg-btn-yellow  yw-hover-bg-btn-orange'
+    /**
+     * @group Immutable DOM Constants
+     */
+    static classButtonDisabled = 'yw-border-orange yw-text-orange'
     /**
      * @group Immutable DOM Constants
      */
@@ -203,17 +223,23 @@ class RegisterButton implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly style = {
-        width: 'fit-content',
-    }
+    public readonly style
     /**
      * @group Immutable DOM Constants
      */
-    public readonly enable
+    public readonly tag = 'span'
+
+    /**
+     * @group Immutable DOM Constants
+     */
     /**
      * @group Immutable DOM Constants
      */
     public readonly onclick
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly customAttributes
     /**
      * @group Immutable DOM Constants
      */
@@ -231,48 +257,45 @@ class RegisterButton implements VirtualDOM {
                     : RegisterButton.classButtonDisabled,
             {
                 wrapper: (classes) =>
-                    `${classes} p-2 border  rounded d-flex align-items-center `,
+                    `${classes} p-2 w-100 justify-content-center mt-2  rounded d-flex align-items-center `,
             },
         )
         this.children = [
             {
                 innerText: 'Register',
-                enable: attr$(state.validEmail$, (email) => email != undefined),
+                // enable: attr$(state.validEmail$, (email) => email != undefined),
             },
             child$(state.pending$, (pending) =>
                 pending ? { class: 'fas fa-spinner fa-spin' } : {},
             ),
         ]
+        this.style = attr$(state.validEmail$, (email) =>
+            email != undefined
+                ? { pointerEvents: 'auto' }
+                : {
+                      pointerEvents: 'none',
+                  },
+        )
+        this.customAttributes = {
+            dataBSToggle: 'tooltip',
+            dataBSPlacement: 'right',
+            title: 'Click to process your registration.',
+        }
     }
 }
 
 const headerView = {
-    class: 'd-flex flex-column align-items-center px-4 py-2 justify-content-center',
+    class: 'd-flex  align-items-center  ',
     style: {
-        fontSize: 'x-large',
+        width: '30vh',
     },
     children: [
         {
-            class: 'd-flex align-items-center  fv-text-focus',
-            children: [
-                {
-                    class: 'px-1',
-                    innerText: 'Visitor',
-                },
-            ],
+            class: 'fas fa-user-circle fa-lg ',
         },
         {
-            class: 'd-flex align-items-center my-2',
-            children: [
-                {
-                    class: 'd-flex align-items-center my-2',
-                    children: [
-                        {
-                            class: 'fas fa-2x fa-users',
-                        },
-                    ],
-                },
-            ],
+            class: 'ms-2',
+            innerText: 'Visitor',
         },
     ],
 }
@@ -285,7 +308,7 @@ export class InviteButtonView implements VirtualDOM {
      * @group Immutable DOM Constants
      */
     public readonly class =
-        'd-flex align-items-center fv-pointer btn btn-light  p-2 m-1 yw-hover-btn-fill-color'
+        'd-flex align-items-center justify-content-center w-100 fv-pointer yw-border-none fv-text-primary yw-bg-btn-yellow yw-hover-bg-btn-orange rounded  p-2 m-1'
     /**
      * @group Immutable DOM Constants
      */
@@ -305,10 +328,10 @@ export class InviteButtonView implements VirtualDOM {
         Object.assign(this, params)
         this.children = [
             {
-                innerText: params.title,
+                class: 'fas fa-sign-in-alt fa-lg fv-pointer  rounded  me-2',
             },
             {
-                class: 'fas fa-sign-in-alt fv-pointer p-1 rounded fv-hover-bg-background-alt',
+                innerText: params.title,
             },
         ]
         this.onclick = params.onclick
@@ -322,21 +345,21 @@ export class InviteLoginView implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly class = 'd-flex justify-content-center'
+    public readonly class = 'd-flex flex-column '
     /**
      * @group Immutable DOM Constants
      */
     public readonly children = []
 
-    constructor(params: { visitorFormState: VisitorFormState }) {
+    constructor() {
         this.children = [
+            {
+                class: 'font-weight-bold mt-3',
+                innerText: 'You already have an account !',
+            },
             new InviteButtonView({
-                title: 'I have an account',
+                title: 'Login',
                 onclick: () => redirectWith('loginAsUserUrl'),
-            }),
-            new InviteButtonView({
-                title: 'Continue as visitor',
-                onclick: () => params.visitorFormState.modalState.ok$.next(),
             }),
         ]
     }
@@ -346,10 +369,10 @@ const inviteRegisteringView0 = {
     class: 'mx-auto text-justify px-2 text-wrap',
     tag: 'p',
     style: {
-        maxWidth: '500px',
+        // minWidth: '250px',
     },
     innerHTML: `
-You are using YouWol as anonymous user, and you can almost do anything.<br><br>
+<br>You are using YouWol Platform as an anonymous user and you can almost do anything.<br><br>
 
 However, your session and related data will be deleted after a period of 24 hours.<br>`,
 }
@@ -357,11 +380,17 @@ However, your session and related data will be deleted after a period of 24 hour
 const inviteRegisteringView1 = {
     class: 'mx-auto text-justify px-2 text-wrap',
     tag: 'p',
-    style: {
-        maxWidth: '500px',
-    },
-    innerHTML: `
-You can keep your session and related data by registering.
-Just provide your email address and follow the emailed instructions. It is free and minimal.<br><br>
+    children: [
+        {
+            class: 'font-weight-bold',
+            innerHTML: `<br>You need an account ?`,
+        },
+        {
+            innerHTML: `
+
+<br>You can keep your session and related data by registering. 
+Just provide your email address and follow the emailed instructions. It is free but limited.<br><br>
 `,
+        },
+    ],
 }

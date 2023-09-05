@@ -5,7 +5,7 @@ import { filter, mergeMap } from 'rxjs/operators'
 import { SettingsView } from './settings.view'
 import { ProfilesState } from './profiles.state'
 import { Accounts } from '@youwol/http-clients'
-import { ProfilesDropDownView } from './profiles-dropdown.view'
+import { ClosePopupButtonView } from './profiles-dropdown.view'
 
 /**
  * @category View
@@ -16,7 +16,6 @@ export class ProfilesView {
      */
     public readonly class =
         'vw-25 vh-25 rounded mx-auto my-auto p-4 fv-bg-background-alt yw-box-shadow yw-animate-in '
-
     /**
      * @group Immutable DOM Constants
      */
@@ -24,15 +23,11 @@ export class ProfilesView {
 
     constructor({
         sessionInfo,
-        profilesInfo,
+        state,
     }: {
         sessionInfo: Accounts.SessionDetails
-        profilesInfo: {
-            customProfiles: { id: string; name: string }[]
-            selectedProfile: string
-        }
+        state: ProfilesState
     }) {
-        const state = new ProfilesState({ profilesInfo })
         const cm$ = ProfilesState.getBootstrap$().pipe(
             mergeMap(() => ProfilesState.getFvCodeMirror$()),
         )
@@ -41,7 +36,7 @@ export class ProfilesView {
             {
                 class: 'd-flex align-items-center justify-content-center w-100 my-2',
                 children: [
-                    { class: 'mx-3', innerText: 'Selected profile' },
+                    { class: 'mx-3', innerText: 'Profile name :' },
                     {
                         class: attr$(
                             ProfilesState.getBootstrap$(),
@@ -51,17 +46,18 @@ export class ProfilesView {
                             },
                         ),
                     },
-                    child$(ProfilesState.getBootstrap$(), () => {
-                        return new ProfilesDropDownView({
-                            state,
-                        })
-                    }),
+                    {
+                        innerText: attr$(
+                            state.editedProfile$,
+                            (profile) => profile.name,
+                        ),
+                    },
                     child$(state.editionMode$, (edition) =>
                         edition ? {} : new EditProfileButton(state),
                     ),
                 ],
             },
-            child$(state.selectedProfile$, (profile) =>
+            child$(state.editedProfile$, (profile) =>
                 profile.id == 'default' ? new ReadonlyWarningView() : {},
             ),
             child$(state.editionMode$.pipe(filter((v) => v)), () => {
@@ -91,6 +87,7 @@ export class ProfilesView {
                     },
                 ],
             },
+            new ClosePopupButtonView(),
         ]
     }
 }
@@ -181,14 +178,8 @@ export class EditProfileButton implements VirtualDOM {
     constructor(state: ProfilesState) {
         this.children = [
             {
-                class: 'fas fa-pen mr-1 ',
+                class: 'fas fa-pen me-1 ',
             },
-            child$(state.selectedProfile$, ({ id }) => {
-                return {
-                    innerText:
-                        id == 'default' ? 'View profile' : 'Edit profile',
-                }
-            }),
         ]
         this.onclick = () => state.edit()
     }

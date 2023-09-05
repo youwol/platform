@@ -58,11 +58,15 @@ export class ProfilesState {
      * @group Observables
      */
     public readonly selectedProfile$ = new ReplaySubject<Profile>(1)
+    /**
+     * @group Observables
+     */
+    public readonly editedProfile$ = new ReplaySubject<Profile>(1)
 
     /**
      * @group Observables
      */
-    public readonly editionMode$ = new BehaviorSubject<boolean>(false)
+    public readonly editionMode$ = new BehaviorSubject<boolean>(true)
 
     /**
      * @group Observables
@@ -156,7 +160,6 @@ export class ProfilesState {
     }
 
     deleteProfile(profileId: string) {
-        this.selectProfile('default')
         this.profiles$.next(
             [...this.profiles$.value].filter(({ id }) => id != profileId),
         )
@@ -175,12 +178,7 @@ export class ProfilesState {
         }
         const profile = this.profiles$.value.find(({ id }) => id == profileId)
 
-        return Promise.all([
-            OsCore.PreferencesFacade.setPreferencesScript(
-                settingsContent.preferences,
-            ),
-            OsCore.Installer.setInstallerScript(settingsContent.installers),
-        ]).then(() => {
+        return Promise.all([]).then(() => {
             this.cdnSessionStorage
                 .postData$({
                     packageName: setup.name,
@@ -194,6 +192,82 @@ export class ProfilesState {
                 })
                 .subscribe()
         })
+    }
+
+    renameProfile(profileId, newName) {
+        if (profileId.id == 'default') {
+            return
+        }
+        const updatedProfiles = this.profiles$.value.map((profile) => {
+            if (profile.id === profileId) {
+                return { ...profile, name: newName }
+            }
+            return profile
+        })
+        this.profiles$.next(updatedProfiles)
+        this.syncProfileInfo(profileId)
+        this.profileProcessing$.next(true)
+        this.getProfileData$(profileId)
+            .pipe(
+                tap((profileData) => {
+                    this.cdnSessionStorage
+                        .postData$({
+                            packageName: setup.name,
+                            dataName: `customProfile_${profileId}`,
+                            body: {
+                                name: newName,
+                                id: profileId,
+                                preferences: profileData.preferences,
+                                installers: profileData.installers,
+                            },
+                        })
+                        .subscribe(() => {
+                            // this.selectProfile(profileId)
+                            this.edit()
+                            this.profileProcessing$.next(false)
+                        })
+                }),
+            )
+            .subscribe()
+    }
+
+    duplicateProfile(oldProfileId: string, newName: string) {
+        const profileId = v4()
+        this.profiles$.next([
+            ...this.profiles$.value,
+            { name: newName, id: profileId },
+        ])
+
+        this.syncProfileInfo(profileId)
+        this.profileProcessing$.next(true)
+        this.getProfileData$(oldProfileId)
+            .pipe(
+                tap((profileData) => {
+                    this.cdnSessionStorage
+                        .postData$({
+                            packageName: setup.name,
+                            dataName: `customProfile_${profileId}`,
+                            body: {
+                                name: newName,
+                                id: profileId,
+                                preferences: profileData.preferences,
+                                installers: profileData.installers,
+                            },
+                        })
+                        .subscribe(() => {
+                            // this.selectProfile(profileId)
+                            // this.edit()
+                            this.profileProcessing$.next(false)
+                        })
+                }),
+            )
+            .subscribe()
+    }
+
+    editProfile(profileId: string) {
+        this.getProfileData$(profileId)
+            .pipe(tap((resp: Profile) => this.editedProfile$.next(resp)))
+            .subscribe()
     }
 
     private getProfileData$(profileId: string): Observable<Profile> {
@@ -232,7 +306,7 @@ export class ProfilesState {
             return ProfilesState.bootstrap$
         }
         ProfilesState.bootstrap$ = from(
-            install({ modules: ['bootstrap#^4.0.0'] }),
+            install({ modules: ['bootstrap#^5.3.0'] }),
         ).pipe(shareReplay({ bufferSize: 1, refCount: true }))
         return ProfilesState.getBootstrap$()
     }

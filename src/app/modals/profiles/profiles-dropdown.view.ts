@@ -1,58 +1,11 @@
-import { attr$, children$, VirtualDOM } from '@youwol/flux-view'
+import { attr$, VirtualDOM } from '@youwol/flux-view'
 import { ProfilesState } from './profiles.state'
 import { BehaviorSubject } from 'rxjs'
-
-/**
- * @category View
- */
-export class ProfilesDropDownView implements VirtualDOM {
-    /**
-     * @group Immutable DOM Constants
-     */
-    public readonly class = 'dropdown'
-    /**
-     * @group Immutable DOM Constants
-     */
-    public readonly children: VirtualDOM[]
-
-    constructor({ state }: { state: ProfilesState }) {
-        this.children = [
-            {
-                tag: 'button',
-                class: 'btn btn-secondary dropdown-toggle',
-                type: 'button',
-                id: 'dropdownMenuButton',
-                customAttributes: {
-                    dataToggle: 'dropdown',
-                    ariaHaspopup: 'true',
-                },
-                ariaExpanded: false,
-                innerText: attr$(
-                    state.selectedProfile$,
-                    (profile) => profile.name,
-                ),
-            },
-            {
-                class: 'dropdown-menu',
-                customAttributes: {
-                    ariaLabelledby: 'dropdownMenuButton',
-                },
-                children: children$(state.profiles$, (profiles) => {
-                    return [
-                        ...profiles.map(
-                            (profile) =>
-                                new ProfileItemView({ profile, state }),
-                        ),
-                        new NewProfileItemView({ state }),
-                    ]
-                }),
-            },
-        ]
-    }
-}
+import { ProfileOptionsView } from './profile-options.view'
+import { Accounts } from '@youwol/http-clients'
 
 const baseClassesItemView =
-    'dropdown-item fv-pointer fv-hover-bg-background-alt fv-hover-text-primary'
+    'dropdown-item fv-pointer fv-hover-bg-background-alt fv-text-primary'
 
 /**
  * @category View
@@ -61,7 +14,14 @@ export class ProfileItemView {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly class = `${baseClassesItemView} d-flex align-items-center justify-content-between`
+    public readonly class = `accordion-item`
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly style = {
+        // height: '29px',
+    }
+    public readonly id
     /**
      * @group Immutable DOM Constants
      */
@@ -69,26 +29,63 @@ export class ProfileItemView {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly onclick: (ev: MouseEvent) => void
+    public readonly onclick: (ev) => void
 
     constructor({
+        sessionInfo,
         profile,
         state,
     }: {
+        sessionInfo?: Accounts.SessionDetails
         profile: { id: string; name: string }
         state: ProfilesState
     }) {
-        const trashView = {
-            class: 'fas fa-trash fv-text-error fv-hover-xx-lighter fv-hover-border-primary rounded p-1',
-            onclick: () => state.deleteProfile(profile.id),
-        }
+        const divId = profile.id.substring(0, 5)
         this.children = [
             {
-                innerText: profile.name,
+                class: `${baseClassesItemView}  rounded d-flex yw-hover-text-primary align-items-center mb-1 px-3`,
+                children: [
+                    {
+                        class: 'd-flex justify-content-center yw-hover-text-primary align-items-center me-2 ',
+                        style: {
+                            width: '25px',
+                        },
+                        children: [
+                            {
+                                class: attr$(
+                                    state.selectedProfile$,
+                                    (activeProfile) =>
+                                        activeProfile.id === profile.id
+                                            ? 'fas fa-circle fa-lg text-success'
+                                            : 'far fa-circle fa-lg',
+                                ),
+                            },
+                        ],
+                        onclick: () => state.selectProfile(profile.id),
+                    },
+
+                    {
+                        class: 'w-75  text-align-start yw-hover-text-primary fv-pointer m-0',
+                        innerText: profile.name,
+                        onclick: () => state.selectProfile(profile.id),
+                    },
+                    {
+                        class: 'accordion-button collapsed fv-text-primary ',
+                        customAttributes: {
+                            dataBsToggle: 'collapse',
+                            dataBsTarget: '#profilesOpt' + divId,
+                        },
+                        ariaExpanded: 'false',
+                    },
+                ],
             },
-            profile.id != 'default' ? trashView : undefined,
+            new ProfileOptionsView({
+                sessionInfo,
+                profile,
+                state,
+                divId,
+            }),
         ]
-        this.onclick = () => state.selectProfile(profile.id)
     }
 }
 
@@ -99,7 +96,13 @@ export class NewProfileItemView {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly class = `${baseClassesItemView}`
+    public readonly class = `${baseClassesItemView}   rounded d-flex align-items-center px-3`
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly style = {
+        height: '29px',
+    }
     /**
      * @group Immutable DOM Constants
      */
@@ -116,10 +119,30 @@ export class NewProfileItemView {
 
         this.children = [
             {
+                class: 'd-flex justify-content-center align-items-center me-2 ',
+                style: {
+                    width: '25px',
+                },
+                children: [
+                    {
+                        class: 'fas fa-plus fv-text-primary yw-hover-text-orange',
+                        onclick: (e) => {
+                            e.stopPropagation()
+                            value$.value ? state.newProfile(value$.value) : ''
+                        },
+                    },
+                ],
+            },
+            {
                 tag: 'input',
                 type: 'text',
+                class: 'rounded',
+                style: {
+                    outline: 'none',
+                    borderStyle: 'none',
+                },
                 value: value$.getValue(),
-                placeholder: "enter profile's name",
+                placeholder: 'Add a new profile . . .',
                 oninput: (ev) => {
                     value$.next(ev.target.value)
                 },
@@ -127,12 +150,65 @@ export class NewProfileItemView {
                     ev.key == 'Enter' && state.newProfile(value$.value)
                 },
             },
-            {
-                class: 'fas fa-plus mx-2',
-                onclick: () => {
-                    state.newProfile(value$.value)
-                },
-            },
         ]
     }
+}
+
+export class ClosePopupButtonView implements VirtualDOM {
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly class = 'fas fa-times  fv-pointer yw-text-orange'
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly tag = 'span'
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly style = {
+        position: 'absolute',
+        top: '10px',
+        right: '10px',
+    }
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly onclick = () => {
+        document.querySelector('body > div:nth-child(2)').remove()
+    }
+}
+
+export class CanclePopupButtonView implements VirtualDOM {
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly class =
+        'btn yw-text-light-orange  yw-border-orange yw-hover-bg-light-orange rounded yw-hover-text-dark yw-text-orange  fv-bg-background'
+
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly tag = 'span'
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly innerText = 'Cancel'
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly style = {
+        color: 'unset',
+        width: '100px',
+    }
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly onclick = () => {
+        document.querySelector('body > div:nth-child(2)').remove()
+    }
+}
+
+export const leavePopupAfterClickBtn = (): void => {
+    document.querySelector('body > div:nth-child(2)').remove()
 }

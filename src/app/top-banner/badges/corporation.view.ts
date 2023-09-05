@@ -1,5 +1,6 @@
 import { VirtualDOM } from '@youwol/flux-view'
 import * as OsCore from '@youwol/os-core'
+import { TooltipsView } from '../../tooltips/tooltips.view'
 
 /**
  * @category View
@@ -12,12 +13,24 @@ export class CorporationBadgeView {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly children: VirtualDOM[] = []
-
+    public readonly style = {
+        position: 'relative',
+    }
     /**
      * @group Immutable DOM Constants
      */
-    public readonly onclick: () => void
+    public readonly children: VirtualDOM[] = []
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly onclick: (el) => void
+    // need to improve
+    // public readonly connectedCallback = (elem) => {
+    //     return installContextMenu({
+    //         div: elem,
+    //         children: [new ContextMenuYwIconView()],
+    //     })
+    // }
 
     constructor({
         state,
@@ -28,6 +41,8 @@ export class CorporationBadgeView {
         preferences: OsCore.Preferences
         app?: OsCore.RunningApp
     }) {
+        // const ctxState = new ContextMenuState1()
+
         if (!OsCore.PreferencesExtractor.getCorporation(preferences)) {
             return
         }
@@ -35,12 +50,28 @@ export class CorporationBadgeView {
             OsCore.PreferencesExtractor.getCorporationWidgets(preferences, {
                 platformState: state,
             }).length > 0
-                ? 'ml-2 d-flex my-auto yw-disable-click p-1 rounded fv-hover-bg-background-alt fv-pointer top-banner-menu-view'
+                ? 'ms-2 d-flex rounded  top-banner-menu-view'
                 : 'mx-1'
-        console.log('Widgets')
-        this.children = [preferences.desktop.topBanner.corporation.icon]
-        this.onclick = () => {
-            state.minimize(app.instanceId)
-        }
+        this.children = [
+            {
+                class: ' my-auto  p-1 rounded fv-hover-bg-background-alt',
+                children: [preferences.desktop.topBanner.corporation.icon],
+                onclick: (el) => {
+                    el.preventDefault()
+                    app?.instanceId ? state.minimize(app.instanceId) : ''
+                },
+            },
+            new TooltipsView({
+                tooltipPlace: { top: 9, right: -8 },
+                tooltipArrow: {
+                    arrowLength: 230,
+                    leftRightMove: 38,
+                    arrowWidth: 15,
+                },
+                divId: 'yw-icon',
+                tooltipText:
+                    "Click on company's logo to return to dashboard or to have more information.",
+            }),
+        ]
     }
 }

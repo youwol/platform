@@ -3,6 +3,7 @@ import { VisitorFormView } from '../user'
 import { separatorView } from '../user/common'
 import { BehaviorSubject } from 'rxjs'
 import { Modal } from '@youwol/fv-group'
+import { ClosePopupButtonView } from '../profiles'
 
 /**
  * @category State
@@ -63,7 +64,13 @@ export class WelcomeVisitorView implements VirtualDOM {
      * @group Immutable DOM Constants
      */
     public readonly class: string =
-        'yw-box-shadow rounded p-3 fv-text-primary fv-bg-background'
+        'yw-box-shadow w-50 w-sm-75 yw-bg-dark rounded p-3 fv-text-primary '
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly style = {
+        position: 'relative',
+    }
     /**
      * @group Immutable DOM Constants
      */
@@ -72,6 +79,7 @@ export class WelcomeVisitorView implements VirtualDOM {
     constructor({ modalState }: { modalState: Modal.State }) {
         const state = new WelcomeVisitorState()
         this.children = [
+            new ClosePopupButtonView(),
             new VisitorFormView({ modalState, class: '' }),
             separatorView,
             new DoNotShowAgainView({ state }),

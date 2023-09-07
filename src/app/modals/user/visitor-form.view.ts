@@ -160,7 +160,7 @@ class RegisterForm implements VirtualDOM {
             new EmailInputRow(state),
             {
                 class: 'w-100 text-center',
-                innerText: attr$(message$, (v) => v),
+                innerText: attr$(message$, (v) => (v ? v : '')),
             },
         ]
     }

@@ -11,6 +11,19 @@ export const separatorView = {
     style: { opacity: '0.5' },
 }
 
-export function redirectWith(method: NavigateMethod) {
-    window.location.replace(new Accounts.Client()[method](window.location.href))
+export function redirectWith(
+    method: NavigateMethod,
+    params?: Record<string, string>,
+) {
+    let url = window.location.href
+    if (params) {
+        const paramsString = Object.entries(params).map(
+            ([key, value]) => `${key}=${value}`,
+        )
+        url += '?' + paramsString
+    }
+    if (!params) {
+        url = url.split('?')[0]
+    }
+    window.location.replace(new Accounts.Client()[method](url))
 }

@@ -31,8 +31,6 @@ export class RegisteredFormView implements VirtualDOM {
             otherProfilesView,
             new AllProfilesView({ state }),
             separatorView,
-            logAsVisitorView,
-            separatorView,
             logoutView,
         ]
     }
@@ -108,30 +106,6 @@ export const manageIdentityView = {
     },
 }
 
-export const logAsVisitorView = {
-    class: baseDropdownItemsClass,
-    children: [
-        {
-            class: 'd-flex justify-content-center align-items-center me-2 ',
-            style: {
-                width: '25px',
-            },
-            children: [
-                {
-                    class: 'fas fa-user-circle fa-lg ',
-                },
-            ],
-        },
-        {
-            innerText: 'Visitor',
-        },
-    ],
-
-    onclick: () => {
-        redirectWith('loginAsTempUserUrl')
-    },
-}
-
 export const otherProfilesView = {
     class: 'container p-0 m-0 fv-text-primary text-center',
     children: [
@@ -157,7 +131,7 @@ export const logoutView = {
         },
     ],
     onclick: () => {
-        redirectWith('logoutUrl')
+        redirectWith('logoutUrl', { login_flow: 'temp' })
     },
 }
 

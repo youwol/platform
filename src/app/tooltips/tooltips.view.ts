@@ -54,7 +54,7 @@ export class TooltipsView {
                             // width: 'fit-content',
                         },
                         innerText: tooltipText,
-                        children: [new CloseTooltipView(divId)],
+                        children: [new CloseTooltipView(divId, _tooltipState)],
                     },
                 ],
             },
@@ -111,10 +111,11 @@ export class CloseTooltipView implements VirtualDOM {
     public readonly children: VirtualDOM[]
     public readonly onclick
 
-    constructor(divId: string) {
+    constructor(divId: string, state: TooltipsState) {
         this.onclick = () => {
-            const tooltipState = new TooltipsState()
-            tooltipState.removeTooltipElements(divId)
+            // Hot fix
+            state.dataSteps$.next([])
+            state.removeTooltipElements(divId)
             document.getElementById(divId).remove()
         }
     }

@@ -17,7 +17,9 @@ export class TooltipsState {
     /**
      * @group Observables
      */
-    public readonly dataSteps$ = new BehaviorSubject<string[]>([])
+    public readonly dataSteps$ = new BehaviorSubject<string[] | null>(
+        this.getTooltipSteps()['tooltip-elements'],
+    )
 
     constructor() {
         this.initTooltip()
@@ -48,8 +50,18 @@ export class TooltipsState {
         return config['show-tooltip'] ?? this.isTooltip$.value
     }
 
+    private getTooltipSteps() {
+        return (
+            this.getYouwolTooltipConfig() || {
+                'show-tooltip': this.isTooltip$.value,
+                'tooltip-elements': [],
+            }
+        )
+    }
+
     public appendTooltipElements(element: string) {
-        if (!this.dataSteps$.value.includes(element)) {
+        const currentSteps = this.dataSteps$.value
+        if (!currentSteps.includes(element)) {
             const elements = [...this.dataSteps$.value, element]
             this.dataSteps$.next(elements)
             this.updateTooltipConfig(elements)
@@ -63,11 +75,12 @@ export class TooltipsState {
     }
 
     private updateTooltipConfig(elements: string[]) {
+        const isDataSteps = this.dataSteps$.value.length !== 0
         const config: TooltipInterface = {
-            'show-tooltip': elements.length > 0,
+            'show-tooltip': isDataSteps,
             'tooltip-elements': elements,
         }
         this.setYouwolTooltipConfig(config)
-        this.isTooltip$.next(elements.length > 0)
+        this.isTooltip$.next(isDataSteps)
     }
 }

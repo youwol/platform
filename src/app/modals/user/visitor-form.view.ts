@@ -84,7 +84,6 @@ export class VisitorFormState {
             this._triggerRegistration$.pipe(mapTo('start')),
             this.pendingHandler$.pipe(mapTo('end')),
             this._httpError$.pipe(
-                tap((v) => console.log('err inside the _http obs', v)),
                 filter((e) => e != undefined),
                 mapTo('KO'),
             ),
@@ -148,9 +147,7 @@ class RegisterForm implements VirtualDOM {
                 ),
             ),
             state.httpError$.pipe(
-                tap((e) => console.log('ee :', e)),
                 map((e) => {
-                    console.log('ee :', e)
                     e ? 'Error while submitting registration' : ''
                 }),
             ),
@@ -160,7 +157,7 @@ class RegisterForm implements VirtualDOM {
             new EmailInputRow(state),
             {
                 class: 'w-100 text-center',
-                innerText: attr$(message$, (v) => v),
+                innerText: attr$(message$, (v) => (v ? v : '')),
             },
         ]
     }

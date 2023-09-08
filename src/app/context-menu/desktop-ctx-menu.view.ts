@@ -45,8 +45,8 @@ export class FullscreenView implements VirtualDOM {
             {
                 class: attr$(isFullscreen$, (isFullscreen) =>
                     !isFullscreen
-                        ? 'fas fa-expand pe-2'
-                        : 'fas fa-compress pe-2',
+                        ? 'fas fa-compress pe-2'
+                        : 'fas fa-expand pe-2',
                 ),
             },
             {

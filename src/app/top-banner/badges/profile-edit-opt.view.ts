@@ -4,6 +4,7 @@ import { ProfilesState, ProfilesView } from '../../modals/profiles'
 import { VirtualDOM } from '@youwol/flux-view'
 import { classEditProfileCtxMenu } from '../../context-menu/desktop-ctx-menu.view'
 import { baseClassCtxMenuActions } from '../../context-menu/context-menu.view'
+import { FontawesomeFixBoxView } from '../../modals/profiles/profile-options.view'
 
 /**
  * @category View
@@ -38,9 +39,7 @@ export class ProfileEditOptView implements VirtualDOM {
         state: ProfilesState
     }) {
         this.children = [
-            {
-                class: 'fas fa-cog pe-2 ',
-            },
+            new FontawesomeFixBoxView({ fasClass: 'fas fa-cog pe-2 ' }),
             {
                 innerText: 'Edit profile',
             },

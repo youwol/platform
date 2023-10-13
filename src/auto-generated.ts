@@ -8,7 +8,7 @@ const runTimeDependencies = {
         "@youwol/http-clients": "^2.0.1",
         "rxjs": "^6.5.5",
         "uuid": "^8.3.2",
-        "@youwol/cdn-client": "^1.0.2",
+        "@youwol/cdn-client": "^2.0.6",
         "codemirror": "^5.52.0",
         "@youwol/fv-code-mirror-editors": "^0.2.1",
         "@youwol/fv-context-menu": "^0.1.1"
@@ -23,7 +23,7 @@ const externals = {
     "@youwol/http-clients": "window['@youwol/http-clients_APIv2']",
     "rxjs": "window['rxjs_APIv6']",
     "uuid": "window['uuid_APIv8']",
-    "@youwol/cdn-client": "window['@youwol/cdn-client_APIv1']",
+    "@youwol/cdn-client": "window['@youwol/cdn-client_APIv2']",
     "codemirror": "window['CodeMirror_APIv5']",
     "@youwol/fv-code-mirror-editors": "window['@youwol/fv-code-mirror-editors_APIv02']",
     "@youwol/fv-context-menu": "window['@youwol/fv-context-menu_APIv01']",
@@ -59,7 +59,7 @@ const exportedSymbols = {
         "exportedSymbol": "uuid"
     },
     "@youwol/cdn-client": {
-        "apiKey": "1",
+        "apiKey": "2",
         "exportedSymbol": "@youwol/cdn-client"
     },
     "codemirror": {

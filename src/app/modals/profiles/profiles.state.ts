@@ -1,13 +1,28 @@
-import { BehaviorSubject, from, Observable, of, ReplaySubject } from 'rxjs'
+import {
+    BehaviorSubject,
+    combineLatest,
+    from,
+    Observable,
+    of,
+    ReplaySubject,
+} from 'rxjs'
 import { CdnEvent, install } from '@youwol/cdn-client'
-import { mergeMap, shareReplay, tap } from 'rxjs/operators'
+import { map, mergeMap, shareReplay, take, tap } from 'rxjs/operators'
 import { setup } from '../../../auto-generated'
-import { PreferencesFacade } from '@youwol/os-core'
+import {
+    PreferencesFacade,
+    ChildApplicationAPI,
+    Installer,
+} from '@youwol/os-core'
 import { CdnSessionsStorage } from '@youwol/http-clients'
 import { raiseHTTPErrors } from '@youwol/http-primitives'
 import { v4 } from 'uuid'
 import * as OsCore from '@youwol/os-core'
 import { TsCodeEditorModule } from '@youwol/fv-code-mirror-editors'
+import * as rxjs from 'rxjs'
+import * as cdnClient from '@youwol/cdn-client'
+import * as httpClients from '@youwol/http-clients'
+import * as fluxView from '@youwol/flux-view'
 
 const cmInstall = {
     modules: [
@@ -71,7 +86,7 @@ export class ProfilesState {
     /**
      * @group Observables
      */
-    static bootstrap$: Observable<Window>
+    static bootstrap$: Observable<WindowOrWorkerGlobalScope>
 
     /**
      * @group Observables
@@ -144,19 +159,27 @@ export class ProfilesState {
     }
 
     selectProfile(profileId: string) {
-        this.getProfileData$(profileId)
-            .pipe(
-                tap((resp) => {
-                    OsCore.PreferencesFacade.setPreferencesScript(
-                        resp.preferences,
-                    )
-                    OsCore.Installer.setInstallerScript(resp.installers)
-                    this.syncProfileInfo(profileId)
-                }),
-            )
-            .subscribe((resp: Profile) => {
+        /* To be used only if the validity of the profile is guaranteed */
+        this.selectProfile$(profileId).subscribe()
+    }
+
+    selectProfile$(profileId: string) {
+        return this.getProfileData$(profileId).pipe(
+            mergeMap((resp) => {
+                return combineLatest([
+                    from(
+                        OsCore.PreferencesFacade.setPreferencesScript(
+                            resp.preferences,
+                        ),
+                    ),
+                    from(OsCore.Installer.setInstallerScript(resp.installers)),
+                ]).pipe(map(() => resp))
+            }),
+            tap((resp) => {
+                this.syncProfileInfo(profileId)
                 this.selectedProfile$.next(resp)
-            })
+            }),
+        )
     }
 
     deleteProfile(profileId: string) {
@@ -172,15 +195,34 @@ export class ProfilesState {
             .subscribe()
     }
 
+    ensureExecutionOk$(settingsContent: SettingsContent) {
+        /**
+         * This function should somehow be provided by os-core, for now it is implemented here
+         */
+        const executePreferences = () =>
+            new Function(settingsContent.preferences.jsSrc)()({
+                rxjs,
+                cdnClient,
+                httpClients,
+                fluxView,
+                platformState: ChildApplicationAPI.getOsInstance(),
+            })
+        const executeInstallers = () =>
+            new Function(settingsContent.installers.jsSrc)()(
+                new Installer(),
+            ).then((installer) => installer.resolve())
+
+        return from(Promise.all([executePreferences(), executeInstallers]))
+    }
+
     updateProfile(profileId: string, settingsContent: SettingsContent) {
         if (profileId == 'default') {
             return
         }
         const profile = this.profiles$.value.find(({ id }) => id == profileId)
-
-        return Promise.all([]).then(() => {
-            this.cdnSessionStorage
-                .postData$({
+        const obs = this.ensureExecutionOk$(settingsContent).pipe(
+            mergeMap(() =>
+                this.cdnSessionStorage.postData$({
                     packageName: setup.name,
                     dataName: `customProfile_${profileId}`,
                     body: {
@@ -189,8 +231,27 @@ export class ProfilesState {
                         preferences: settingsContent.preferences,
                         installers: settingsContent.installers,
                     },
-                })
-                .subscribe()
+                }),
+            ),
+            mergeMap(() => this.selectedProfile$),
+            take(1),
+            mergeMap((selected) =>
+                selected.id === profileId
+                    ? this.selectProfile$(profileId)
+                    : of({}),
+            ),
+        )
+        return new Promise<void>((resolve, reject) => {
+            obs.subscribe(
+                () => resolve(),
+                (e) => {
+                    console.error(
+                        'An error occurred while updating the profile',
+                        e,
+                    )
+                    reject(e)
+                },
+            )
         })
     }
 
@@ -255,8 +316,6 @@ export class ProfilesState {
                             },
                         })
                         .subscribe(() => {
-                            // this.selectProfile(profileId)
-                            // this.edit()
                             this.profileProcessing$.next(false)
                         })
                 }),

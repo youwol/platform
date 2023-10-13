@@ -7,7 +7,7 @@ import {
     ReplaySubject,
 } from 'rxjs'
 import { CdnEvent, install } from '@youwol/cdn-client'
-import { map, mergeMap, shareReplay, tap } from 'rxjs/operators'
+import { map, mergeMap, shareReplay, take, tap } from 'rxjs/operators'
 import { setup } from '../../../auto-generated'
 import {
     PreferencesFacade,
@@ -159,19 +159,27 @@ export class ProfilesState {
     }
 
     selectProfile(profileId: string) {
-        this.getProfileData$(profileId)
-            .pipe(
-                tap((resp) => {
-                    OsCore.PreferencesFacade.setPreferencesScript(
-                        resp.preferences,
-                    )
-                    OsCore.Installer.setInstallerScript(resp.installers)
-                    this.syncProfileInfo(profileId)
-                }),
-            )
-            .subscribe((resp: Profile) => {
+        /* To be used only if the validity of the profile is guaranteed */
+        this.selectProfile$(profileId).subscribe()
+    }
+
+    selectProfile$(profileId: string) {
+        return this.getProfileData$(profileId).pipe(
+            mergeMap((resp) => {
+                return combineLatest([
+                    from(
+                        OsCore.PreferencesFacade.setPreferencesScript(
+                            resp.preferences,
+                        ),
+                    ),
+                    from(OsCore.Installer.setInstallerScript(resp.installers)),
+                ]).pipe(map(() => resp))
+            }),
+            tap((resp) => {
+                this.syncProfileInfo(profileId)
                 this.selectedProfile$.next(resp)
-            })
+            }),
+        )
     }
 
     deleteProfile(profileId: string) {
@@ -224,6 +232,13 @@ export class ProfilesState {
                         installers: settingsContent.installers,
                     },
                 }),
+            ),
+            mergeMap(() => this.selectedProfile$),
+            take(1),
+            mergeMap((selected) =>
+                selected.id === profileId
+                    ? this.selectProfile$(profileId)
+                    : of({}),
             ),
         )
         return new Promise<void>((resolve, reject) => {

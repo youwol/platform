@@ -52,7 +52,10 @@ export class ApplicationsLaunchPadView implements VirtualDOM {
                     pointerEvents: 'none',
                 },
                 children: [
-                    new LaunchpadBadgeView({ state: this.state }),
+                    new LaunchpadBadgeView({
+                        state: this.state,
+                        isTooltip: false,
+                    }),
                     {
                         class: 'mx-1',
                         innerText: 'Application Launcher',

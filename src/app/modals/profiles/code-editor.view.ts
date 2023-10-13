@@ -1,4 +1,4 @@
-import { combineLatest, Observable, Subject } from 'rxjs'
+import { Observable, Subject } from 'rxjs'
 import { child$, VirtualDOM } from '@youwol/flux-view'
 import { Common, TsCodeEditorModule } from '@youwol/fv-code-mirror-editors'
 
@@ -19,7 +19,6 @@ export class CodeEditorView implements VirtualDOM {
     public readonly children: VirtualDOM[]
 
     constructor({
-        profileState,
         CodeEditorModule,
         tsSrc,
         readOnly,
@@ -66,7 +65,6 @@ export class CodeEditorView implements VirtualDOM {
                       codeEditorView.nativeEditor$,
                       (editor) =>
                           new ToolbarView({
-                              profileState: profileState,
                               highlights$: codeEditorView.highlights$,
                               onRun: onRunWithErrors,
                               editor,
@@ -93,44 +91,31 @@ export class ToolbarView implements VirtualDOM {
     public readonly children: VirtualDOM[]
 
     constructor({
-        profileState,
         highlights$,
         onRun,
         editor,
         error$,
     }: {
-        profileState: ProfilesState
         highlights$: Observable<Common.SrcHighlight[]>
         onRun: (editor: CodeMirror.Editor) => Promise<unknown>
         editor: CodeMirror.Editor
         error$
     }) {
         this.children = [
-            child$(
-                combineLatest([
-                    highlights$,
-                    profileState.editedProfile$,
-                    profileState.selectedProfile$,
-                ]),
-                ([highlights, editProfile, selectedProfile]) => {
-                    return highlights.length > 0
-                        ? {
-                              class: 'fas fa-exclamation fv-text-error  p-1',
-                          }
-                        : {
-                              class: 'fas fa-save mx-1 fv-text-success fv-hover-xx-lighter fv-pointer rounded p-1',
-                              onclick: () => {
-                                  onRun(editor).then(() =>
-                                      editProfile.id === selectedProfile.id
-                                          ? profileState.selectProfile(
-                                                selectedProfile.id,
-                                            )
-                                          : {},
-                                  )
-                              },
-                          }
-                },
-            ),
+            child$(highlights$, (highlights) => {
+                return highlights.length > 0
+                    ? {
+                          class: 'fas fa-exclamation fv-text-error p-1',
+                      }
+                    : {
+                          class: 'fas fa-save mx-1 fv-text-success fv-hover-xx-lighter fv-pointer rounded p-1',
+                          onclick: () => {
+                              onRun(editor).then(() => {
+                                  /* no op: errors are handle separately using 'error$' */
+                              })
+                          },
+                      }
+            }),
             child$(error$, (error) => {
                 return error
                     ? { class: 'fas fa-times fv-text-error  p-1' }

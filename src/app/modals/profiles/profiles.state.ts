@@ -71,7 +71,7 @@ export class ProfilesState {
     /**
      * @group Observables
      */
-    static bootstrap$: Observable<Window>
+    static bootstrap$: Observable<WindowOrWorkerGlobalScope>
 
     /**
      * @group Observables

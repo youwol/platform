@@ -29,7 +29,13 @@ export class LaunchpadBadgeView implements VirtualDOM {
      */
     public readonly onclick: (ev: MouseEvent) => void
 
-    constructor({ state }: { state: OsCore.PlatformState }) {
+    constructor({
+        state,
+        isTooltip = true,
+    }: {
+        state: OsCore.PlatformState
+        isTooltip?: boolean
+    }) {
         this.children = [
             {
                 class: 'd-flex flex-wrap  my-auto  p-1 rounded fv-hover-bg-background-alt fv-pointer ',
@@ -79,16 +85,19 @@ export class LaunchpadBadgeView implements VirtualDOM {
                                 modalState.cancel$.next(ev)),
                     ),
             },
-            new TooltipsView({
-                tooltipPlace: { top: 2, right: -10 },
-                tooltipArrow: {
-                    arrowLength: 30,
-                    leftRightMove: 1,
-                    arrowWidth: 10,
-                },
-                divId: 'desktop-launchpad',
-                tooltipText: 'Click here to start the Application Launcher',
-            }),
+            isTooltip
+                ? new TooltipsView({
+                      tooltipPlace: { top: 2, right: -10 },
+                      tooltipArrow: {
+                          arrowLength: 30,
+                          leftRightMove: 1,
+                          arrowWidth: 10,
+                      },
+                      divId: 'desktop-launchpad',
+                      tooltipText:
+                          'Click here to start the Application Launcher',
+                  })
+                : {},
         ]
     }
 }

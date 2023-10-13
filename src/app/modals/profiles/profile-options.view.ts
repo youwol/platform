@@ -102,9 +102,9 @@ export class ProfileDeleteOptView implements VirtualDOM {
         state: ProfilesState
     }) {
         this.children = [
-            {
-                class: 'fas fa-trash-alt pe-2 yw-hover-text-orange',
-            },
+            new FontawesomeFixBoxView({
+                fasClass: 'fas fa-trash-alt pe-2 yw-hover-text-orange',
+            }),
             {
                 innerText: 'Delete',
             },
@@ -142,9 +142,7 @@ export class ProfileRenameOptView implements VirtualDOM {
         state: ProfilesState
     }) {
         this.children = [
-            {
-                class: 'fas fa-edit  pe-2',
-            },
+            new FontawesomeFixBoxView({ fasClass: 'fas fa-edit  pe-2' }),
             {
                 innerText: 'Rename',
             },
@@ -176,9 +174,7 @@ export class ProfileDuplicateOptView implements VirtualDOM {
         state: ProfilesState
     }) {
         this.children = [
-            {
-                class: 'fas fa-clone  pe-2',
-            },
+            new FontawesomeFixBoxView({ fasClass: 'fas fa-clone  pe-2' }),
             {
                 innerText: 'Duplicate ',
             },
@@ -187,5 +183,33 @@ export class ProfileDuplicateOptView implements VirtualDOM {
             popupModal(
                 () => new DuplicatedProfileConfirmation({ profile, state }),
             )
+    }
+}
+
+export class FontawesomeFixBoxView implements VirtualDOM {
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly class = 'd-flex flex-column align-items-start'
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly style: { width: string; height: string }
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly children: VirtualDOM[]
+
+    constructor(params: { fasClass: string; width?: string; height?: string }) {
+        Object.assign(this, params)
+        this.children = [
+            {
+                class: params.fasClass,
+            },
+        ]
+        this.style = {
+            width: params.width ? params.width : '24px',
+            height: params.height ? params.height : '13px',
+        }
     }
 }

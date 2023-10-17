@@ -97,9 +97,14 @@ export const manageIdentityView = {
         },
     ],
     onclick: () => {
+        const platformEnvironment = window.location.href.includes(
+            `platform.int.youwol`,
+        )
+            ? ''
+            : '.int'
         window
             .open(
-                'https://platform.int.youwol.com/auth/realms/youwol/account/#/',
+                `https://platform${platformEnvironment}.youwol.com/auth/realms/youwol/account/#/`,
                 '_blank',
             )
             .focus()

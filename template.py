@@ -27,6 +27,7 @@ template = Template(
     dependencies=Dependencies(
         runTime=RunTimeDeps(
             externals={
+                "marked": "^4.2.3",
                 "@youwol/fv-tabs": "^0.2.1",
                 "@youwol/os-core": "^0.1.2",
                 "@youwol/fv-group": "^0.2.1",

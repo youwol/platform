@@ -1,6 +1,7 @@
 
 const runTimeDependencies = {
     "externals": {
+        "marked": "^4.2.3",
         "@youwol/fv-tabs": "^0.2.1",
         "@youwol/os-core": "^0.1.2",
         "@youwol/fv-group": "^0.2.1",
@@ -16,6 +17,7 @@ const runTimeDependencies = {
     "includedInBundle": {}
 }
 const externals = {
+    "marked": "window['marked_APIv4']",
     "@youwol/fv-tabs": "window['@youwol/fv-tabs_APIv02']",
     "@youwol/os-core": "window['@youwol/os-core_APIv01']",
     "@youwol/fv-group": "window['@youwol/fv-group_APIv02']",
@@ -30,6 +32,10 @@ const externals = {
     "rxjs/operators": "window['rxjs_APIv6']['operators']"
 }
 const exportedSymbols = {
+    "marked": {
+        "apiKey": "4",
+        "exportedSymbol": "marked"
+    },
     "@youwol/fv-tabs": {
         "apiKey": "02",
         "exportedSymbol": "@youwol/fv-tabs"

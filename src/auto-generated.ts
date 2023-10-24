@@ -8,9 +8,9 @@ const runTimeDependencies = {
         "@youwol/http-clients": "^2.0.1",
         "rxjs": "^6.5.5",
         "uuid": "^8.3.2",
-        "@youwol/cdn-client": "^2.0.6",
+        "@youwol/cdn-client": "^2.1.2",
         "codemirror": "^5.52.0",
-        "@youwol/fv-code-mirror-editors": "^0.2.1",
+        "@youwol/fv-code-mirror-editors": "^0.3.1",
         "@youwol/fv-context-menu": "^0.1.1"
     },
     "includedInBundle": {}
@@ -25,7 +25,7 @@ const externals = {
     "uuid": "window['uuid_APIv8']",
     "@youwol/cdn-client": "window['@youwol/cdn-client_APIv2']",
     "codemirror": "window['CodeMirror_APIv5']",
-    "@youwol/fv-code-mirror-editors": "window['@youwol/fv-code-mirror-editors_APIv02']",
+    "@youwol/fv-code-mirror-editors": "window['@youwol/fv-code-mirror-editors_APIv03']",
     "@youwol/fv-context-menu": "window['@youwol/fv-context-menu_APIv01']",
     "rxjs/operators": "window['rxjs_APIv6']['operators']"
 }
@@ -67,7 +67,7 @@ const exportedSymbols = {
         "exportedSymbol": "CodeMirror"
     },
     "@youwol/fv-code-mirror-editors": {
-        "apiKey": "02",
+        "apiKey": "03",
         "exportedSymbol": "@youwol/fv-code-mirror-editors"
     },
     "@youwol/fv-context-menu": {
@@ -100,7 +100,7 @@ const entries = {
 export const setup = {
     name:'@youwol/platform',
         assetId:'QHlvdXdvbC9wbGF0Zm9ybQ==',
-    version:'0.1.7-wip',
+    version:'0.1.7',
     shortDescription:"OS like frontend application of YouWol platform.",
     developerDocumentation:'https://platform.youwol.com/applications/@youwol/cdn-explorer/latest?package=@youwol/platform&tab=doc',
     npmPackage:'https://www.npmjs.com/package/@youwol/platform',
@@ -146,7 +146,7 @@ export const setup = {
         const parameters = installParameters || {}
         const scripts = [
             ...(parameters.scripts || []),
-            `@youwol/platform#0.1.7-wip~dist/@youwol/platform/${entry.name}.js`
+            `@youwol/platform#0.1.7~dist/@youwol/platform/${entry.name}.js`
         ]
         const modules = [
             ...(parameters.modules || []),

@@ -34,9 +34,9 @@ template = Template(
                 "@youwol/http-clients": "^2.0.1",
                 "rxjs": "^6.5.5",
                 "uuid": "^8.3.2",
-                "@youwol/cdn-client": "^2.0.6",
+                "@youwol/cdn-client": "^2.1.2",
                 "codemirror": "^5.52.0",
-                "@youwol/fv-code-mirror-editors": "^0.2.1",
+                "@youwol/fv-code-mirror-editors": "^0.3.1",
                 "@youwol/fv-context-menu": "^0.1.1",
             }
         ),

@@ -156,7 +156,6 @@ export class BackgroundView implements VirtualDOM {
     }
 
     constructor() {
-        console.log('mouse entred :', this.hovered$.value)
         this.children = [
             child$(
                 OsCore.PreferencesFacade.getPreferences$(),

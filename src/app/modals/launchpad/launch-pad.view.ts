@@ -4,6 +4,8 @@ import { map } from 'rxjs/operators'
 import { LaunchpadBadgeView } from '../../top-banner/badges'
 import { Modal } from '@youwol/fv-group'
 import { ClosePopupButtonView } from '../profiles'
+import { BehaviorSubject } from 'rxjs'
+import { SideAppActionsView } from './actions.view'
 
 /**
  * @category View
@@ -202,20 +204,19 @@ class NewAppView implements VirtualDOM {
      * @group Immutable DOM Constants
      */
     public readonly children: VirtualDOM[]
+    public readonly hovered$ = new BehaviorSubject(false)
+
+    public readonly onmouseenter = () => {
+        this.hovered$.next(true)
+    }
+    public readonly onmouseleave = () => {
+        this.hovered$.next(false)
+    }
 
     /**
      * @group Immutable DOM Constants
      */
-    public readonly onclick = (ev: MouseEvent) => {
-        this.modalState.ok$.next(ev)
-        this.state
-            .createInstance$({
-                cdnPackage: this.app.cdnPackage,
-                version: 'latest',
-                focus: true,
-            })
-            .subscribe()
-    }
+    public readonly ondblclick: (ev: MouseEvent) => void
 
     constructor(params: {
         state: OsCore.PlatformState
@@ -228,7 +229,27 @@ class NewAppView implements VirtualDOM {
                 children: [this.app.graphics.appIcon],
             },
             { class: 'mt-1 text-center', innerText: this.app.displayName },
+
+            child$(this.hovered$, (isHovered) =>
+                isHovered
+                    ? new SideAppActionsView({
+                          state: params.state,
+                          modalState: params.modalState,
+                          app: params.app,
+                      })
+                    : {},
+            ),
         ]
+        this.ondblclick = (ev: MouseEvent) => {
+            this.modalState.ok$.next(ev)
+            this.state
+                .createInstance$({
+                    cdnPackage: this.app.cdnPackage,
+                    version: 'latest',
+                    focus: true,
+                })
+                .subscribe()
+        }
     }
 }
 

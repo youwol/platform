@@ -39,6 +39,7 @@ template = Template(
                 "codemirror": "^5.52.0",
                 "@youwol/fv-code-mirror-editors": "^0.3.1",
                 "@youwol/fv-context-menu": "^0.1.1",
+                "marked": "^4.3.0"
             }
         ),
         devTime={

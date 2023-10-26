@@ -29,7 +29,7 @@
         ]
     },
     "dependencies": {
-        "marked": "^4.3.0",
+        "marked": "^4.2.3",
         "@youwol/fv-tabs": "^0.2.1",
         "@youwol/os-core": "^0.1.14",
         "@youwol/fv-group": "^0.2.5",

@@ -1355,10 +1355,10 @@
     "@youwol/flux-view" "^1.0.3"
     rxjs "^6.5.5"
 
-"@youwol/fv-group@^0.2.1":
-  version "0.2.3"
-  resolved "https://registry.yarnpkg.com/@youwol/fv-group/-/fv-group-0.2.3.tgz#d2f5594f7477ec9d987b599992830368a2ae388e"
-  integrity sha512-N6OphExW0EEHr7MnYfYanzFNZMV4mX4tpUtqTUH71D/jEaNtDh1GfZyAg6KYICaukBcUOiIXTVMHq+DIeZ+bXA==
+"@youwol/fv-group@^0.2.5":
+  version "0.2.5"
+  resolved "https://registry.yarnpkg.com/@youwol/fv-group/-/fv-group-0.2.5.tgz#8ce6013abfd6bd96d67c08096b6c3b6969a5ca34"
+  integrity sha512-L5v2kzynjJmvayiVBIAtBQNV/J5KUppSGlSxuar9rNKtv8ZeVpexcCF/8FDC5+f8NVmRP6O+PJgqvgSZ6o0OAw==
   dependencies:
     "@youwol/flux-view" "^1.0.3"
     rxjs "^6.5.5"
@@ -4477,7 +4477,7 @@ map-obj@^4.1.0:
   resolved "https://registry.yarnpkg.com/map-obj/-/map-obj-4.3.0.tgz#9304f906e93faae70880da102a9f1df0ea8bb05a"
   integrity sha512-hdN1wVrZbb29eBGiGjJbeP8JbKjq1urkHJ/LIP/NY48MZ1QVXUsQBV1G1zvYFHn1XE06cwjBsOI2K3Ulnj1YXQ==
 
-marked@^4.3.0:
+marked@^4.2.3, marked@^4.3.0:
   version "4.3.0"
   resolved "https://registry.yarnpkg.com/marked/-/marked-4.3.0.tgz#796362821b019f734054582038b116481b456cf3"
   integrity sha512-PRsaiG84bK+AMvxziE/lCFss8juXjNaWzVbN5tXAm4XjeaS9NAHhop+PjQxz2A9h8Q4M/xGmzP8vqNwy6JeK0A==

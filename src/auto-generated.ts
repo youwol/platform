@@ -1,10 +1,10 @@
 
 const runTimeDependencies = {
     "externals": {
-        "marked": "^4.3.0",
+        "marked": "^4.2.3",
         "@youwol/fv-tabs": "^0.2.1",
         "@youwol/os-core": "^0.1.14",
-        "@youwol/fv-group": "^0.2.1",
+        "@youwol/fv-group": "^0.2.5",
         "@youwol/flux-view": "^1.0.3",
         "@youwol/http-clients": "^2.0.1",
         "rxjs": "^6.5.5",

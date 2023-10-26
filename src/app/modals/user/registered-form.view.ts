@@ -99,7 +99,7 @@ export const manageIdentityView = {
     onclick: () =>
         window
             .open(
-                `https://platform.youwol.com/auth/realms/youwol/account/#/`,
+                `https://platform.youwol.com/auth/realms/youwol/account/`,
                 '_blank',
             )
             .focus(),

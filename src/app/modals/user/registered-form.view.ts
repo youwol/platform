@@ -96,14 +96,13 @@ export const manageIdentityView = {
             innerText: 'Manage account',
         },
     ],
-    onclick: () => {
+    onclick: () =>
         window
             .open(
-                'https://platform.int.youwol.com/auth/realms/youwol/account/#/',
+                `https://platform.youwol.com/auth/realms/youwol/account/`,
                 '_blank',
             )
-            .focus()
-    },
+            .focus(),
 }
 
 export const otherProfilesView = {

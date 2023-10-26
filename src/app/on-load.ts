@@ -18,12 +18,12 @@ import {
 } from '@youwol/http-clients'
 import { HTTPError, raiseHTTPErrors } from '@youwol/http-primitives'
 import { map, shareReplay } from 'rxjs/operators'
-import { installContextMenu } from './context-menu/context-menu.state'
-import { ContextMenuDesktopView } from './context-menu/context-menu.view'
 import { PlatformBannerView } from './top-banner'
-import { Observable } from 'rxjs'
+import { BehaviorSubject, Observable } from 'rxjs'
 import { ProfilesState } from './modals/profiles'
 import { setup } from '../auto-generated'
+import { ContextMenuDesktopView } from './context-menu/context-menu.view'
+import { installContextMenu } from './context-menu/context-menu.state'
 
 require('./style.css')
 
@@ -56,6 +56,7 @@ export class PlatformView implements VirtualDOM {
      * @group States
      */
     public readonly state = new OsCore.PlatformState()
+    public readonly tabIndex = '-1'
     /**
      * @group Immutable DOM Constants
      */
@@ -88,7 +89,7 @@ export class PlatformView implements VirtualDOM {
                         class: 'fv-bg-background yw-box-shadow',
                         style: {
                             background: '#070707',
-                            zIndex: 99,
+                            zIndex: 0,
                         },
                     }),
             ),
@@ -101,6 +102,18 @@ export class PlatformView implements VirtualDOM {
                     new RunningAppView({ state: this.state }),
                     new DesktopWidgetsView({ state: this.state }),
                 ],
+                connectedCallback: (elem: HTMLElement) => {
+                    return installContextMenu({
+                        div: elem,
+                        children: [
+                            child$(getProfileStateData$(), (profileState) => {
+                                return new ContextMenuDesktopView({
+                                    profileState,
+                                })
+                            }),
+                        ],
+                    })
+                },
             },
         ]
 
@@ -126,7 +139,7 @@ export class BackgroundView implements VirtualDOM {
     public readonly style = {
         top: '0px',
         left: '0px',
-        zIndex: '1',
+        zIndex: '-1',
     }
     /**
      * @group Immutable DOM Constants
@@ -136,6 +149,11 @@ export class BackgroundView implements VirtualDOM {
      * @group Immutable DOM Constants
      */
     public readonly connectedCallback: (elem) => void
+    public readonly hovered$ = new BehaviorSubject(false)
+
+    public readonly onmouseenter = () => {
+        this.hovered$.next(true)
+    }
 
     constructor() {
         this.children = [
@@ -146,16 +164,6 @@ export class BackgroundView implements VirtualDOM {
                 },
             ),
         ]
-        this.connectedCallback = (elem) => {
-            return installContextMenu({
-                div: elem,
-                children: [
-                    child$(getProfileStateData$(), (profileState) => {
-                        return new ContextMenuDesktopView({ profileState })
-                    }),
-                ],
-            })
-        }
     }
 }
 

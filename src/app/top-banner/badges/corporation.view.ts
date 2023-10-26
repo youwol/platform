@@ -44,7 +44,7 @@ export class CorporationBadgeView {
                 platformState: state,
             }).length > 0
                 ? 'ms-2 d-flex rounded  top-banner-menu-view'
-                : 'mx-1'
+                : 'mx-1 align-self-center'
         this.children = [
             {
                 class: ' my-auto  p-1 rounded fv-hover-bg-background-alt',

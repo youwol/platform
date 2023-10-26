@@ -1,9 +1,10 @@
 
 const runTimeDependencies = {
     "externals": {
+        "marked": "^4.2.3",
         "@youwol/fv-tabs": "^0.2.1",
-        "@youwol/os-core": "^0.1.2",
-        "@youwol/fv-group": "^0.2.1",
+        "@youwol/os-core": "^0.1.14",
+        "@youwol/fv-group": "^0.2.5",
         "@youwol/flux-view": "^1.0.3",
         "@youwol/http-clients": "^2.0.1",
         "rxjs": "^6.5.5",
@@ -16,6 +17,7 @@ const runTimeDependencies = {
     "includedInBundle": {}
 }
 const externals = {
+    "marked": "window['marked_APIv4']",
     "@youwol/fv-tabs": "window['@youwol/fv-tabs_APIv02']",
     "@youwol/os-core": "window['@youwol/os-core_APIv01']",
     "@youwol/fv-group": "window['@youwol/fv-group_APIv02']",
@@ -30,6 +32,10 @@ const externals = {
     "rxjs/operators": "window['rxjs_APIv6']['operators']"
 }
 const exportedSymbols = {
+    "marked": {
+        "apiKey": "4",
+        "exportedSymbol": "marked"
+    },
     "@youwol/fv-tabs": {
         "apiKey": "02",
         "exportedSymbol": "@youwol/fv-tabs"
@@ -100,7 +106,7 @@ const entries = {
 export const setup = {
     name:'@youwol/platform',
         assetId:'QHlvdXdvbC9wbGF0Zm9ybQ==',
-    version:'0.1.7',
+    version:'0.1.8-wip',
     shortDescription:"OS like frontend application of YouWol platform.",
     developerDocumentation:'https://platform.youwol.com/applications/@youwol/cdn-explorer/latest?package=@youwol/platform&tab=doc',
     npmPackage:'https://www.npmjs.com/package/@youwol/platform',
@@ -146,7 +152,7 @@ export const setup = {
         const parameters = installParameters || {}
         const scripts = [
             ...(parameters.scripts || []),
-            `@youwol/platform#0.1.7~dist/@youwol/platform/${entry.name}.js`
+            `@youwol/platform#0.1.8-wip~dist/@youwol/platform/${entry.name}.js`
         ]
         const modules = [
             ...(parameters.modules || []),

@@ -1,7 +1,7 @@
 {
     "name": "@youwol/platform",
     "description": "OS like frontend application of YouWol platform.",
-    "version": "0.1.7",
+    "version": "0.1.8-wip",
     "author": "greinisch@youwol.com",
     "homepage": "https://github.com/youwol/platform#README.md",
     "main": "dist/index.html",
@@ -29,9 +29,10 @@
         ]
     },
     "dependencies": {
+        "marked": "^4.2.3",
         "@youwol/fv-tabs": "^0.2.1",
-        "@youwol/os-core": "^0.1.2",
-        "@youwol/fv-group": "^0.2.1",
+        "@youwol/os-core": "^0.1.14",
+        "@youwol/fv-group": "^0.2.5",
         "@youwol/flux-view": "^1.0.3",
         "@youwol/http-clients": "^2.0.1",
         "rxjs": "^6.5.5",
@@ -69,8 +70,8 @@
     "webpm": {
         "dependencies": {
             "@youwol/fv-tabs": "^0.2.1",
-            "@youwol/os-core": "^0.1.2",
-            "@youwol/fv-group": "^0.2.1",
+            "@youwol/os-core": "^0.1.14",
+            "@youwol/fv-group": "^0.2.5",
             "@youwol/flux-view": "^1.0.3",
             "@youwol/http-clients": "^2.0.1",
             "rxjs": "^6.5.5",

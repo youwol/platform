@@ -64,9 +64,10 @@ export class TooltipsView {
         this.id = divId
         this.style = {
             cursor: 'default',
+            zIndex: '1',
             position: 'absolute',
-            top: `${top ? top : 3}rem`,
-            right: `${right ? right : 2}rem`,
+            top: `${top ?? 3}rem`,
+            right: `${right ?? 2}rem`,
         }
     }
 }
@@ -93,7 +94,7 @@ export class ToolTipLinkView implements VirtualDOM {
             position: 'absolute',
             width: `${arrowLength ? arrowLength + 100 : 130}%`,
             height: `${arrowLength ? arrowLength + 100 : 130}%`,
-            clipPath: `polygon(${leftRightMove ? leftRightMove : 70}% 0, ${
+            clipPath: `polygon(${leftRightMove ?? 70}% 0, ${
                 30 + arrowWidth
             }% 50%, ${70 - arrowWidth}% 50%)`,
         }

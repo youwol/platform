@@ -228,7 +228,7 @@ class NewAppView implements VirtualDOM {
             {
                 children: [this.app.graphics.appIcon],
             },
-            { class: 'mt-1 text-center', innerText: this.app.displayName },
+            { class: 'text-center', innerText: this.app.displayName },
 
             child$(this.hovered$, (isHovered) =>
                 isHovered

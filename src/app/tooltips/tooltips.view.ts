@@ -2,9 +2,15 @@ import { VirtualDOM } from '@youwol/flux-view'
 import { TooltipsState } from './tooltips.state'
 
 export class TooltipsView {
-    public readonly class
-    public readonly id
-    public readonly style
+    public readonly class: string
+    public readonly id: string
+    public readonly style: {
+        cursor: string
+        top: string
+        position: string
+        right: string
+        zIndex: string
+    }
     public readonly children: VirtualDOM[]
 
     constructor({
@@ -67,7 +73,12 @@ export class TooltipsView {
 
 export class ToolTipLinkView implements VirtualDOM {
     public readonly class = 'yw-bg-yellowish'
-    public readonly style
+    public readonly style: {
+        clipPath: string
+        width: string
+        position: string
+        height: string
+    }
 
     constructor({
         arrowLength,
@@ -102,7 +113,7 @@ export class CloseTooltipView implements VirtualDOM {
         cursor: 'pointer',
     }
     public readonly children: VirtualDOM[]
-    public readonly onclick
+    public readonly onclick: () => void
 
     constructor(divId: string, state: TooltipsState) {
         this.onclick = () => {

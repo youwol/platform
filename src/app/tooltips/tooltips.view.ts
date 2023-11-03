@@ -53,12 +53,12 @@ export class TooltipsView {
                             minWidth: '10rem',
                         },
                         innerText: tooltipText,
-                        children: [new CloseTooltipView(divId, _tooltipState)],
+                        children: [new CloseTooltipView(divId, tooltipState)],
                     },
                 ],
             },
         ]
-        this.class = _tooltipState.isTooltip$.value
+        this.class = tooltipState.isTooltip$.value
             ? 'text-dark fv-hover-bg-background-trans'
             : 'd-none'
         this.id = divId

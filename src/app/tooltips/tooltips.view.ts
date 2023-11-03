@@ -22,11 +22,7 @@ export class TooltipsView {
         divId: string
         tooltipText: string
     }) {
-        const _tooltipState = new TooltipsState()
-        _tooltipState.isTooltip$.value
-            ? _tooltipState.appendTooltipElements(divId)
-            : ''
-
+        const tooltipState = new TooltipsState()
         this.children = [
             {
                 class: ' d-flex justify-content-center align-items-center ',
@@ -46,12 +42,9 @@ export class TooltipsView {
                         class: ' yw-bg-yellowish rounded p-2 pt-4 yw-bottom-box-shadow yw-animate-in',
                         style: {
                             position: 'absolute',
-                            // top: '0rem',
-                            // left: '0rem',
                             textAlignLast: 'center',
                             textAlign: 'center',
                             minWidth: '10rem',
-                            // width: 'fit-content',
                         },
                         innerText: tooltipText,
                         children: [new CloseTooltipView(divId, _tooltipState)],

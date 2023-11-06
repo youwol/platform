@@ -2,9 +2,15 @@ import { VirtualDOM } from '@youwol/flux-view'
 import { TooltipsState } from './tooltips.state'
 
 export class TooltipsView {
-    public readonly class
-    public readonly id
-    public readonly style
+    public readonly class: string
+    public readonly id: string
+    public readonly style: {
+        cursor: string
+        top: string
+        position: string
+        right: string
+        zIndex: string
+    }
     public readonly children: VirtualDOM[]
 
     constructor({
@@ -22,11 +28,7 @@ export class TooltipsView {
         divId: string
         tooltipText: string
     }) {
-        const _tooltipState = new TooltipsState()
-        _tooltipState.isTooltip$.value
-            ? _tooltipState.appendTooltipElements(divId)
-            : ''
-
+        const tooltipState = new TooltipsState()
         this.children = [
             {
                 class: ' d-flex justify-content-center align-items-center ',
@@ -46,35 +48,38 @@ export class TooltipsView {
                         class: ' yw-bg-yellowish rounded p-2 pt-4 yw-bottom-box-shadow yw-animate-in',
                         style: {
                             position: 'absolute',
-                            // top: '0rem',
-                            // left: '0rem',
                             textAlignLast: 'center',
                             textAlign: 'center',
                             minWidth: '10rem',
-                            // width: 'fit-content',
                         },
                         innerText: tooltipText,
-                        children: [new CloseTooltipView(divId, _tooltipState)],
+                        children: [new CloseTooltipView(divId, tooltipState)],
                     },
                 ],
             },
         ]
-        this.class = _tooltipState.isTooltip$.value
+        this.class = tooltipState.isTooltip$.value
             ? 'text-dark fv-hover-bg-background-trans'
             : 'd-none'
         this.id = divId
         this.style = {
             cursor: 'default',
+            zIndex: '1',
             position: 'absolute',
-            top: `${top ? top : 3}rem`,
-            right: `${right ? right : 2}rem`,
+            top: `${top ?? 3}rem`,
+            right: `${right ?? 2}rem`,
         }
     }
 }
 
 export class ToolTipLinkView implements VirtualDOM {
     public readonly class = 'yw-bg-yellowish'
-    public readonly style
+    public readonly style: {
+        clipPath: string
+        width: string
+        position: string
+        height: string
+    }
 
     constructor({
         arrowLength,
@@ -89,7 +94,7 @@ export class ToolTipLinkView implements VirtualDOM {
             position: 'absolute',
             width: `${arrowLength ? arrowLength + 100 : 130}%`,
             height: `${arrowLength ? arrowLength + 100 : 130}%`,
-            clipPath: `polygon(${leftRightMove ? leftRightMove : 70}% 0, ${
+            clipPath: `polygon(${leftRightMove ?? 70}% 0, ${
                 30 + arrowWidth
             }% 50%, ${70 - arrowWidth}% 50%)`,
         }
@@ -109,7 +114,7 @@ export class CloseTooltipView implements VirtualDOM {
         cursor: 'pointer',
     }
     public readonly children: VirtualDOM[]
-    public readonly onclick
+    public readonly onclick: () => void
 
     constructor(divId: string, state: TooltipsState) {
         this.onclick = () => {

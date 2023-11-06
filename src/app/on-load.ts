@@ -89,7 +89,6 @@ export class PlatformView implements VirtualDOM {
                         class: 'fv-bg-background yw-box-shadow',
                         style: {
                             background: '#070707',
-                            zIndex: 0,
                         },
                     }),
             ),
@@ -97,6 +96,7 @@ export class PlatformView implements VirtualDOM {
                 class: 'd-flex align-items-center flex-grow-1 w-100 yw-iframe-border-none',
                 style: {
                     minHeight: '0px',
+                    overflow: 'auto',
                 },
                 children: [
                     new RunningAppView({ state: this.state }),

@@ -138,19 +138,23 @@ class SideAppFavoriteAction implements VirtualDOM {
                     OsCore.FavoritesFacade.getApplications$(),
                     (app) =>
                         app.find((a) => a.assetId === params.assetId)
-                            ? `fa-star  ${iconsClasses}`
-                            : `fa-star text-secondary ${iconsClasses}`,
+                            ? `fa-star text-secondary ${iconsClasses}`
+                            : `fa-star  ${iconsClasses}`,
                 ),
-                customAttributes: {
-                    dataToggle: 'tooltip',
-                    title: attr$(FavoritesFacade.getApplications$(), (app) => {
-                        return app.find((a) =>
-                            a.assetId === params.assetId
-                                ? 'un-favorite'
-                                : `favorite`,
+                customAttributes: attr$(
+                    FavoritesFacade.getApplications$(),
+                    (app) => {
+                        const isFavorite = app.find(
+                            (a) => a.assetId === params.assetId,
                         )
-                    }),
-                },
+                        return {
+                            dataToggle: 'tooltip',
+                            title: isFavorite
+                                ? 'Remove from desktop'
+                                : `Add to desktop`,
+                        }
+                    },
+                ),
             },
         ]
         this.onclick = () => {

@@ -134,10 +134,12 @@ class SideAppFavoriteAction implements VirtualDOM {
         Object.assign(this, params)
         this.children = [
             {
-                class: attr$(OsCore.FavoritesFacade.getApplications$(), (app) =>
-                    app.find((a) => a.assetId === params.assetId)
-                        ? `fa-star text-secondary ${iconsClasses}`
-                        : `fa-star  ${iconsClasses}`,
+                class: attr$(
+                    OsCore.FavoritesFacade.getApplications$(),
+                    (app) =>
+                        app.find((a) => a.assetId === params.assetId)
+                            ? `fa-star text-secondary ${iconsClasses}`
+                            : `fa-star  ${iconsClasses}`,
                 ),
                 customAttributes: attr$(
                     FavoritesFacade.getApplications$(),

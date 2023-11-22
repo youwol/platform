@@ -234,9 +234,24 @@ class NewAppView implements VirtualDOM {
         Object.assign(this, params)
         this.children = [
             {
+                class: 'd-flex justify-content-center align-items-center',
+                style: {
+                    width: '70px',
+                    height: '70px',
+                },
                 children: [this.app.graphics.appIcon],
             },
-            { class: 'text-center', innerText: this.app.displayName },
+            {
+                class: 'd-flex justify-content-center align-items-center mt-1',
+                children: [
+                    {
+                        style: {
+                            height: '43px',
+                        },
+                        innerText: this.app.displayName,
+                    },
+                ],
+            },
 
             child$(this.hovered$, (isHovered) =>
                 isHovered

@@ -187,7 +187,15 @@ class NewAppView implements VirtualDOM {
      * @group Immutable DOM Constants
      */
     public readonly class =
-        'm-3  fv-pointer fv-text-primary app-icon-motion p-2 rounded  yw-hover-app yw-webkit-align-center'
+        'p-1 d-flex flex-column align-items-center yw-hover-app m-1'
+    public readonly style = {
+        position: 'relative',
+        width: '116px',
+        height: '125px',
+        overflowWrap: 'anywhere',
+        textAlign: 'center',
+        justifyContent: 'center',
+    }
     /**
      * @group States
      */
@@ -226,9 +234,24 @@ class NewAppView implements VirtualDOM {
         Object.assign(this, params)
         this.children = [
             {
+                class: 'd-flex justify-content-center align-items-center',
+                style: {
+                    width: '70px',
+                    height: '70px',
+                },
                 children: [this.app.graphics.appIcon],
             },
-            { class: 'text-center', innerText: this.app.displayName },
+            {
+                class: 'd-flex justify-content-center align-items-center mt-1',
+                children: [
+                    {
+                        style: {
+                            height: '43px',
+                        },
+                        innerText: this.app.displayName,
+                    },
+                ],
+            },
 
             child$(this.hovered$, (isHovered) =>
                 isHovered
@@ -409,7 +432,11 @@ export class RunningAppView implements VirtualDOM {
             class: `w-100 fv-text-primary d-flex align-items-center justify-content-between position-relative yw-minimized-app`,
             children: [
                 child$(this.executable.appMetadata$, (d) => ({
-                    class: 'p-2',
+                    class: 'p-1',
+                    style: {
+                        height: '40px',
+                        width: '40px',
+                    },
                     children: [d.graphics.appIcon],
                 })),
                 {

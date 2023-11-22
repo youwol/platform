@@ -15,7 +15,7 @@ export class SideAppActionsView implements VirtualDOM {
     public readonly style = {
         position: 'absolute',
         top: '5px',
-        right: '-5%',
+        right: '5%',
     }
 
     public readonly children: VirtualDOM[]

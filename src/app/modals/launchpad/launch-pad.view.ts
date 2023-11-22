@@ -187,7 +187,15 @@ class NewAppView implements VirtualDOM {
      * @group Immutable DOM Constants
      */
     public readonly class =
-        'm-3  fv-pointer fv-text-primary app-icon-motion p-2 rounded  yw-hover-app yw-webkit-align-center'
+        'p-1 d-flex flex-column align-items-center yw-hover-app m-1'
+    public readonly style = {
+        position: 'relative',
+        width: '116px',
+        height: '125px',
+        overflowWrap: 'anywhere',
+        textAlign: 'center',
+        justifyContent: 'center',
+    }
     /**
      * @group States
      */

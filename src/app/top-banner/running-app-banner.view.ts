@@ -99,7 +99,6 @@ class RunningAppTitleView implements VirtualDOM {
                             children: [appInfo.graphics.appIcon],
                         }
                     }),
-                    // { class: 'mx-1' },
                     child$(app.header$, (view) => {
                         return view
                     }),

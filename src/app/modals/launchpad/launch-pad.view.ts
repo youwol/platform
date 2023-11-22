@@ -436,8 +436,6 @@ export class RunningAppView implements VirtualDOM {
                     style: {
                         height: '40px',
                         width: '40px',
-                        // borderRadius: '5px',
-                        // overflow: 'overlay',
                     },
                     children: [d.graphics.appIcon],
                 })),

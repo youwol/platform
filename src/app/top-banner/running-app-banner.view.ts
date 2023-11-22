@@ -89,12 +89,20 @@ class RunningAppTitleView implements VirtualDOM {
             {
                 class: 'd-flex align-items-center yw-opened-app',
                 children: [
-                    child$(
-                        app.appMetadata$,
-                        (appInfo) => appInfo.graphics.appIcon,
-                    ),
+                    child$(app.appMetadata$, (appInfo) => {
+                        return {
+                            style: {
+                                height: '25px',
+                                width: '25px',
+                                borderRadius: '5px',
+                            },
+                            children: [appInfo.graphics.appIcon],
+                        }
+                    }),
                     // { class: 'mx-1' },
-                    child$(app.header$, (view) => view),
+                    child$(app.header$, (view) => {
+                        return view
+                    }),
                 ],
             },
             {

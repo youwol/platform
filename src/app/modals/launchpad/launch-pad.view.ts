@@ -432,7 +432,13 @@ export class RunningAppView implements VirtualDOM {
             class: `w-100 fv-text-primary d-flex align-items-center justify-content-between position-relative yw-minimized-app`,
             children: [
                 child$(this.executable.appMetadata$, (d) => ({
-                    class: 'p-2',
+                    class: 'p-1',
+                    style: {
+                        height: '40px',
+                        width: '40px',
+                        // borderRadius: '5px',
+                        // overflow: 'overlay',
+                    },
                     children: [d.graphics.appIcon],
                 })),
                 {

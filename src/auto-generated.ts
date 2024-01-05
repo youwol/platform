@@ -106,13 +106,13 @@ const entries = {
 export const setup = {
     name:'@youwol/platform',
         assetId:'QHlvdXdvbC9wbGF0Zm9ybQ==',
-    version:'0.1.11-wip',
+    version:'0.2.0-wip',
     shortDescription:"OS like frontend application of YouWol platform.",
     developerDocumentation:'https://platform.youwol.com/applications/@youwol/cdn-explorer/latest?package=@youwol/platform&tab=doc',
     npmPackage:'https://www.npmjs.com/package/@youwol/platform',
     sourceGithub:'https://github.com/youwol/platform',
     userGuide:'https://l.youwol.com/doc/@youwol/platform',
-    apiVersion:'01',
+    apiVersion:'02',
     runTimeDependencies,
     externals,
     exportedSymbols,
@@ -137,7 +137,7 @@ export const setup = {
             modules,
             scripts,
         }).then(() => {
-            return window[`@youwol/platform_APIv01`]
+            return window[`@youwol/platform_APIv02`]
         })
     },
     installAuxiliaryModule: ({name, cdnClient, installParameters}:{
@@ -152,7 +152,7 @@ export const setup = {
         const parameters = installParameters || {}
         const scripts = [
             ...(parameters.scripts || []),
-            `@youwol/platform#0.1.11-wip~dist/@youwol/platform/${entry.name}.js`
+            `@youwol/platform#0.2.0-wip~dist/@youwol/platform/${entry.name}.js`
         ]
         const modules = [
             ...(parameters.modules || []),
@@ -163,7 +163,7 @@ export const setup = {
             modules,
             scripts,
         }).then(() => {
-            return window[`@youwol/platform/${entry.name}_APIv01`]
+            return window[`@youwol/platform/${entry.name}_APIv02`]
         })
     },
     getCdnDependencies(name?: string){

@@ -61,7 +61,6 @@ export class LaunchpadBadgeView implements VirtualDOM<'div'> {
                                 new Set(apps.map((app) => app.cdnPackage)),
                         ),
                     ),
-                    // checkhere
                     vdomMap: (distinctApps: Set<string>) =>
                         Array(9)
                             .fill(null)
@@ -81,33 +80,6 @@ export class LaunchpadBadgeView implements VirtualDOM<'div'> {
                                 }
                             }),
                 },
-
-                // checkhere
-                //     children$(
-                //     state.runningApplications$.pipe(
-                //         map(
-                //             (apps) =>
-                //                 new Set(apps.map((app) => app.cdnPackage)),
-                //         ),
-                //     ),
-                //     (distinctApps) =>
-                //         Array(9)
-                //             .fill(null)
-                //             .map((_, i) => {
-                //                 return {
-                //                     class:
-                //                         'rounded ' +
-                //                         (i < distinctApps.size
-                //                             ? 'yw-bg-orange  fv-border-orange'
-                //                             : 'fv-bg-primary fv-border-primary'),
-                //                     style: {
-                //                         width: '6px',
-                //                         height: '6px',
-                //                         margin: '1px',
-                //                     },
-                //                 }
-                //             }),
-                // ),
                 onclick: () =>
                     popupModal(
                         (modalState) =>

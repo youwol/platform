@@ -199,25 +199,6 @@ class NewAppsView implements VirtualDOM<'div'> {
                                 })
                             },
                         },
-
-                        //     children$(
-                        //     OsCore.Installer.getApplicationsInfo$().pipe(
-                        //         map((apps) => {
-                        //             return apps.filter(
-                        //                 (app) => app.execution.standalone,
-                        //             )
-                        //         }),
-                        //     ),
-                        //     (apps) => {
-                        //         return apps.map((app) => {
-                        //             return new NewAppView({
-                        //                 state: this.state,
-                        //                 modalState: this.modalState,
-                        //                 app,
-                        //             })
-                        //         })
-                        //     },
-                        // ),
                     },
                 ],
             },
@@ -316,15 +297,6 @@ class NewAppView implements VirtualDOM<'div'> {
                           })
                         : { tag: 'div' },
             },
-            // child$(this.hovered$, (isHovered) =>
-            //     isHovered
-            //         ? new SideAppActionsView({
-            //               state: params.state,
-            //               modalState: params.modalState,
-            //               app: params.app,
-            //           })
-            //         : {},
-            // ),
         ]
         this.ondblclick = (ev: MouseEvent) => {
             this.modalState.ok$.next(ev)

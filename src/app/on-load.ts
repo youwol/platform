@@ -190,7 +190,6 @@ export class DesktopWidgetsView implements VirtualDOM<'div'> {
      * @group Immutable DOM Constants
      */
     public readonly children: ChildrenLike
-    // Stream$<Preferences, VirtualDOM[]>
     /**
      * @group States
      */

@@ -135,7 +135,6 @@ export class RenameProfileConfirmation implements VirtualDOM<'div'> {
                             ) {
                                 state.renameProfile(profile.id, rename$.value)
                                 leavePopupAfterClickBtn()
-                                // state.selectProfile(profile.id)
                             }
                         },
                     },

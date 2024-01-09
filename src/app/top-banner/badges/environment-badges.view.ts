@@ -30,13 +30,11 @@ export class EnvironmentBadgesView implements VirtualDOM<'div'> {
         sessionInfo: Accounts.SessionDetails
         profileState: ProfilesState
     }) {
-        this.children =
-            // [new UserBadgeDropdownView(sessionInfo)]
-            sessionInfo.userInfo.temp
-                ? [
-                      new LoginBadgeView(),
-                      new UserBadgeDropdownView(sessionInfo, profileState),
-                  ]
-                : [new UserBadgeDropdownView(sessionInfo, profileState)]
+        this.children = sessionInfo.userInfo.temp
+            ? [
+                  new LoginBadgeView(),
+                  new UserBadgeDropdownView(sessionInfo, profileState),
+              ]
+            : [new UserBadgeDropdownView(sessionInfo, profileState)]
     }
 }

@@ -47,9 +47,6 @@ export class UserBadgeDropdownView implements VirtualDOM<'div'> {
                     ariaExpanded: false,
                     ariaHaspopup: 'true',
                 },
-                // checkthis
-                // ariaExpanded: false,
-                // ariaHaspopup: 'true',
                 children: [
                     sessionInfo.userInfo.temp
                         ? new VisitorBadgeView()

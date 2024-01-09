@@ -114,7 +114,6 @@ export class CloseTooltipView implements VirtualDOM<'span'> {
 
     constructor(divId: string, state: TooltipsState) {
         this.onclick = () => {
-            // Hot fix
             state.dataSteps$.next([])
             state.removeTooltipElements(divId)
             document.getElementById(divId).remove()

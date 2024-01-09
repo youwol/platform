@@ -14,7 +14,6 @@ export class RunningAppView implements VirtualDOM<'div'> {
      * @group Immutable DOM Constants
      */
     public readonly class: AttributeLike<string>
-    // Stream$<OsCore.RunningApp, string>
     /**
      * @group States
      */

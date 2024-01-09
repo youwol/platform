@@ -19,13 +19,7 @@ export class ProfileItemView implements VirtualDOM<'div'> {
      * @group Immutable DOM Constants
      */
     public readonly class = `accordion-item`
-    /**
-     * @group Immutable DOM Constants
-     */
-    public readonly style = {
-        // height: '29px',
-    }
-    public readonly id
+
     /**
      * @group Immutable DOM Constants
      */

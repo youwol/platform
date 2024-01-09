@@ -16,7 +16,7 @@ export class SideAppActionsView implements VirtualDOM<'div'> {
      * @group Immutable DOM Constants
      */
     public readonly tag = 'div'
-    public readonly class = 'd-flex flex-column' //: Stream$<boolean, string>
+    public readonly class = 'd-flex flex-column'
     public readonly style = {
         position: 'absolute' as const,
         top: '5px',
@@ -38,10 +38,6 @@ export class SideAppActionsView implements VirtualDOM<'div'> {
                 modalState: params.modalState,
                 app: params.app,
             }),
-            // {
-            //                 source$: ,
-            //                 vdomMap:
-            //             }
             {
                 source$: OsCore.RequestsExecutor.getAsset(
                     window.btoa(window.btoa(params.app.cdnPackage)),

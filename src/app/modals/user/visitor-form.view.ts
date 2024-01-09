@@ -279,7 +279,6 @@ class RegisterButton implements VirtualDOM<'span'> {
             {
                 tag: 'div',
                 innerText: 'Register',
-                // enable: attr$(state.validEmail$, (email) => email != undefined),
             },
             {
                 source$: state.pending$,

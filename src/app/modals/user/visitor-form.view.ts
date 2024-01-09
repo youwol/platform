@@ -385,8 +385,7 @@ export class InviteLoginView implements VirtualDOM<'div'> {
     /**
      * @group Immutable DOM Constants
      */
-    // checkHere
-    public readonly children = []
+    public readonly children: ChildrenLike
 
     constructor() {
         this.children = [

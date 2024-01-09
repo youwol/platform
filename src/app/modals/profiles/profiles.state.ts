@@ -25,7 +25,7 @@ import * as httpClients from '@youwol/http-clients'
 
 const cmInstall = {
     modules: [
-        `@youwol/rx-code-mirror-editors#${setup.runTimeDependencies.externals['@youwol/rx-code-mirror-editors']}`,
+        `@youwol/rx-code-mirror-editors#${setup.runTimeDependencies.externals['@youwol/rx-code-mirror-editors']} as codeMirrorEditors`,
     ],
     scripts: [
         'codemirror#5.52.0~mode/javascript.min.js',
@@ -36,11 +36,6 @@ const cmInstall = {
         'codemirror#5.52.0~theme/blackboard.min.css',
         'codemirror#5.52.0~addons/lint/lint.css',
     ],
-    aliases: {
-        codeMirrorEditors: setup.getDependencySymbolExported(
-            '@youwol/rx-code-mirror-editors',
-        ),
-    },
     onEvent: (event) => {
         ProfilesState.cdnEvents$.next(event)
     },

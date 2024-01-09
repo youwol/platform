@@ -6,7 +6,7 @@ import type * as Marked from 'marked'
 import { Modal } from '@youwol/rx-group-views'
 import { popupModal } from '../common'
 import { from } from 'rxjs'
-import { map, tap } from 'rxjs/operators'
+import { map } from 'rxjs/operators'
 import { setup } from '../../../auto-generated'
 import { FavoritesFacade } from '@youwol/os-core'
 import { AssetsBackend, ExplorerBackend } from '@youwol/http-clients'
@@ -192,10 +192,7 @@ function installMarked$() {
         webpmClient.install({
             modules: [`marked#${setup.runTimeDependencies.externals.marked}`],
         }) as unknown as Promise<{ marked: typeof Marked }>,
-    ).pipe(
-        map(({ marked }) => marked),
-        tap((v) => console.log('type Of !! ', typeof v)),
-    )
+    ).pipe(map(({ marked }) => marked))
 }
 
 class AppDescriptionView implements VirtualDOM<'div'> {

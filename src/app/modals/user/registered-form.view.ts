@@ -1,8 +1,8 @@
-import {ChildrenLike, VirtualDOM} from '@youwol/rx-vdom'
-import {Accounts} from '@youwol/http-clients'
-import {separatorView, redirectWith} from './common'
+import { ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
+import { Accounts } from '@youwol/http-clients'
+import { separatorView, redirectWith } from './common'
 
-import {NewProfileItemView, ProfileItemView, ProfilesState} from '../profiles'
+import { NewProfileItemView, ProfileItemView, ProfilesState } from '../profiles'
 
 /**
  * @category View
@@ -22,9 +22,9 @@ export class RegisteredFormView implements VirtualDOM<'div'> {
     public readonly children: ChildrenLike
 
     constructor({
-                    sessionInfo,
-                    state,
-                }: {
+        sessionInfo,
+        state,
+    }: {
         sessionInfo: Accounts.SessionDetails
         state: ProfilesState
     }) {
@@ -33,7 +33,7 @@ export class RegisteredFormView implements VirtualDOM<'div'> {
             manageIdentityView,
             separatorView,
             otherProfilesView,
-            new AllProfilesView({state}),
+            new AllProfilesView({ state }),
             separatorView,
             logoutView,
         ]
@@ -125,7 +125,7 @@ export const otherProfilesView: VirtualDOM<'div'> = {
         {
             tag: 'div',
             innerText: 'Profiles',
-            style: {opacity: '0.5'},
+            style: { opacity: '0.5' },
         },
     ],
 }
@@ -153,7 +153,7 @@ export const logoutView: VirtualDOM<'div'> = {
         },
     ],
     onclick: () => {
-        redirectWith('logoutUrl', {login_flow: 'temp'})
+        redirectWith('logoutUrl', { login_flow: 'temp' })
     },
 }
 
@@ -175,16 +175,16 @@ export class AllProfilesView implements VirtualDOM<'div'> {
      */
     public readonly children: ChildrenLike
 
-    constructor({state}: { state: ProfilesState }) {
+    constructor({ state }: { state: ProfilesState }) {
         this.children = {
             policy: 'replace',
             source$: state.profiles$,
             vdomMap: (profiles: { id: string; name: string }[]) => {
                 return [
                     ...profiles.map(
-                        (profile) => new ProfileItemView({profile, state}),
+                        (profile) => new ProfileItemView({ profile, state }),
                     ),
-                    new NewProfileItemView({state}),
+                    new NewProfileItemView({ state }),
                 ]
             },
         }
@@ -215,7 +215,7 @@ export class AccountBadge implements VirtualDOM<'div'> {
     constructor(userInfos: Accounts.UserInfos) {
         this.children = [
             new AvatarView(userInfos),
-            {tag: 'div', innerText: userInfos.name},
+            { tag: 'div', innerText: userInfos.name },
         ]
     }
 }

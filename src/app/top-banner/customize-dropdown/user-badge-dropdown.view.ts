@@ -1,6 +1,6 @@
-import { VirtualDOM } from '@youwol/flux-view'
+import { ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
 import { Accounts } from '@youwol/http-clients'
-import { Modal } from '@youwol/fv-group'
+import { Modal } from '@youwol/rx-group-views'
 import { RegisteredBadgeView, VisitorBadgeView } from '../badges'
 import { ProfilesState } from '../../modals/profiles'
 import { RegisteredFormView, VisitorFormView } from '../../modals/user'
@@ -9,7 +9,11 @@ import { TooltipsView } from '../../tooltips/tooltips.view'
 /**
  * @category View
  */
-export class UserBadgeDropdownView implements VirtualDOM {
+export class UserBadgeDropdownView implements VirtualDOM<'div'> {
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly tag = 'div'
     /**
      * @group Immutable DOM Constants
      */
@@ -17,7 +21,7 @@ export class UserBadgeDropdownView implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly children: VirtualDOM[]
+    public readonly children: ChildrenLike
     /**
      * @group Immutable Constants
      */
@@ -40,9 +44,12 @@ export class UserBadgeDropdownView implements VirtualDOM {
                 customAttributes: {
                     dataBsToggle: 'dropdown',
                     dataBsAutoClose: 'outside',
+                    ariaExpanded: false,
+                    ariaHaspopup: 'true',
                 },
-                ariaExpanded: false,
-                ariaHaspopup: 'true',
+                // checkthis
+                // ariaExpanded: false,
+                // ariaHaspopup: 'true',
                 children: [
                     sessionInfo.userInfo.temp
                         ? new VisitorBadgeView()
@@ -50,6 +57,7 @@ export class UserBadgeDropdownView implements VirtualDOM {
                 ],
             },
             {
+                tag: 'div',
                 class: 'dropdown-menu fv-bg-background yw-animate-in yw-box-shadow fv-font-size-regular fv-font-family-regular',
                 style: {
                     background: '#070707',

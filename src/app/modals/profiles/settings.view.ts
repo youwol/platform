@@ -1,4 +1,4 @@
-import { VirtualDOM } from '@youwol/flux-view'
+import { ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
 import { Accounts } from '@youwol/http-clients'
 import { SettingsTabsView } from './settings-tabs'
 import { ProfilesState } from './profiles.state'
@@ -6,7 +6,11 @@ import { ProfilesState } from './profiles.state'
 /**
  * @category View
  */
-export class SettingsView implements VirtualDOM {
+export class SettingsView implements VirtualDOM<'div'> {
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly tag = 'div'
     /**
      * @group Immutable DOM Constants
      */
@@ -17,7 +21,7 @@ export class SettingsView implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly children: VirtualDOM[]
+    public readonly children: ChildrenLike
 
     constructor({
         sessionInfo,
@@ -28,6 +32,7 @@ export class SettingsView implements VirtualDOM {
     }) {
         this.children = [
             {
+                tag: 'div',
                 class: 'position-relative h-100 d-flex flex-column',
                 children: [
                     new SettingsTabsView({ sessionInfo, profilesState }),

@@ -6,7 +6,7 @@ import {
     of,
     ReplaySubject,
 } from 'rxjs'
-import { CdnEvent, install } from '@youwol/cdn-client'
+import { CdnEvent, install } from '@youwol/webpm-client'
 import { map, mergeMap, shareReplay, take, tap } from 'rxjs/operators'
 import { setup } from '../../../auto-generated'
 import {
@@ -18,15 +18,14 @@ import { CdnSessionsStorage } from '@youwol/http-clients'
 import { raiseHTTPErrors } from '@youwol/http-primitives'
 import { v4 } from 'uuid'
 import * as OsCore from '@youwol/os-core'
-import { TsCodeEditorModule } from '@youwol/fv-code-mirror-editors'
-import * as rxjs from 'rxjs'
-import * as cdnClient from '@youwol/cdn-client'
+import { TsCodeEditorModule } from '@youwol/rx-code-mirror-editors'
+
+import * as webpmClient from '@youwol/webpm-client'
 import * as httpClients from '@youwol/http-clients'
-import * as fluxView from '@youwol/flux-view'
 
 const cmInstall = {
     modules: [
-        `@youwol/fv-code-mirror-editors#${setup.runTimeDependencies.externals['@youwol/fv-code-mirror-editors']}`,
+        `@youwol/rx-code-mirror-editors#${setup.runTimeDependencies.externals['@youwol/rx-code-mirror-editors']}`,
     ],
     scripts: [
         'codemirror#5.52.0~mode/javascript.min.js',
@@ -39,7 +38,7 @@ const cmInstall = {
     ],
     aliases: {
         codeMirrorEditors: setup.getDependencySymbolExported(
-            '@youwol/fv-code-mirror-editors',
+            '@youwol/rx-code-mirror-editors',
         ),
     },
     onEvent: (event) => {
@@ -201,10 +200,8 @@ export class ProfilesState {
          */
         const executePreferences = () =>
             new Function(settingsContent.preferences.jsSrc)()({
-                rxjs,
-                cdnClient,
+                webpmClient,
                 httpClients,
-                fluxView,
                 platformState: ChildApplicationAPI.getOsInstance(),
             })
         const executeInstallers = () =>

@@ -1,8 +1,13 @@
-import { attr$, child$, children$, VirtualDOM } from '@youwol/flux-view'
+import {
+    RxChild,
+    AnyVirtualDOM,
+    ChildrenLike,
+    VirtualDOM,
+} from '@youwol/rx-vdom'
 import * as OsCore from '@youwol/os-core'
 import { map } from 'rxjs/operators'
 import { LaunchpadBadgeView } from '../../top-banner/badges'
-import { Modal } from '@youwol/fv-group'
+import { Modal } from '@youwol/rx-group-views'
 import { ClosePopupButtonView } from '../profiles'
 import { BehaviorSubject } from 'rxjs'
 import { SideAppActionsView } from './actions.view'
@@ -10,7 +15,11 @@ import { SideAppActionsView } from './actions.view'
 /**
  * @category View
  */
-export class ApplicationsLaunchPadView implements VirtualDOM {
+export class ApplicationsLaunchPadView implements VirtualDOM<'div'> {
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly tag = 'div'
     /**
      * @group Immutable DOM Constants
      */
@@ -34,7 +43,7 @@ export class ApplicationsLaunchPadView implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly children: VirtualDOM[]
+    public readonly children: ChildrenLike
 
     /**
      * @group Immutable DOM Constants
@@ -48,6 +57,7 @@ export class ApplicationsLaunchPadView implements VirtualDOM {
         Object.assign(this, params)
         this.children = [
             {
+                tag: 'div',
                 class: 'fv-bg-background w-100 d-flex align-items-center disabled ',
                 style: {
                     background: '#070707',
@@ -59,28 +69,36 @@ export class ApplicationsLaunchPadView implements VirtualDOM {
                         isTooltip: false,
                     }),
                     {
+                        tag: 'div',
                         class: 'mx-1',
                         innerText: 'Application Launcher',
                     },
                 ],
             },
             {
+                tag: 'div',
                 class: 'flex-grow-1 w-100 d-flex p-3',
                 style: {
                     minHeight: '0px',
                 },
                 children: [
-                    child$(this.state.runningApplications$, (apps) =>
-                        apps.length > 0
-                            ? new RunningAppsView({
-                                  state: this.state,
-                                  modalState: this.modalState,
-                              })
-                            : {},
-                    ),
-                    child$(this.state.runningApplications$, (apps) =>
-                        apps.length > 0 ? { class: 'mx-3 border-end' } : {},
-                    ),
+                    {
+                        source$: this.state.runningApplications$,
+                        vdomMap: (apps: OsCore.RunningApp[]) =>
+                            apps.length > 0
+                                ? new RunningAppsView({
+                                      state: this.state,
+                                      modalState: this.modalState,
+                                  })
+                                : { tag: 'div' },
+                    },
+                    {
+                        source$: this.state.runningApplications$,
+                        vdomMap: (apps: OsCore.RunningApp[]) =>
+                            apps.length > 0
+                                ? { tag: 'div', class: 'mx-3 border-end' }
+                                : { tag: 'div' },
+                    },
                     new NewAppsView({
                         state: this.state,
                         modalState: this.modalState,
@@ -95,7 +113,11 @@ export class ApplicationsLaunchPadView implements VirtualDOM {
 /**
  * @category View
  */
-class NewAppsView implements VirtualDOM {
+class NewAppsView implements VirtualDOM<'div'> {
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly tag = 'div'
     /**
      * @group Immutable DOM Constants
      */
@@ -109,7 +131,7 @@ class NewAppsView implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly children: VirtualDOM[]
+    public readonly children: ChildrenLike
     /**
      * @group State
      */
@@ -124,45 +146,50 @@ class NewAppsView implements VirtualDOM {
         modalState: Modal.State
     }) {
         Object.assign(this, params)
-        const spinner = child$(
-            OsCore.Installer.getApplicationsInfo$(),
-            (): VirtualDOM => {
-                return {}
+        const spinner: RxChild = {
+            source$: OsCore.Installer.getApplicationsInfo$(),
+            vdomMap: () => {
+                return { tag: 'div' }
             },
-            {
-                untilFirst: {
-                    class: 'fas fa-spinner fa-spin mx-2',
-                },
+            untilFirst: {
+                tag: 'div',
+                class: 'fas fa-spinner fa-spin mx-2',
             },
-        )
+        }
 
         this.children = [
             {
+                tag: 'div',
                 class: 'fv-text-primary d-flex align-items-center',
                 children: [
                     {
+                        tag: 'div',
                         innerText: 'Applications',
                     },
                     spinner,
                 ],
             },
             {
+                tag: 'div',
                 class: 'flex-grow-1 overflow-auto',
                 style: {
                     minHeight: '0px',
                 },
                 children: [
                     {
+                        tag: 'div',
                         class: 'd-flex p-2 m-2 flex-wrap justify-content-start align-items-center',
-                        children: children$(
-                            OsCore.Installer.getApplicationsInfo$().pipe(
-                                map((apps) => {
-                                    return apps.filter(
-                                        (app) => app.execution.standalone,
-                                    )
-                                }),
-                            ),
-                            (apps) => {
+                        children: {
+                            policy: 'replace',
+                            source$:
+                                OsCore.Installer.getApplicationsInfo$().pipe(
+                                    map((apps) => {
+                                        return apps.filter(
+                                            (app) => app.execution.standalone,
+                                        )
+                                    }),
+                                ),
+                            vdomMap: (apps: OsCore.ApplicationInfo[]) => {
                                 return apps.map((app) => {
                                     return new NewAppView({
                                         state: this.state,
@@ -171,7 +198,26 @@ class NewAppsView implements VirtualDOM {
                                     })
                                 })
                             },
-                        ),
+                        },
+
+                        //     children$(
+                        //     OsCore.Installer.getApplicationsInfo$().pipe(
+                        //         map((apps) => {
+                        //             return apps.filter(
+                        //                 (app) => app.execution.standalone,
+                        //             )
+                        //         }),
+                        //     ),
+                        //     (apps) => {
+                        //         return apps.map((app) => {
+                        //             return new NewAppView({
+                        //                 state: this.state,
+                        //                 modalState: this.modalState,
+                        //                 app,
+                        //             })
+                        //         })
+                        //     },
+                        // ),
                     },
                 ],
             },
@@ -182,19 +228,23 @@ class NewAppsView implements VirtualDOM {
 /**
  * @category View
  */
-class NewAppView implements VirtualDOM {
+class NewAppView implements VirtualDOM<'div'> {
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly tag = 'div'
     /**
      * @group Immutable DOM Constants
      */
     public readonly class =
         'p-1 d-flex flex-column align-items-center yw-hover-app m-1'
     public readonly style = {
-        position: 'relative',
+        position: 'relative' as const,
         width: '116px',
         height: '125px',
-        overflowWrap: 'anywhere',
-        textAlign: 'center',
-        justifyContent: 'center',
+        overflowWrap: 'anywhere' as const,
+        textAlign: 'center' as const,
+        justifyContent: 'center' as const,
     }
     /**
      * @group States
@@ -211,7 +261,7 @@ class NewAppView implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly children: VirtualDOM[]
+    public readonly children: ChildrenLike
     public readonly hovered$ = new BehaviorSubject(false)
 
     public readonly onmouseenter = () => {
@@ -234,6 +284,7 @@ class NewAppView implements VirtualDOM {
         Object.assign(this, params)
         this.children = [
             {
+                tag: 'div',
                 class: 'd-flex justify-content-center align-items-center',
                 style: {
                     width: '70px',
@@ -242,9 +293,11 @@ class NewAppView implements VirtualDOM {
                 children: [this.app.graphics.appIcon],
             },
             {
+                tag: 'div',
                 class: 'd-flex justify-content-center align-items-center mt-1',
                 children: [
                     {
+                        tag: 'div',
                         style: {
                             height: '43px',
                         },
@@ -252,16 +305,26 @@ class NewAppView implements VirtualDOM {
                     },
                 ],
             },
-
-            child$(this.hovered$, (isHovered) =>
-                isHovered
-                    ? new SideAppActionsView({
-                          state: params.state,
-                          modalState: params.modalState,
-                          app: params.app,
-                      })
-                    : {},
-            ),
+            {
+                source$: this.hovered$,
+                vdomMap: (isHovered) =>
+                    isHovered
+                        ? new SideAppActionsView({
+                              state: params.state,
+                              modalState: params.modalState,
+                              app: params.app,
+                          })
+                        : { tag: 'div' },
+            },
+            // child$(this.hovered$, (isHovered) =>
+            //     isHovered
+            //         ? new SideAppActionsView({
+            //               state: params.state,
+            //               modalState: params.modalState,
+            //               app: params.app,
+            //           })
+            //         : {},
+            // ),
         ]
         this.ondblclick = (ev: MouseEvent) => {
             this.modalState.ok$.next(ev)
@@ -279,7 +342,11 @@ class NewAppView implements VirtualDOM {
 /**
  * @category View
  */
-class RunningAppsView implements VirtualDOM {
+class RunningAppsView implements VirtualDOM<'div'> {
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly tag = 'div'
     /**
      * @group Immutable DOM Constants
      */
@@ -289,12 +356,12 @@ class RunningAppsView implements VirtualDOM {
      * @group Immutable DOM Constants
      */
     public readonly style = {
-        position: 'relative',
+        position: 'relative' as const,
     }
     /**
      * @group Immutable DOM Constants
      */
-    public readonly children: VirtualDOM[]
+    public readonly children: ChildrenLike
     /**
      * @group States
      */
@@ -311,6 +378,7 @@ class RunningAppsView implements VirtualDOM {
         Object.assign(this, params)
         this.children = [
             {
+                tag: 'div',
                 style: {
                     position: 'sticky',
                     top: '0px',
@@ -318,18 +386,20 @@ class RunningAppsView implements VirtualDOM {
                     width: '100%',
                     backgroundColor: '#444444',
                     paddingBottom: '5px',
-                    zIndex: '1',
+                    zIndex: 1,
                 },
                 innerText: 'Running Applications',
             },
             {
+                tag: 'div',
                 class: 'd-flex flex-column flex-grow-1',
                 style: {
                     minHeight: '0px',
                 },
-                children: children$(
-                    this.state.runningApplications$,
-                    (runningApps) => {
+                children: {
+                    policy: 'replace',
+                    source$: this.state.runningApplications$,
+                    vdomMap: (runningApps: OsCore.RunningApp[]) => {
                         const executables: {
                             [key: string]: OsCore.Executable
                         } = [...runningApps].reduce(
@@ -351,7 +421,7 @@ class RunningAppsView implements VirtualDOM {
                                 }),
                         )
                     },
-                ),
+                },
             },
         ]
     }
@@ -360,7 +430,11 @@ class RunningAppsView implements VirtualDOM {
 /**
  * @category View
  */
-export class RunningAppView implements VirtualDOM {
+export class RunningAppView implements VirtualDOM<'div'> {
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly tag = 'div'
     /**
      * @group Immutable DOM Constants
      */
@@ -368,7 +442,7 @@ export class RunningAppView implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly children: VirtualDOM[]
+    public readonly children: ChildrenLike
     /**
      * @group Immutable Constants
      */
@@ -410,10 +484,12 @@ export class RunningAppView implements VirtualDOM {
         Object.assign(this, params)
         this.children = [
             {
+                tag: 'div',
                 class: 'fv-bg-background w-100 rounded px-1',
                 children: [
                     this.headerView(),
                     {
+                        tag: 'div',
                         class: 'fv-border-bottom-primary w-100',
                     },
                     new InstancesListView({
@@ -427,28 +503,33 @@ export class RunningAppView implements VirtualDOM {
         ]
     }
 
-    headerView() {
+    headerView(): VirtualDOM<'div'> {
         return {
+            tag: 'div',
             class: `w-100 fv-text-primary d-flex align-items-center justify-content-between position-relative yw-minimized-app`,
             children: [
-                child$(this.executable.appMetadata$, (d) => ({
-                    class: 'p-1',
-                    style: {
-                        height: '40px',
-                        width: '40px',
-                    },
-                    children: [d.graphics.appIcon],
-                })),
+                {
+                    source$: this.executable.appMetadata$,
+                    vdomMap: (d: OsCore.ApplicationInfo) => ({
+                        tag: 'div',
+                        class: 'p-1',
+                        style: {
+                            height: '40px',
+                            width: '40px',
+                        },
+                        children: [d.graphics.appIcon],
+                    }),
+                },
                 {
                     tag: 'span',
                     style: {
                         fontWeight: 'bolder',
                     },
                     class: 'mx-2',
-                    innerText: attr$(
-                        this.executable.appMetadata$,
-                        (d) => d.displayName,
-                    ),
+                    innerText: {
+                        source$: this.executable.appMetadata$,
+                        vdomMap: (d: OsCore.ApplicationInfo) => d.displayName,
+                    },
                 },
             ],
         }
@@ -458,7 +539,11 @@ export class RunningAppView implements VirtualDOM {
 /**
  * @category View
  */
-class InstancesListView implements VirtualDOM {
+class InstancesListView implements VirtualDOM<'div'> {
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly tag = 'div'
     /**
      * @group States
      */
@@ -472,7 +557,7 @@ class InstancesListView implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly children: VirtualDOM[]
+    public readonly children: ChildrenLike
     /**
      * @group Immutable Constants
      */
@@ -489,7 +574,7 @@ class InstancesListView implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly style = { userSelect: 'none' }
+    public readonly style = { userSelect: 'none' as const }
 
     constructor(params: {
         state: OsCore.PlatformState
@@ -502,39 +587,45 @@ class InstancesListView implements VirtualDOM {
         this.children = [this.instancesListView()]
     }
 
-    instancesListView() {
+    instancesListView(): VirtualDOM<'div'> {
         return {
+            tag: 'div',
             class: 'w-100',
             style: {
                 width: 'fit-content',
             },
-            children: this.instances.map((app) => {
+            children: this.instances.map((app): VirtualDOM<'div'> => {
                 return {
-                    class: attr$(
-                        this.state.runningApplication$,
-                        (selected: OsCore.RunningApp): string => {
+                    tag: 'div',
+                    class: {
+                        source$: this.state.runningApplication$,
+                        vdomMap: (selected: OsCore.RunningApp): string => {
                             return selected &&
                                 selected.instanceId == app.instanceId
                                 ? 'fv-text-focus '
                                 : 'fv-text-primary '
                         },
-                        {
-                            wrapper: (d) =>
-                                `${d} fv-pointer px-1 my-2 rounded fv-hover-bg-background-alt d-flex align-items-center justify-content-between`,
-                        },
-                    ),
+                        wrapper: (d) =>
+                            `${d} fv-pointer px-1 my-2 rounded fv-hover-bg-background-alt d-flex align-items-center justify-content-between`,
+                    },
                     onclick: (ev) => {
                         this.modalState.ok$.next(ev)
                         this.state.focus(app.instanceId)
                     },
                     children: [
                         {
+                            tag: 'div',
                             class: 'px-1',
                             children: [
-                                child$(app.snippet$, (snippet) => snippet),
+                                {
+                                    source$: app.snippet$,
+                                    vdomMap: (snippet: AnyVirtualDOM) =>
+                                        snippet,
+                                },
                             ],
                         },
                         {
+                            tag: 'div',
                             class: 'fv-text-error fv-hover-xx-lighter fas fa-times-circle',
                             onclick: (ev) => {
                                 ev.stopPropagation()

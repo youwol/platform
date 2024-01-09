@@ -1,5 +1,5 @@
-import { DockableTabs } from '@youwol/fv-tabs'
-import { VirtualDOM } from '@youwol/flux-view'
+import { DockableTabs } from '@youwol/rx-tab-views'
+import { VirtualDOM } from '@youwol/rx-vdom'
 
 /**
  * @category View
@@ -7,7 +7,7 @@ import { VirtualDOM } from '@youwol/flux-view'
 export class UserSettingsTabBase extends DockableTabs.Tab {
     protected constructor(params: {
         id: string
-        content: ({ tabsState }) => VirtualDOM
+        content: ({ tabsState }) => VirtualDOM<'div'>
         title: string
         icon: string
     }) {

@@ -1,10 +1,10 @@
-import { attr$, child$, Stream$, VirtualDOM } from '@youwol/flux-view'
+import { AttributeLike, ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
 import { BehaviorSubject, merge, Observable, Subject } from 'rxjs'
 import { filter, map, mapTo, mergeMap, tap } from 'rxjs/operators'
 import { Accounts } from '@youwol/http-clients'
 import { dispatchHTTPErrors, Empty, HTTPError } from '@youwol/http-primitives'
 import { separatorView, redirectWith } from './common'
-import { Modal } from '@youwol/fv-group'
+import { Modal } from '@youwol/rx-group-views'
 
 type Email = string
 
@@ -59,7 +59,7 @@ export class VisitorFormState {
     constructor(params: { modalState: Modal.State }) {
         Object.assign(this, params)
         this._email$.subscribe(() => {
-            this._httpError$.next()
+            this._httpError$.next(undefined)
         })
 
         this.validEmail$ = this._email$.pipe(
@@ -102,7 +102,11 @@ export class VisitorFormState {
 /**
  * @category View
  */
-export class VisitorFormView {
+export class VisitorFormView implements VirtualDOM<'div'> {
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly tag = 'div'
     /**
      * @group Immutable DOM Constants
      */
@@ -111,7 +115,7 @@ export class VisitorFormView {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly children: VirtualDOM[]
+    public readonly children: ChildrenLike
 
     constructor(params: { modalState: Modal.State; class?: string }) {
         const state = new VisitorFormState({ modalState: params.modalState })
@@ -131,11 +135,15 @@ export class VisitorFormView {
 /**
  * @category View
  */
-class RegisterForm implements VirtualDOM {
+class RegisterForm implements VirtualDOM<'div'> {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly children: VirtualDOM[]
+    public readonly tag = 'div'
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly children: ChildrenLike
 
     constructor(state: VisitorFormState) {
         const message$ = merge(
@@ -156,8 +164,12 @@ class RegisterForm implements VirtualDOM {
         this.children = [
             new EmailInputRow(state),
             {
+                tag: 'div',
                 class: 'w-100 text-center',
-                innerText: attr$(message$, (v) => (v ? v : '')),
+                innerText: {
+                    source$: message$,
+                    vdomMap: (v: string | void) => (v ? v : ''),
+                },
             },
         ]
     }
@@ -166,7 +178,11 @@ class RegisterForm implements VirtualDOM {
 /**
  * @category View
  */
-class EmailInputRow implements VirtualDOM {
+class EmailInputRow implements VirtualDOM<'div'> {
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly tag = 'div'
     /**
      * @group Immutable DOM Constants
      */
@@ -175,14 +191,16 @@ class EmailInputRow implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly children: VirtualDOM[]
+    public readonly children: ChildrenLike
 
     constructor(state: VisitorFormState) {
         this.children = [
             {
+                tag: 'div',
                 class: 'd-flex w-100',
                 children: [
                     {
+                        tag: 'div',
                         innerText: 'E-mail',
                     },
                     {
@@ -190,7 +208,8 @@ class EmailInputRow implements VirtualDOM {
                         tag: 'input',
                         value: '',
                         placeholder: 'ex: example@domain.com',
-                        oninput: (event) => state.setEmail(event.target.value),
+                        oninput: (event) =>
+                            state.setEmail(event.target['value']),
                     },
                 ],
             },
@@ -203,7 +222,7 @@ class EmailInputRow implements VirtualDOM {
 /**
  * @category View
  */
-class RegisterButton implements VirtualDOM {
+class RegisterButton implements VirtualDOM<'span'> {
     /**
      * @group Immutable DOM Constants
      */
@@ -216,7 +235,7 @@ class RegisterButton implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly class: Stream$<string, string>
+    public readonly class: AttributeLike<string>
     /**
      * @group Immutable DOM Constants
      */
@@ -240,39 +259,46 @@ class RegisterButton implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly children: VirtualDOM[]
+    public readonly children: ChildrenLike
 
     constructor(state: VisitorFormState) {
         this.onclick = () => {
             state.triggerRegistration()
         }
-        this.class = attr$(
-            state.validEmail$,
-            (v): string =>
+        this.class = {
+            source$: state.validEmail$,
+            vdomMap: (v): string =>
                 v
                     ? RegisterButton.classButtonEnabled
                     : RegisterButton.classButtonDisabled,
-            {
-                wrapper: (classes) =>
-                    `${classes} p-2 w-100 justify-content-center mt-2  rounded d-flex align-items-center `,
-            },
-        )
+
+            wrapper: (classes) =>
+                `${classes} p-2 w-100 justify-content-center mt-2  rounded d-flex align-items-center `,
+        }
         this.children = [
             {
+                tag: 'div',
                 innerText: 'Register',
                 // enable: attr$(state.validEmail$, (email) => email != undefined),
             },
-            child$(state.pending$, (pending) =>
-                pending ? { class: 'fas fa-spinner fa-spin' } : {},
-            ),
+            {
+                source$: state.pending$,
+                vdomMap: (pending) =>
+                    pending
+                        ? { tag: 'div', class: 'fas fa-spinner fa-spin' }
+                        : { tag: 'div' },
+            },
         ]
-        this.style = attr$(state.validEmail$, (email) =>
-            email != undefined
-                ? { pointerEvents: 'auto' }
-                : {
-                      pointerEvents: 'none',
-                  },
-        )
+        this.style = {
+            source$: state.validEmail$,
+            vdomMap: (email) =>
+                email != undefined
+                    ? { pointerEvents: 'auto' }
+                    : {
+                          pointerEvents: 'none',
+                      },
+        }
+
         this.customAttributes = {
             dataBSToggle: 'tooltip',
             dataBSPlacement: 'right',
@@ -281,16 +307,19 @@ class RegisterButton implements VirtualDOM {
     }
 }
 
-const headerView = {
+const headerView: VirtualDOM<'div'> = {
+    tag: 'div',
     class: 'd-flex  align-items-center  ',
     style: {
         width: '30vh',
     },
     children: [
         {
+            tag: 'div',
             class: 'fas fa-user-circle fa-lg ',
         },
         {
+            tag: 'div',
             class: 'ms-2',
             innerText: 'Visitor',
         },
@@ -300,7 +329,11 @@ const headerView = {
 /**
  * @category View
  */
-export class InviteButtonView implements VirtualDOM {
+export class InviteButtonView implements VirtualDOM<'div'> {
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly tag = 'div'
     /**
      * @group Immutable DOM Constants
      */
@@ -315,7 +348,7 @@ export class InviteButtonView implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly children: VirtualDOM[]
+    public readonly children: ChildrenLike
     /**
      * @group Immutable DOM Constants
      */
@@ -325,9 +358,11 @@ export class InviteButtonView implements VirtualDOM {
         Object.assign(this, params)
         this.children = [
             {
+                tag: 'div',
                 class: 'fas fa-sign-in-alt fa-lg fv-pointer  rounded  me-2',
             },
             {
+                tag: 'div',
                 innerText: params.title,
             },
         ]
@@ -338,7 +373,11 @@ export class InviteButtonView implements VirtualDOM {
 /**
  * @category View
  */
-export class InviteLoginView implements VirtualDOM {
+export class InviteLoginView implements VirtualDOM<'div'> {
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly tag = 'div'
     /**
      * @group Immutable DOM Constants
      */
@@ -346,11 +385,13 @@ export class InviteLoginView implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
+    // checkHere
     public readonly children = []
 
     constructor() {
         this.children = [
             {
+                tag: 'div',
                 class: 'font-weight-bold mt-3',
                 innerText: 'You already have an account !',
             },
@@ -362,27 +403,26 @@ export class InviteLoginView implements VirtualDOM {
     }
 }
 
-const inviteRegisteringView0 = {
+const inviteRegisteringView0: VirtualDOM<'p'> = {
     class: 'mx-auto text-justify px-2 text-wrap',
     tag: 'p',
-    style: {
-        // minWidth: '250px',
-    },
     innerHTML: `
 <br>You are using YouWol Platform as an anonymous user and you can almost do anything.<br><br>
 
 However, your session and related data will be deleted after a period of 24 hours.<br>`,
 }
 
-const inviteRegisteringView1 = {
+const inviteRegisteringView1: VirtualDOM<'p'> = {
     class: 'mx-auto text-justify px-2 text-wrap',
     tag: 'p',
     children: [
         {
+            tag: 'div',
             class: 'font-weight-bold',
             innerHTML: `<br>You need an account ?`,
         },
         {
+            tag: 'div',
             innerHTML: `
 
 <br>You can keep your session and related data by registering. 

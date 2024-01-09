@@ -1,4 +1,4 @@
-import { child$, VirtualDOM } from '@youwol/flux-view'
+import { ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
 import * as OsCore from '@youwol/os-core'
 import { RunningAppBannerView } from './running-app-banner.view'
 import { RegularBannerView } from './regular-banner.view'
@@ -8,7 +8,11 @@ import { ProfilesState } from '../modals/profiles'
  *
  * @category View
  */
-export class PlatformBannerView implements VirtualDOM {
+export class PlatformBannerView implements VirtualDOM<'div'> {
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly tag = 'div'
     /**
      * @group States
      */
@@ -20,7 +24,7 @@ export class PlatformBannerView implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly children: VirtualDOM[]
+    public readonly children: ChildrenLike
 
     constructor(params: {
         state: OsCore.PlatformState
@@ -29,15 +33,17 @@ export class PlatformBannerView implements VirtualDOM {
     }) {
         Object.assign(this, params)
         this.children = [
-            child$(this.state.runningApplication$, (app) =>
-                app == undefined
-                    ? new RegularBannerView(this.state, this.profileState)
-                    : new RunningAppBannerView(
-                          this.state,
-                          this.profileState,
-                          app,
-                      ),
-            ),
+            {
+                source$: this.state.runningApplication$,
+                vdomMap: (app: OsCore.RunningApp) =>
+                    app == undefined
+                        ? new RegularBannerView(this.state, this.profileState)
+                        : new RunningAppBannerView(
+                              this.state,
+                              this.profileState,
+                              app,
+                          ),
+            },
         ]
     }
 }

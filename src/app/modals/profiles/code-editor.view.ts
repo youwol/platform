@@ -1,6 +1,6 @@
 import { Observable, Subject } from 'rxjs'
-import { child$, VirtualDOM } from '@youwol/flux-view'
-import { Common, TsCodeEditorModule } from '@youwol/fv-code-mirror-editors'
+import { ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
+import { Common, TsCodeEditorModule } from '@youwol/rx-code-mirror-editors'
 
 import CodeMirror from 'codemirror'
 import { ProfilesState } from './profiles.state'
@@ -8,7 +8,11 @@ import { ProfilesState } from './profiles.state'
 /**
  * @category View
  */
-export class CodeEditorView implements VirtualDOM {
+export class CodeEditorView implements VirtualDOM<'div'> {
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly tag = 'div'
     /**
      * @group Immutable DOM Constants
      */
@@ -16,7 +20,7 @@ export class CodeEditorView implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly children: VirtualDOM[]
+    public readonly children: ChildrenLike
 
     constructor({
         CodeEditorModule,
@@ -42,7 +46,7 @@ export class CodeEditorView implements VirtualDOM {
         const error$ = new Subject<Error | undefined>()
         const onRunWithErrors = (editor) =>
             onRun(editor)
-                .then(() => error$.next())
+                .then(() => error$.next(undefined))
                 .catch((e) => {
                     error$.next(e)
                     console.error('An error occurred', e)
@@ -60,18 +64,19 @@ export class CodeEditorView implements VirtualDOM {
         })
         this.children = [
             readOnly
-                ? {}
-                : child$(
-                      codeEditorView.nativeEditor$,
-                      (editor) =>
+                ? { tag: 'div' }
+                : {
+                      source$: codeEditorView.nativeEditor$,
+                      vdomMap: (editor) =>
                           new ToolbarView({
                               highlights$: codeEditorView.highlights$,
                               onRun: onRunWithErrors,
                               editor,
                               error$,
                           }),
-                  ),
+                  },
             {
+                tag: 'div',
                 class: 'w-100 flex-grow-1 overflow-auto',
                 children: [codeEditorView],
             },
@@ -79,7 +84,11 @@ export class CodeEditorView implements VirtualDOM {
     }
 }
 
-export class ToolbarView implements VirtualDOM {
+export class ToolbarView implements VirtualDOM<'div'> {
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly tag = 'div'
     /**
      * @group Immutable DOM Constants
      */
@@ -88,7 +97,7 @@ export class ToolbarView implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly children: VirtualDOM[]
+    public readonly children: ChildrenLike
 
     constructor({
         highlights$,
@@ -102,25 +111,39 @@ export class ToolbarView implements VirtualDOM {
         error$
     }) {
         this.children = [
-            child$(highlights$, (highlights) => {
-                return highlights.length > 0
-                    ? {
-                          class: 'fas fa-exclamation fv-text-error p-1',
-                      }
-                    : {
-                          class: 'fas fa-save mx-1 fv-text-success fv-hover-xx-lighter fv-pointer rounded p-1',
-                          onclick: () => {
-                              onRun(editor).then(() => {
-                                  /* no op: errors are handle separately using 'error$' */
-                              })
-                          },
-                      }
-            }),
-            child$(error$, (error) => {
-                return error
-                    ? { class: 'fas fa-times fv-text-error  p-1' }
-                    : { class: 'fas fa-check fv-text-success  p-1' }
-            }),
+            {
+                source$: highlights$,
+                vdomMap: (highlights: Common.SrcHighlight[]) => {
+                    return highlights.length > 0
+                        ? {
+                              tag: 'div',
+                              class: 'fas fa-exclamation fv-text-error p-1',
+                          }
+                        : {
+                              tag: 'div',
+                              class: 'fas fa-save mx-1 fv-text-success fv-hover-xx-lighter fv-pointer rounded p-1',
+                              onclick: () => {
+                                  onRun(editor).then(() => {
+                                      /* no op: errors are handle separately using 'error$' */
+                                  })
+                              },
+                          }
+                },
+            },
+            {
+                source$: error$,
+                vdomMap: (error) => {
+                    return error
+                        ? {
+                              tag: 'div',
+                              class: 'fas fa-times fv-text-error  p-1',
+                          }
+                        : {
+                              tag: 'div',
+                              class: 'fas fa-check fv-text-success  p-1',
+                          }
+                },
+            },
         ]
     }
 }

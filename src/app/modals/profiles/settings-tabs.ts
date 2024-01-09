@@ -1,4 +1,4 @@
-import { DockableTabs } from '@youwol/fv-tabs'
+import { DockableTabs } from '@youwol/rx-tab-views'
 import { BehaviorSubject, of } from 'rxjs'
 import { Accounts } from '@youwol/http-clients'
 import { PreferencesTab } from './preferences-tab.view'

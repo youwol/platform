@@ -1,4 +1,4 @@
-import { VirtualDOM } from '@youwol/flux-view'
+import { ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
 import * as OsCore from '@youwol/os-core'
 import { TooltipsView } from '../../tooltips/tooltips.view'
 import { popupModal } from '../../modals'
@@ -8,7 +8,11 @@ import { setup } from '../../../auto-generated'
 /**
  * @category View
  */
-export class CorporationBadgeView {
+export class CorporationBadgeView implements VirtualDOM<'div'> {
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly tag = 'div'
     /**
      * @group Immutable DOM Constants
      */
@@ -17,12 +21,12 @@ export class CorporationBadgeView {
      * @group Immutable DOM Constants
      */
     public readonly style = {
-        position: 'relative',
+        position: 'relative' as const,
     }
     /**
      * @group Immutable DOM Constants
      */
-    public readonly children: VirtualDOM[] = []
+    public readonly children: ChildrenLike = []
     /**
      * @group Immutable DOM Constants
      */
@@ -47,6 +51,7 @@ export class CorporationBadgeView {
                 : 'mx-1 align-self-center'
         this.children = [
             {
+                tag: 'div',
                 class: ' my-auto  p-1 rounded fv-hover-bg-background-alt',
                 children: [preferences.desktop.topBanner.corporation.icon],
                 onclick: (el) => {
@@ -69,7 +74,11 @@ export class CorporationBadgeView {
     }
 }
 
-export class AboutYwView implements VirtualDOM {
+export class AboutYwView implements VirtualDOM<'div'> {
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly tag = 'div'
     /**
      * @group Immutable DOM Constants
      */
@@ -78,7 +87,7 @@ export class AboutYwView implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public children: VirtualDOM[]
+    public children: ChildrenLike
     /**
      * @group Immutable DOM Constants
      */
@@ -93,7 +102,11 @@ export class AboutYwView implements VirtualDOM {
     }
 }
 
-export class AboutYwContentsView implements VirtualDOM {
+export class AboutYwContentsView implements VirtualDOM<'div'> {
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly tag = 'div'
     /**
      * @group Immutable DOM Constants
      */
@@ -101,7 +114,7 @@ export class AboutYwContentsView implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public children: VirtualDOM[]
+    public children: ChildrenLike
     public readonly onclick: () => void
 
     constructor() {
@@ -109,7 +122,11 @@ export class AboutYwContentsView implements VirtualDOM {
     }
 }
 
-export class AboutYwTextContentsView implements VirtualDOM {
+export class AboutYwTextContentsView implements VirtualDOM<'div'> {
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly tag = 'div'
     /**
      * @group Immutable DOM Constants
      */
@@ -117,12 +134,13 @@ export class AboutYwTextContentsView implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public children: VirtualDOM[]
+    public children: ChildrenLike
     public readonly onclick: () => void
 
     constructor() {
         this.children = [
             {
+                tag: 'div',
                 class: 'h5 fv-text-primary mt-4 mb-4 text-center',
                 innerText: '© 2019–2023 YouWol',
             },
@@ -137,7 +155,11 @@ export class AboutYwTextContentsView implements VirtualDOM {
     }
 }
 
-class AboutYwLogoView implements VirtualDOM {
+class AboutYwLogoView implements VirtualDOM<'div'> {
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly tag = 'div'
     /**
      * @group Immutable DOM Constants
      */
@@ -145,7 +167,7 @@ class AboutYwLogoView implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public children: VirtualDOM[]
+    public children: ChildrenLike
 
     constructor() {
         this.children = [
@@ -156,6 +178,7 @@ class AboutYwLogoView implements VirtualDOM {
                 src: `/api/assets-gateway/raw/package/${setup.assetId}/${setup.version}/assets/logo_YouWol_name_white.svg`,
             },
             {
+                tag: 'div',
                 class: 'h1 p-0 m-0 ms-4',
                 style: {
                     lineHeight: '1.1',
@@ -166,7 +189,7 @@ class AboutYwLogoView implements VirtualDOM {
     }
 }
 
-const aboutYwImgContentsView = {
+const aboutYwImgContentsView: VirtualDOM<'img'> = {
     tag: 'img',
     src: `/api/assets-gateway/raw/package/${setup.assetId}/${setup.version}/assets/youWol_bg_img.png`,
     style: {

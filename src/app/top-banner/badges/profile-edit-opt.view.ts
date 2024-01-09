@@ -1,7 +1,7 @@
 import { popupModal } from '../../modals'
 import { Accounts } from '@youwol/http-clients'
 import { ProfilesState, ProfilesView } from '../../modals/profiles'
-import { VirtualDOM } from '@youwol/flux-view'
+import { ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
 import { classEditProfileCtxMenu } from '../../context-menu/desktop-ctx-menu.view'
 import { baseClassCtxMenuActions } from '../../context-menu/context-menu.view'
 import { FontawesomeFixBoxView } from '../../modals/profiles/profile-options.view'
@@ -9,7 +9,11 @@ import { FontawesomeFixBoxView } from '../../modals/profiles/profile-options.vie
 /**
  * @category View
  */
-export class ProfileEditOptView implements VirtualDOM {
+export class ProfileEditOptView implements VirtualDOM<'div'> {
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly tag = 'div'
     /**
      * @group Immutable DOM Constants
      */
@@ -18,7 +22,7 @@ export class ProfileEditOptView implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly children: VirtualDOM[]
+    public readonly children: ChildrenLike
     /**
      * @group Immutable DOM Constants
      */
@@ -41,6 +45,7 @@ export class ProfileEditOptView implements VirtualDOM {
         this.children = [
             new FontawesomeFixBoxView({ fasClass: 'fas fa-cog pe-2 ' }),
             {
+                tag: 'div',
                 innerText: 'Edit profile',
             },
         ]

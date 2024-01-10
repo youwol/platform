@@ -1,10 +1,10 @@
-import { HTMLElement$, render, VirtualDOM } from '@youwol/flux-view'
+import { AnyVirtualDOM, RxHTMLElement, render } from '@youwol/rx-vdom'
 import { merge } from 'rxjs'
 import { take } from 'rxjs/operators'
-import { Modal } from '@youwol/fv-group'
+import { Modal } from '@youwol/rx-group-views'
 
 export function popupModal(
-    contentView: (modalState: Modal.State) => VirtualDOM,
+    contentView: (modalState: Modal.State) => AnyVirtualDOM,
     sideEffect = (_htmlElement: HTMLDivElement, _state: Modal.State) => {
         /* noop*/
     },
@@ -13,7 +13,7 @@ export function popupModal(
     const view = new Modal.View({
         state: modalState,
         contentView,
-        connectedCallback: (elem: HTMLDivElement & HTMLElement$) => {
+        connectedCallback: (elem: RxHTMLElement<'div'>) => {
             sideEffect(elem, modalState)
             elem.children[0].classList.add('fv-text-primary')
             // https://stackoverflow.com/questions/63719149/merge-deprecation-warning-confusion

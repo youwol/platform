@@ -1,10 +1,10 @@
 require('./style.css')
 export {}
-import * as cdnClient from '@youwol/cdn-client'
+import * as webpmClient from '@youwol/webpm-client'
 import { setup } from '../auto-generated'
 
 await setup.installMainModule({
-    cdnClient,
+    cdnClient: webpmClient,
     installParameters: {
         css: [
             'bootstrap#^5.3.0~bootstrap.min.css',

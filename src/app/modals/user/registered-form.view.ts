@@ -1,4 +1,4 @@
-import { children$, Stream$, VirtualDOM } from '@youwol/flux-view'
+import { ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
 import { Accounts } from '@youwol/http-clients'
 import { separatorView, redirectWith } from './common'
 
@@ -7,7 +7,11 @@ import { NewProfileItemView, ProfileItemView, ProfilesState } from '../profiles'
 /**
  * @category View
  */
-export class RegisteredFormView implements VirtualDOM {
+export class RegisteredFormView implements VirtualDOM<'div'> {
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly tag = 'div'
     /**
      * @group Immutable DOM Constants
      */
@@ -15,7 +19,7 @@ export class RegisteredFormView implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly children: VirtualDOM[]
+    public readonly children: ChildrenLike
 
     constructor({
         sessionInfo,
@@ -39,7 +43,11 @@ export class RegisteredFormView implements VirtualDOM {
 /**
  * @category View
  */
-export class AvatarView implements VirtualDOM {
+export class AvatarView implements VirtualDOM<'div'> {
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly tag = 'div'
     /**
      * @group Immutable DOM Constants
      */
@@ -56,11 +64,12 @@ export class AvatarView implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly children: VirtualDOM[]
+    public readonly children: ChildrenLike
 
     constructor(userInfos: Accounts.UserInfos) {
         this.children = [
             {
+                tag: 'div',
                 class: 'rounded text-center',
                 style: {
                     color: 'white',
@@ -78,21 +87,25 @@ export class AvatarView implements VirtualDOM {
 
 export const baseDropdownItemsClass =
     'dropdown-item  fv-text-primary yw-hover-text-primary  text-center fv-hover-bg-background-alt fv-pointer rounded d-flex align-items-center mb-1 px-3'
-export const manageIdentityView = {
+export const manageIdentityView: VirtualDOM<'div'> = {
+    tag: 'div',
     class: baseDropdownItemsClass,
     children: [
         {
+            tag: 'div',
             class: 'd-flex justify-content-center align-items-center me-2 ',
             style: {
                 width: '25px',
             },
             children: [
                 {
+                    tag: 'div',
                     class: 'fas fa-address-card fa-lg  ',
                 },
             ],
         },
         {
+            tag: 'div',
             innerText: 'Manage account',
         },
     ],
@@ -105,27 +118,37 @@ export const manageIdentityView = {
             .focus(),
 }
 
-export const otherProfilesView = {
+export const otherProfilesView: VirtualDOM<'div'> = {
+    tag: 'div',
     class: 'container p-0 m-0 fv-text-primary text-center',
     children: [
         {
+            tag: 'div',
             innerText: 'Profiles',
             style: { opacity: '0.5' },
         },
     ],
 }
 
-export const logoutView = {
+export const logoutView: VirtualDOM<'div'> = {
+    tag: 'div',
     class: baseDropdownItemsClass,
     children: [
         {
+            tag: 'div',
             class: 'd-flex justify-content-center align-items-center me-2 ',
             style: {
                 width: '25px',
             },
-            children: [{ class: 'fas fa-sign-out-alt fa-lg ' }],
+            children: [
+                {
+                    tag: 'div',
+                    class: 'fas fa-sign-out-alt fa-lg ',
+                },
+            ],
         },
         {
+            tag: 'div',
             innerText: 'Logout',
         },
     ],
@@ -134,7 +157,11 @@ export const logoutView = {
     },
 }
 
-export class AllProfilesView implements VirtualDOM {
+export class AllProfilesView implements VirtualDOM<'div'> {
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly tag = 'div'
     /**
      * @group Immutable DOM Constants
      */
@@ -146,24 +173,29 @@ export class AllProfilesView implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly children: Stream$<
-        { id: string; name: string }[],
-        VirtualDOM[]
-    >
+    public readonly children: ChildrenLike
 
     constructor({ state }: { state: ProfilesState }) {
-        this.children = children$(state.profiles$, (profiles) => {
-            return [
-                ...profiles.map(
-                    (profile) => new ProfileItemView({ profile, state }),
-                ),
-                new NewProfileItemView({ state }),
-            ]
-        })
+        this.children = {
+            policy: 'replace',
+            source$: state.profiles$,
+            vdomMap: (profiles: { id: string; name: string }[]) => {
+                return [
+                    ...profiles.map(
+                        (profile) => new ProfileItemView({ profile, state }),
+                    ),
+                    new NewProfileItemView({ state }),
+                ]
+            },
+        }
     }
 }
 
-export class AccountBadge implements VirtualDOM {
+export class AccountBadge implements VirtualDOM<'div'> {
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly tag = 'div'
     /**
      * @group Immutable DOM Constants
      */
@@ -173,17 +205,17 @@ export class AccountBadge implements VirtualDOM {
      * @group Immutable DOM Constants
      */
     public readonly style = {
-        pointerEvents: 'none',
+        pointerEvents: 'none' as const,
     }
     /**
      * @group Immutable DOM Constants
      */
-    public readonly children: VirtualDOM[]
+    public readonly children: ChildrenLike
 
     constructor(userInfos: Accounts.UserInfos) {
         this.children = [
             new AvatarView(userInfos),
-            { innerText: userInfos.name },
+            { tag: 'div', innerText: userInfos.name },
         ]
     }
 }

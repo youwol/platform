@@ -1,4 +1,5 @@
 import { Accounts } from '@youwol/http-clients'
+import { VirtualDOM } from '@youwol/rx-vdom'
 
 type NavigateMethod =
     | 'logoutAndForgetUserUrl'
@@ -6,7 +7,8 @@ type NavigateMethod =
     | 'loginAsUserUrl'
     | 'loginAsTempUserUrl'
 
-export const separatorView = {
+export const separatorView: VirtualDOM<'div'> = {
+    tag: 'div',
     class: 'flex-grow-1 fv-border-top-primary mt-1 mb-1',
     style: { opacity: '0.5' },
 }

@@ -1,10 +1,14 @@
 import * as OsCore from '@youwol/os-core'
-import { VirtualDOM } from '@youwol/flux-view'
+import { ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
 
 /**
  * @category View
  */
-export class CorporationView {
+export class CorporationView implements VirtualDOM<'div'> {
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly tag = 'div'
     /**
      * @group Immutable DOM Constants
      */
@@ -12,7 +16,7 @@ export class CorporationView {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly children: VirtualDOM[]
+    public readonly children: ChildrenLike
 
     constructor({
         state,

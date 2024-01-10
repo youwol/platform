@@ -1,4 +1,4 @@
-import { VirtualDOM } from '@youwol/flux-view'
+import { ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
 import { ProfilesState } from './profiles.state'
 import { popupModal } from '../common'
 
@@ -10,7 +10,11 @@ import {
 import { ProfileEditOptView } from '../../top-banner/badges'
 import { Accounts } from '@youwol/http-clients'
 
-export class ProfileOptionsView implements VirtualDOM {
+export class ProfileOptionsView implements VirtualDOM<'div'> {
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly tag = 'div'
     /**
      * @group Immutable DOM Constants
      */
@@ -18,7 +22,7 @@ export class ProfileOptionsView implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly children: VirtualDOM[]
+    public readonly children: ChildrenLike
     /**
      * @group Immutable DOM Constants
      */
@@ -45,6 +49,7 @@ export class ProfileOptionsView implements VirtualDOM {
     }) {
         this.children = [
             {
+                tag: 'div',
                 class: 'd-flex flex-column align-items-start float-end ',
                 style: { width: '85.8%', fontSize: '13px' },
                 children:
@@ -80,7 +85,11 @@ export class ProfileOptionsView implements VirtualDOM {
 const baseProfileOptClass =
     'fv-text-primary yw-hover-text-primary text-center  w-100 fv-hover-bg-background-alt fv-pointer rounded d-flex align-items-center mb-1 px-3'
 
-export class ProfileDeleteOptView implements VirtualDOM {
+export class ProfileDeleteOptView implements VirtualDOM<'div'> {
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly tag = 'div'
     /**
      * @group Immutable DOM Constants
      */
@@ -92,7 +101,7 @@ export class ProfileDeleteOptView implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly children: VirtualDOM[]
+    public readonly children: ChildrenLike
 
     constructor({
         profile,
@@ -106,6 +115,7 @@ export class ProfileDeleteOptView implements VirtualDOM {
                 fasClass: 'fas fa-trash-alt pe-2 yw-hover-text-orange',
             }),
             {
+                tag: 'div',
                 innerText: 'Delete',
             },
         ]
@@ -120,7 +130,11 @@ export class ProfileDeleteOptView implements VirtualDOM {
     }
 }
 
-export class ProfileRenameOptView implements VirtualDOM {
+export class ProfileRenameOptView implements VirtualDOM<'div'> {
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly tag = 'div'
     /**
      * @group Immutable DOM Constants
      */
@@ -128,7 +142,7 @@ export class ProfileRenameOptView implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly children: VirtualDOM[]
+    public readonly children: ChildrenLike
     /**
      * @group Immutable DOM Constants
      */
@@ -144,6 +158,7 @@ export class ProfileRenameOptView implements VirtualDOM {
         this.children = [
             new FontawesomeFixBoxView({ fasClass: 'fas fa-edit  pe-2' }),
             {
+                tag: 'div',
                 innerText: 'Rename',
             },
         ]
@@ -152,7 +167,11 @@ export class ProfileRenameOptView implements VirtualDOM {
     }
 }
 
-export class ProfileDuplicateOptView implements VirtualDOM {
+export class ProfileDuplicateOptView implements VirtualDOM<'div'> {
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly tag = 'div'
     /**
      * @group Immutable DOM Constants
      */
@@ -160,7 +179,7 @@ export class ProfileDuplicateOptView implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly children: VirtualDOM[]
+    public readonly children: ChildrenLike
     /**
      * @group Immutable DOM Constants
      */
@@ -176,6 +195,7 @@ export class ProfileDuplicateOptView implements VirtualDOM {
         this.children = [
             new FontawesomeFixBoxView({ fasClass: 'fas fa-clone  pe-2' }),
             {
+                tag: 'div',
                 innerText: 'Duplicate ',
             },
         ]
@@ -186,7 +206,11 @@ export class ProfileDuplicateOptView implements VirtualDOM {
     }
 }
 
-export class FontawesomeFixBoxView implements VirtualDOM {
+export class FontawesomeFixBoxView implements VirtualDOM<'div'> {
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly tag = 'div'
     /**
      * @group Immutable DOM Constants
      */
@@ -198,12 +222,13 @@ export class FontawesomeFixBoxView implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly children: VirtualDOM[]
+    public readonly children: ChildrenLike
 
     constructor(params: { fasClass: string; width?: string; height?: string }) {
         Object.assign(this, params)
         this.children = [
             {
+                tag: 'div',
                 class: params.fasClass,
             },
         ]

@@ -1,5 +1,5 @@
 import * as OsCore from '@youwol/os-core'
-import { children$, VirtualDOM } from '@youwol/flux-view'
+import { ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
 import { map } from 'rxjs/operators'
 import { popupModal } from '../../modals'
 import { ApplicationsLaunchPadView } from '../../modals/launchpad'
@@ -9,7 +9,11 @@ import { TooltipsView } from '../../tooltips/tooltips.view'
  *
  * @category View
  */
-export class LaunchpadBadgeView implements VirtualDOM {
+export class LaunchpadBadgeView implements VirtualDOM<'div'> {
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly tag = 'div'
     /**
      * @group Immutable DOM Constants
      */
@@ -18,12 +22,12 @@ export class LaunchpadBadgeView implements VirtualDOM {
      * @group Immutable DOM Constants
      */
     public readonly style = {
-        position: 'relative',
+        position: 'relative' as const,
     }
     /**
      * @group Immutable DOM Constants
      */
-    public readonly children: VirtualDOM[]
+    public readonly children: ChildrenLike
     /**
      * @group Immutable DOM Constants
      */
@@ -38,6 +42,7 @@ export class LaunchpadBadgeView implements VirtualDOM {
     }) {
         this.children = [
             {
+                tag: 'div',
                 class: 'd-flex flex-wrap  my-auto  p-1 rounded fv-hover-bg-background-alt fv-pointer ',
                 style: {
                     width: '33px',
@@ -48,18 +53,20 @@ export class LaunchpadBadgeView implements VirtualDOM {
                     dataBsPlacement: 'right',
                     title: 'Application Launcher',
                 },
-                children: children$(
-                    state.runningApplications$.pipe(
+                children: {
+                    policy: 'replace',
+                    source$: state.runningApplications$.pipe(
                         map(
                             (apps) =>
                                 new Set(apps.map((app) => app.cdnPackage)),
                         ),
                     ),
-                    (distinctApps) =>
+                    vdomMap: (distinctApps: Set<string>) =>
                         Array(9)
                             .fill(null)
                             .map((_, i) => {
                                 return {
+                                    tag: 'div',
                                     class:
                                         'rounded ' +
                                         (i < distinctApps.size
@@ -72,7 +79,7 @@ export class LaunchpadBadgeView implements VirtualDOM {
                                     },
                                 }
                             }),
-                ),
+                },
                 onclick: () =>
                     popupModal(
                         (modalState) =>
@@ -97,7 +104,7 @@ export class LaunchpadBadgeView implements VirtualDOM {
                       tooltipText:
                           'Click here to start the Application Launcher',
                   })
-                : {},
+                : { tag: 'div' },
         ]
     }
 }

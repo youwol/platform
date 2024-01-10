@@ -1,4 +1,3 @@
-import { VirtualDOM } from '@youwol/flux-view'
 import { ProfilesState } from './profiles.state'
 import {
     CanclePopupButtonView,
@@ -7,8 +6,13 @@ import {
 } from './profiles-dropdown.view'
 import { BehaviorSubject } from 'rxjs'
 import { tap } from 'rxjs/operators'
+import { ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
 
-export class DeleteProfileConfirmation implements VirtualDOM {
+export class DeleteProfileConfirmation implements VirtualDOM<'div'> {
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly tag = 'div'
     /**
      * @group Immutable DOM Constants
      */
@@ -17,7 +21,7 @@ export class DeleteProfileConfirmation implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public children: VirtualDOM[]
+    public children: ChildrenLike
     /**
      * @group Immutable DOM Constants
      */
@@ -36,6 +40,7 @@ export class DeleteProfileConfirmation implements VirtualDOM {
                 fa: 'trash-alt',
             }),
             {
+                tag: 'div',
                 class: 'fv-text-primary mt-4 mb-4 text-center',
                 innerText:
                     'Are you sure you want to permanently delete this item : ( ' +
@@ -44,10 +49,12 @@ export class DeleteProfileConfirmation implements VirtualDOM {
             },
 
             {
+                tag: 'div',
                 class: 'd-flex  fv-text-primary yw-hover-text-dark justify-content-between',
                 children: [
                     new CanclePopupButtonView(),
                     {
+                        tag: 'div',
                         class: 'btn yw-text-light-orange  yw-border-orange yw-hover-bg-light-orange rounded yw-hover-text-dark yw-text-orange  fv-bg-background',
                         style: {
                             width: '100px',
@@ -75,7 +82,11 @@ export class DeleteProfileConfirmation implements VirtualDOM {
     }
 }
 
-export class RenameProfileConfirmation implements VirtualDOM {
+export class RenameProfileConfirmation implements VirtualDOM<'div'> {
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly tag = 'div'
     /**
      * @group Immutable DOM Constants
      */
@@ -84,7 +95,7 @@ export class RenameProfileConfirmation implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public children: VirtualDOM[]
+    public children: ChildrenLike
     /**
      * @group Immutable DOM Constants
      */
@@ -105,10 +116,12 @@ export class RenameProfileConfirmation implements VirtualDOM {
             }),
             new PopupProfileOptsInputView({ value$: rename$, state, profile }),
             {
+                tag: 'div',
                 class: 'd-flex fv-text-primary yw-hover-text-dark justify-content-between',
                 children: [
                     new CanclePopupButtonView(),
                     {
+                        tag: 'div',
                         class: 'btn yw-text-light-orange  yw-border-orange yw-hover-bg-light-orange rounded yw-hover-text-dark yw-text-orange  fv-bg-background',
                         style: {
                             width: '100px',
@@ -122,7 +135,6 @@ export class RenameProfileConfirmation implements VirtualDOM {
                             ) {
                                 state.renameProfile(profile.id, rename$.value)
                                 leavePopupAfterClickBtn()
-                                // state.selectProfile(profile.id)
                             }
                         },
                     },
@@ -133,7 +145,11 @@ export class RenameProfileConfirmation implements VirtualDOM {
     }
 }
 
-export class DuplicatedProfileConfirmation implements VirtualDOM {
+export class DuplicatedProfileConfirmation implements VirtualDOM<'div'> {
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly tag = 'div'
     /**
      * @group Immutable DOM Constants
      */
@@ -143,7 +159,7 @@ export class DuplicatedProfileConfirmation implements VirtualDOM {
      * @group Immutable DOM Constants
      */
 
-    public children: VirtualDOM[]
+    public children: ChildrenLike
     /**
      * @group Immutable DOM Constants
      */
@@ -165,10 +181,12 @@ export class DuplicatedProfileConfirmation implements VirtualDOM {
             new PopupProfileOptsInputView({ value$, state, profile }),
 
             {
+                tag: 'div',
                 class: 'd-flex fv-text-primary yw-hover-text-dark justify-content-between',
                 children: [
                     new CanclePopupButtonView(),
                     {
+                        tag: 'div',
                         class: 'btn yw-text-light-orange  yw-border-orange yw-hover-bg-light-orange rounded yw-hover-text-dark yw-text-orange  fv-bg-background',
                         style: {
                             width: '100px',
@@ -193,11 +211,11 @@ export class DuplicatedProfileConfirmation implements VirtualDOM {
     }
 }
 
-export class PopupTitleProfileOptionView implements VirtualDOM {
+export class PopupTitleProfileOptionView implements VirtualDOM<'i'> {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly tag: string = 'i'
+    public readonly tag = 'i'
     /**
      * @group Immutable DOM Constants
      */
@@ -205,11 +223,12 @@ export class PopupTitleProfileOptionView implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly children: VirtualDOM[]
+    public readonly children: ChildrenLike
 
     constructor({ title, fa }: { title: string; fa: string }) {
         this.children = [
             {
+                tag: 'div',
                 style: {
                     fontSize: '16px',
                 },
@@ -221,7 +240,11 @@ export class PopupTitleProfileOptionView implements VirtualDOM {
     }
 }
 
-export class PopupProfileOptsInputView implements VirtualDOM {
+export class PopupProfileOptsInputView implements VirtualDOM<'div'> {
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly tag = 'div'
     /**
      * @group Immutable DOM Constants
      */
@@ -230,11 +253,12 @@ export class PopupProfileOptsInputView implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly children: VirtualDOM[]
+    public readonly children: ChildrenLike
 
     constructor({ value$, state, profile }) {
         this.children = [
             {
+                tag: 'div',
                 style: {
                     minWidth: 'fit-content',
                 },
@@ -252,7 +276,7 @@ export class PopupProfileOptsInputView implements VirtualDOM {
                 value: value$.value == '' ? profile.name : value$.value,
                 placeholder: value$.value,
                 oninput: (ev) => {
-                    value$.next(ev.target.value)
+                    value$.next(ev.target['value'])
                 },
                 onkeydown: (ev: KeyboardEvent) => {
                     ev.key == 'Enter' &&

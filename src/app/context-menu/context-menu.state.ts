@@ -1,13 +1,13 @@
-import { VirtualDOM } from '@youwol/flux-view'
+import { ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
 import { fromEvent, Observable } from 'rxjs'
 import { tap } from 'rxjs/operators'
-import { ContextMenu } from '@youwol/fv-context-menu'
+import { ContextMenu } from '@youwol/rx-context-menu-views'
 
 export class ContextMenuState extends ContextMenu.State {
     public readonly div: HTMLElement
-    public readonly children: VirtualDOM[]
+    public readonly children: ChildrenLike
 
-    constructor(params: { div: HTMLElement; children: VirtualDOM[] }) {
+    constructor(params: { div: HTMLElement; children: ChildrenLike }) {
         super(
             fromEvent(params.div, 'contextmenu').pipe(
                 tap((ev: Event) => ev.preventDefault()),
@@ -16,8 +16,9 @@ export class ContextMenuState extends ContextMenu.State {
         Object.assign(this, params)
     }
 
-    dispatch(_ev: MouseEvent): VirtualDOM {
+    dispatch(_ev: MouseEvent): VirtualDOM<'div'> {
         return {
+            tag: 'div',
             style: {
                 zIndex: 1,
             },
@@ -31,14 +32,13 @@ export function installContextMenu({
     children,
 }: {
     div: HTMLElement
-    children: VirtualDOM[]
+    children: ChildrenLike
 }) {
     return new ContextMenu.View({
         state: new ContextMenuState({
             div: div,
             children: children,
         }),
-        class: 'fv-bg-background border fv-color-primary fv-text-primary',
         style: {
             zIndex: 20,
         },

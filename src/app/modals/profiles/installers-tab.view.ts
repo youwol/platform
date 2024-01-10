@@ -1,7 +1,7 @@
-import { child$, VirtualDOM } from '@youwol/flux-view'
+import { ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
 import { SettingsTabsState } from './settings-tabs'
 import { UserSettingsTabBase } from './common'
-import { ProfilesState } from './profiles.state'
+import { Profile, ProfilesState } from './profiles.state'
 import { CodeEditorView } from './code-editor.view'
 
 const bottomNavClasses = 'fv-bg-background fv-x-lighter w-100 overflow-auto'
@@ -31,7 +31,11 @@ export class InstallersTab extends UserSettingsTabBase {
 /**
  * @category View
  */
-export class InstallersView implements VirtualDOM {
+export class InstallersView implements VirtualDOM<'div'> {
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly tag = 'div'
     /**
      * @group Immutable DOM Constants
      */
@@ -43,31 +47,34 @@ export class InstallersView implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly children: VirtualDOM[]
+    public readonly children: ChildrenLike
 
     constructor(params: { tabsState: SettingsTabsState }) {
         this.children = [
-            child$(params.tabsState.profilesState.editedProfile$, (profile) => {
-                return new CodeEditorView({
-                    profileState: params.tabsState.profilesState,
-                    CodeEditorModule: ProfilesState.CodeEditorModule,
-                    tsSrc: profile.installers.tsSrc,
-                    readOnly: profile.id == 'default',
-                    onRun: (editor) => {
-                        const parsed =
-                            ProfilesState.CodeEditorModule.parseTypescript(
-                                editor.getValue(),
+            {
+                source$: params.tabsState.profilesState.editedProfile$,
+                vdomMap: (profile: Profile) => {
+                    return new CodeEditorView({
+                        profileState: params.tabsState.profilesState,
+                        CodeEditorModule: ProfilesState.CodeEditorModule,
+                        tsSrc: profile.installers.tsSrc,
+                        readOnly: profile.id == 'default',
+                        onRun: (editor) => {
+                            const parsed =
+                                ProfilesState.CodeEditorModule.parseTypescript(
+                                    editor.getValue(),
+                                )
+                            return params.tabsState.profilesState.updateProfile(
+                                profile.id,
+                                {
+                                    preferences: profile.preferences,
+                                    installers: parsed,
+                                },
                             )
-                        return params.tabsState.profilesState.updateProfile(
-                            profile.id,
-                            {
-                                preferences: profile.preferences,
-                                installers: parsed,
-                            },
-                        )
-                    },
-                })
-            }),
+                        },
+                    })
+                },
+            },
         ]
     }
 }

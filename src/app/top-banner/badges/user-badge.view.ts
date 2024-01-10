@@ -1,4 +1,4 @@
-import { VirtualDOM } from '@youwol/flux-view'
+import { ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
 import { Accounts } from '@youwol/http-clients'
 import { AvatarView } from '../../modals/user'
 import { redirectWith } from '../../modals/user/common'
@@ -7,7 +7,11 @@ import { TooltipsView } from '../../tooltips/tooltips.view'
 /**
  * @category View
  */
-export class RegisteredBadgeView implements VirtualDOM {
+export class RegisteredBadgeView implements VirtualDOM<'div'> {
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly tag = 'div'
     /**
      * @group Immutable DOM Constants
      */
@@ -15,7 +19,7 @@ export class RegisteredBadgeView implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly children: VirtualDOM[]
+    public readonly children: ChildrenLike
     /**
      * @group Immutable DOM Constants
      */
@@ -29,6 +33,7 @@ export class RegisteredBadgeView implements VirtualDOM {
         this.children = [
             new AvatarView(userDetails.userInfo),
             {
+                tag: 'div',
                 class: 'ms-2',
                 innerText: userDetails.userInfo.name,
             },
@@ -39,7 +44,11 @@ export class RegisteredBadgeView implements VirtualDOM {
 /**
  * @category View
  */
-export class VisitorBadgeView implements VirtualDOM {
+export class VisitorBadgeView implements VirtualDOM<'div'> {
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly tag = 'div'
     /**
      * @group Immutable DOM Constants
      */
@@ -48,11 +57,12 @@ export class VisitorBadgeView implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly children: VirtualDOM[]
+    public readonly children: ChildrenLike
 
     constructor() {
         this.children = [
             {
+                tag: 'div',
                 class: 'fa fa-user-circle fa-2x me-2',
                 customAttributes: {
                     dataBSToggle: 'tooltip',
@@ -67,14 +77,17 @@ export class VisitorBadgeView implements VirtualDOM {
 /**
  * @category View
  */
-export class LoginBadgeView implements VirtualDOM {
+export class LoginBadgeView implements VirtualDOM<'div'> {
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly tag = 'div'
     /**
      * @group Immutable DOM Constants
      */
     public readonly class: string = 'me-1 align-items-center'
     public readonly style = {
-        // padding: '3px',
-        position: 'relative',
+        position: 'relative' as const,
     }
     /**
      * @group Immutable DOM Constants
@@ -83,11 +96,12 @@ export class LoginBadgeView implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly children: VirtualDOM[]
+    public readonly children: ChildrenLike
 
     constructor() {
         this.children = [
             {
+                tag: 'div',
                 class: 'fas fa-sign-in-alt fa-2x fv-hover-bg-background-alt p-1 yw-btn-focus  rounded fv-pointer  top-banner-menu-view',
                 customAttributes: {
                     dataBSToggle: 'tooltip',

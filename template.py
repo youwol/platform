@@ -28,17 +28,17 @@ template = Template(
         runTime=RunTimeDeps(
             externals={
                 "marked": "^4.2.3",
-                "@youwol/fv-tabs": "^0.2.1",
-                "@youwol/os-core": "^0.1.14",
-                "@youwol/fv-group": "^0.2.5",
-                "@youwol/flux-view": "^1.0.3",
-                "@youwol/http-clients": "^2.0.1",
-                "rxjs": "^6.5.5",
+                "@youwol/os-core": "^0.2.0",
+                "@youwol/http-clients": "^3.0.1",
                 "uuid": "^8.3.2",
-                "@youwol/cdn-client": "^2.1.2",
                 "codemirror": "^5.52.0",
-                "@youwol/fv-code-mirror-editors": "^0.3.1",
-                "@youwol/fv-context-menu": "^0.1.1",
+                "@youwol/rx-context-menu-views": "^0.2.0",
+                "@youwol/rx-tab-views": "^0.3.0",
+                "@youwol/rx-group-views": "^0.3.0",
+                "@youwol/rx-vdom": "^1.0.1",
+                "rxjs": "^7.5.6",
+                "@youwol/rx-code-mirror-editors": "0.4.1",
+                "@youwol/webpm-client": "^3.0.0",
             }
         ),
         devTime={
@@ -50,15 +50,15 @@ template = Template(
         mainModule=MainModule(
             entryFile="./app/index.html",
             loadDependencies=[
-                "@youwol/fv-tabs",
+                "@youwol/rx-tab-views",
                 "@youwol/os-core",
-                "@youwol/fv-group",
-                "@youwol/flux-view",
+                "@youwol/rx-group-views",
+                "@youwol/rx-vdom",
                 "@youwol/http-clients",
                 "rxjs",
                 "uuid",
-                "@youwol/cdn-client",
-                "@youwol/fv-context-menu",
+                "@youwol/webpm-client",
+                "@youwol/rx-context-menu-views",
             ],
         )
     ),

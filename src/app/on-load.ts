@@ -1,13 +1,11 @@
 import {
-    attr$,
-    child$,
-    children$,
+    AttributeLike,
+    ChildrenLike,
+    CSSAttribute,
     render,
-    Stream$,
     VirtualDOM,
-} from '@youwol/flux-view'
+} from '@youwol/rx-vdom'
 import * as OsCore from '@youwol/os-core'
-import { RunningApp, Preferences } from '@youwol/os-core'
 
 import { RunningAppView } from './running-apps'
 
@@ -46,7 +44,11 @@ if (searchParams.has('mode') && searchParams.get('mode') == 'safe') {
  * @category Getting Started
  * @category View
  */
-export class PlatformView implements VirtualDOM {
+export class PlatformView implements VirtualDOM<'div'> {
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly tag = 'div'
     /**
      * @group Immutable DOM Constants
      */
@@ -56,11 +58,11 @@ export class PlatformView implements VirtualDOM {
      * @group States
      */
     public readonly state = new OsCore.PlatformState()
-    public readonly tabIndex = '-1'
+    public readonly tabIndex = -1
     /**
      * @group Immutable DOM Constants
      */
-    public readonly children: VirtualDOM[]
+    public readonly children: ChildrenLike
     /**
      * @group Immutable DOM Constants
      */
@@ -68,10 +70,7 @@ export class PlatformView implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly style: Stream$<
-        { [_key: string]: string },
-        { [_key: string]: string }
-    >
+    public readonly style: CSSAttribute
     /**
      * @group Immutable DOM Constants
      */
@@ -80,9 +79,9 @@ export class PlatformView implements VirtualDOM {
     constructor() {
         this.children = [
             new BackgroundView(),
-            child$(
-                getProfileStateData$(),
-                (profileState) =>
+            {
+                source$: getProfileStateData$(),
+                vdomMap: (profileState: ProfilesState) =>
                     new PlatformBannerView({
                         state: this.state,
                         profileState: profileState,
@@ -91,8 +90,9 @@ export class PlatformView implements VirtualDOM {
                             background: '#070707',
                         },
                     }),
-            ),
+            },
             {
+                tag: 'div',
                 class: 'd-flex align-items-center flex-grow-1 w-100 yw-iframe-border-none',
                 style: {
                     minHeight: '0px',
@@ -106,11 +106,14 @@ export class PlatformView implements VirtualDOM {
                     return installContextMenu({
                         div: elem,
                         children: [
-                            child$(getProfileStateData$(), (profileState) => {
-                                return new ContextMenuDesktopView({
-                                    profileState,
-                                })
-                            }),
+                            {
+                                source$: getProfileStateData$(),
+                                vdomMap: (profileState) => {
+                                    return new ContextMenuDesktopView({
+                                        profileState,
+                                    })
+                                },
+                            },
                         ],
                     })
                 },
@@ -128,7 +131,11 @@ export class PlatformView implements VirtualDOM {
 /**
  * @category View
  */
-export class BackgroundView implements VirtualDOM {
+export class BackgroundView implements VirtualDOM<'div'> {
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly tag = 'div'
     /**
      * @group Immutable DOM Constants
      */
@@ -139,12 +146,12 @@ export class BackgroundView implements VirtualDOM {
     public readonly style = {
         top: '0px',
         left: '0px',
-        zIndex: '-1',
+        zIndex: -1,
     }
     /**
      * @group Immutable DOM Constants
      */
-    public readonly children: VirtualDOM[]
+    public readonly children: ChildrenLike
     /**
      * @group Immutable DOM Constants
      */
@@ -157,12 +164,12 @@ export class BackgroundView implements VirtualDOM {
 
     constructor() {
         this.children = [
-            child$(
-                OsCore.PreferencesFacade.getPreferences$(),
-                (preferences) => {
+            {
+                source$: OsCore.PreferencesFacade.getPreferences$(),
+                vdomMap: (preferences: OsCore.Preferences) => {
                     return preferences.desktop.backgroundView
                 },
-            ),
+            },
         ]
     }
 }
@@ -170,15 +177,19 @@ export class BackgroundView implements VirtualDOM {
 /**
  * @category View
  */
-export class DesktopWidgetsView {
+export class DesktopWidgetsView implements VirtualDOM<'div'> {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly class: Stream$<RunningApp, string>
+    public readonly tag = 'div'
     /**
      * @group Immutable DOM Constants
      */
-    public readonly children: Stream$<Preferences, VirtualDOM[]>
+    public readonly class: AttributeLike<string>
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly children: ChildrenLike
     /**
      * @group States
      */
@@ -187,21 +198,21 @@ export class DesktopWidgetsView {
     constructor(params: { state: OsCore.PlatformState }) {
         Object.assign(this, params)
 
-        this.class = attr$(
-            this.state.runningApplication$,
-            (runningApp): string =>
+        this.class = {
+            source$: this.state.runningApplication$,
+            vdomMap: (runningApp): string =>
                 runningApp ? 'd-none' : 'd-flex flex-column',
-            {
-                wrapper: (d) => `w-100 h-100 p-2 ${d}`,
-            },
-        )
-        this.children = children$(
-            OsCore.PreferencesFacade.getPreferences$(),
-            (preferences) =>
+
+            wrapper: (d) => `w-100 h-100 p-2 ${d}`,
+        }
+        this.children = {
+            policy: 'replace',
+            source$: OsCore.PreferencesFacade.getPreferences$(),
+            vdomMap: (preferences: OsCore.Preferences) =>
                 OsCore.PreferencesExtractor.getDesktopWidgets(preferences, {
                     platformState: this.state,
                 }),
-        )
+        }
     }
 }
 

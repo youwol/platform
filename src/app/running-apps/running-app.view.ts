@@ -1,20 +1,19 @@
-import {
-    attr$,
-    Stream$,
-    VirtualDOM,
-    childrenAppendOnly$,
-} from '@youwol/flux-view'
+import { AttributeLike, ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
 import * as OsCore from '@youwol/os-core'
 import { filter, map } from 'rxjs/operators'
 
 /**
  * @category View
  */
-export class RunningAppView implements VirtualDOM {
+export class RunningAppView implements VirtualDOM<'div'> {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly class: Stream$<OsCore.RunningApp, string>
+    public readonly tag = 'div'
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly class: AttributeLike<string>
     /**
      * @group States
      */
@@ -22,7 +21,7 @@ export class RunningAppView implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly children
+    public readonly children: ChildrenLike
     /**
      * @group Immutable DOM Constants
      */
@@ -36,13 +35,17 @@ export class RunningAppView implements VirtualDOM {
 
     constructor(params: { state: OsCore.PlatformState }) {
         Object.assign(this, params)
-        this.class = attr$(this.state.runningApplication$, (app) =>
-            app == undefined
-                ? 'd-none '
-                : 'h-100 flex-grow-1 d-flex yw-animate-in fv-bg-background-alt pt-1',
-        )
-        this.children = childrenAppendOnly$(
-            this.state.runningApplication$.pipe(
+        this.class = {
+            source$: this.state.runningApplication$,
+            vdomMap: (app) =>
+                app == undefined
+                    ? 'd-none '
+                    : 'h-100 flex-grow-1 d-flex yw-animate-in fv-bg-background-alt pt-1',
+        }
+
+        this.children = {
+            policy: 'append',
+            source$: this.state.runningApplication$.pipe(
                 filter(
                     (app) =>
                         app &&
@@ -50,11 +53,11 @@ export class RunningAppView implements VirtualDOM {
                 ),
                 map((app) => [app]),
             ),
-            (runningApp: OsCore.RunningApp) => {
+            vdomMap: (runningApp: OsCore.RunningApp) => {
                 const view = runningApp.view
                 this.cacheRunningAppsView[runningApp.instanceId] = view
                 return view
             },
-        )
+        }
     }
 }

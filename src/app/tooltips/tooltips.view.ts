@@ -1,17 +1,15 @@
-import { VirtualDOM } from '@youwol/flux-view'
+import { CSSAttribute, ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
 import { TooltipsState } from './tooltips.state'
 
-export class TooltipsView {
+export class TooltipsView implements VirtualDOM<'div'> {
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly tag = 'div'
     public readonly class: string
     public readonly id: string
-    public readonly style: {
-        cursor: string
-        top: string
-        position: string
-        right: string
-        zIndex: string
-    }
-    public readonly children: VirtualDOM[]
+    public readonly style: CSSAttribute
+    public readonly children: ChildrenLike
 
     constructor({
         tooltipPlace: { top, right },
@@ -31,6 +29,7 @@ export class TooltipsView {
         const tooltipState = new TooltipsState()
         this.children = [
             {
+                tag: 'div',
                 class: ' d-flex justify-content-center align-items-center ',
                 style: {
                     position: 'relative',
@@ -45,6 +44,7 @@ export class TooltipsView {
                     }),
 
                     {
+                        tag: 'div',
                         class: ' yw-bg-yellowish rounded p-2 pt-4 yw-bottom-box-shadow yw-animate-in',
                         style: {
                             position: 'absolute',
@@ -64,7 +64,7 @@ export class TooltipsView {
         this.id = divId
         this.style = {
             cursor: 'default',
-            zIndex: '1',
+            zIndex: 1,
             position: 'absolute',
             top: `${top ?? 3}rem`,
             right: `${right ?? 2}rem`,
@@ -72,14 +72,10 @@ export class TooltipsView {
     }
 }
 
-export class ToolTipLinkView implements VirtualDOM {
+export class ToolTipLinkView implements VirtualDOM<'div'> {
+    public readonly tag = 'div'
     public readonly class = 'yw-bg-yellowish'
-    public readonly style: {
-        clipPath: string
-        width: string
-        position: string
-        height: string
-    }
+    public readonly style: CSSAttribute
 
     constructor({
         arrowLength,
@@ -101,24 +97,23 @@ export class ToolTipLinkView implements VirtualDOM {
     }
 }
 
-export class CloseTooltipView implements VirtualDOM {
+export class CloseTooltipView implements VirtualDOM<'span'> {
     public readonly tag = 'span'
     public readonly class = 'fas fa-times yw-text-orange'
     public readonly style = {
         height: '15px',
         width: '15px',
-        zIndex: '1',
-        position: 'absolute',
+        zIndex: 1,
+        position: 'absolute' as const,
         top: '5%',
         right: '5%',
         cursor: 'pointer',
     }
-    public readonly children: VirtualDOM[]
+    public readonly children: ChildrenLike
     public readonly onclick: () => void
 
     constructor(divId: string, state: TooltipsState) {
         this.onclick = () => {
-            // Hot fix
             state.dataSteps$.next([])
             state.removeTooltipElements(divId)
             document.getElementById(divId).remove()

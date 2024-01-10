@@ -1,11 +1,16 @@
-import { attr$, child$, VirtualDOM } from '@youwol/flux-view'
+import { ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
 import { BehaviorSubject } from 'rxjs'
 import { baseClassCtxMenuActions } from './context-menu.view'
 import { ProfileEditOptView } from '../top-banner/badges'
 import { Accounts } from '@youwol/http-clients'
-import { ProfilesState } from '../modals/profiles'
+import { Profile, ProfilesState } from '../modals/profiles'
 
-export class DesktopCtxMenuView implements VirtualDOM {
+export class DesktopCtxMenuView implements VirtualDOM<'div'> {
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly tag = 'div'
+
     /**
      * @group Immutable DOM Constants
      */
@@ -13,7 +18,7 @@ export class DesktopCtxMenuView implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly children: VirtualDOM[]
+    public readonly children: ChildrenLike
 
     constructor({ profileState }) {
         this.children = [
@@ -23,7 +28,12 @@ export class DesktopCtxMenuView implements VirtualDOM {
     }
 }
 
-export class FullscreenView implements VirtualDOM {
+export class FullscreenView implements VirtualDOM<'div'> {
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly tag = 'div'
+
     /**
      * @group Immutable DOM Constants
      */
@@ -31,7 +41,7 @@ export class FullscreenView implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly children: VirtualDOM[]
+    public readonly children: ChildrenLike
     /**
      * @group Immutable DOM Constants
      */
@@ -43,16 +53,22 @@ export class FullscreenView implements VirtualDOM {
         )
         this.children = [
             {
-                class: attr$(isFullscreen$, (isFullscreen) =>
-                    !isFullscreen
-                        ? 'fas fa-compress pe-2'
-                        : 'fas fa-expand pe-2',
-                ),
+                tag: 'div',
+                class: {
+                    source$: isFullscreen$,
+                    vdomMap: (isFullscreen) =>
+                        !isFullscreen
+                            ? 'fas fa-compress pe-2'
+                            : 'fas fa-expand pe-2',
+                },
             },
             {
-                innerText: attr$(isFullscreen$, (isFullscreen) =>
-                    !isFullscreen ? 'Reduce screen' : 'Full screen',
-                ),
+                tag: 'div',
+                innerText: {
+                    source$: isFullscreen$,
+                    vdomMap: (isFullscreen) =>
+                        !isFullscreen ? 'Reduce screen' : 'Full screen',
+                },
             },
         ]
         this.onclick = () => {
@@ -67,7 +83,12 @@ export class FullscreenView implements VirtualDOM {
 
 export const classEditProfileCtxMenu = 'editProfileCtxMenu'
 
-export class EditProfileCtxView implements VirtualDOM {
+export class EditProfileCtxView implements VirtualDOM<'div'> {
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly tag = 'div'
+
     /**
      * @group Immutable DOM Constants
      */
@@ -75,7 +96,7 @@ export class EditProfileCtxView implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly children: VirtualDOM[]
+    public readonly children: ChildrenLike
 
     constructor({
         sessionInfo,
@@ -85,13 +106,16 @@ export class EditProfileCtxView implements VirtualDOM {
         profileState: ProfilesState
     }) {
         this.children = [
-            child$(profileState.selectedProfile$, (profile) => {
-                return new ProfileEditOptView({
-                    profile: profile,
-                    sessionInfo: sessionInfo,
-                    state: profileState,
-                })
-            }),
+            {
+                source$: profileState.selectedProfile$,
+                vdomMap: (profile: Profile) => {
+                    return new ProfileEditOptView({
+                        profile: profile,
+                        sessionInfo: sessionInfo,
+                        state: profileState,
+                    })
+                },
+            },
         ]
     }
 }

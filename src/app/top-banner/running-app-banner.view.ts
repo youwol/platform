@@ -1,16 +1,21 @@
-import { child$, VirtualDOM } from '@youwol/flux-view'
+import { AnyVirtualDOM, ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
 import * as OsCore from '@youwol/os-core'
 import { EnvironmentBadgesView, LaunchpadBadgeView } from './badges'
 import { sessionDetails$ } from './utils.view'
 import { CorporationBadgeView } from './badges/corporation.view'
 import { ProfilesState } from '../modals/profiles'
+import { Accounts } from '@youwol/http-clients'
 
 /**
  * Top banner when an application is running
  *
  * @category View
  */
-export class RunningAppBannerView implements VirtualDOM {
+export class RunningAppBannerView implements VirtualDOM<'div'> {
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly tag = 'div'
     /**
      * @group Immutable DOM Constants
      */
@@ -22,7 +27,7 @@ export class RunningAppBannerView implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly children: VirtualDOM[]
+    public readonly children: ChildrenLike
 
     constructor(
         state: OsCore.PlatformState,
@@ -30,32 +35,47 @@ export class RunningAppBannerView implements VirtualDOM {
         app: OsCore.RunningApp,
     ) {
         this.children = [
-            child$(
-                OsCore.PreferencesFacade.getPreferences$(),
-                (preferences) =>
+            {
+                source$: OsCore.PreferencesFacade.getPreferences$(),
+                vdomMap: (preferences: OsCore.Preferences) =>
                     new CorporationBadgeView({ preferences, state }),
-            ),
+            },
             new LaunchpadBadgeView({ state }),
             {
+                tag: 'div',
                 class: 'my-auto d-flex justify-content-between flex-grow-1',
                 style: { minWidth: '0px' },
                 children: [
                     new RunningAppTitleView(state, app),
                     {
+                        tag: 'div',
                         class: 'flex-grow-1 my-auto',
                         style: { minWidth: '0px' },
                         children: [
-                            child$(app.topBannerActions$, (vDOM) => {
-                                vDOM.style = { maxHeight: 'fit-content' }
-                                return vDOM
-                            }),
+                            {
+                                source$: app.topBannerActions$,
+                                vdomMap: (vDOM: AnyVirtualDOM) => {
+                                    vDOM.style = { maxHeight: 'fit-content' }
+                                    return vDOM
+                                },
+                            },
                         ],
                     },
                 ],
             },
-            child$(sessionDetails$, (sessionInfo) => {
-                return new EnvironmentBadgesView({ sessionInfo, profileState })
-            }),
+            {
+                source$: sessionDetails$,
+                vdomMap: (
+                    sessionInfo:
+                        | Accounts.SessionImpersonationDetails
+                        | Accounts.SessionBaseDetails,
+                ) => {
+                    return new EnvironmentBadgesView({
+                        sessionInfo,
+                        profileState,
+                    })
+                },
+            },
         ]
     }
 }
@@ -64,7 +84,11 @@ export class RunningAppBannerView implements VirtualDOM {
  *
  * @category View
  */
-class RunningAppTitleView implements VirtualDOM {
+class RunningAppTitleView implements VirtualDOM<'div'> {
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly tag = 'div'
     /**
      * @group Immutable DOM Constants
      */
@@ -80,41 +104,52 @@ class RunningAppTitleView implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly children: VirtualDOM[]
+    public readonly children: ChildrenLike
 
     constructor(state: OsCore.PlatformState, app: OsCore.RunningApp) {
         const baseClass = 'fas my-auto fv-pointer fv-hover-text-secondary mx-1'
 
         this.children = [
             {
+                tag: 'div',
                 class: 'd-flex align-items-center yw-opened-app',
                 children: [
-                    child$(app.appMetadata$, (appInfo) => {
-                        return {
-                            style: {
-                                height: '25px',
-                                width: '25px',
-                                borderRadius: '5px',
-                            },
-                            children: [appInfo.graphics.appIcon],
-                        }
-                    }),
-                    child$(app.header$, (view) => {
-                        return view
-                    }),
+                    {
+                        source$: app.appMetadata$,
+                        vdomMap: (appInfo: OsCore.ApplicationInfo) => {
+                            return {
+                                tag: 'div',
+                                style: {
+                                    height: '25px',
+                                    width: '25px',
+                                    borderRadius: '5px',
+                                },
+                                children: [appInfo.graphics.appIcon],
+                            }
+                        },
+                    },
+                    {
+                        source$: app.header$,
+                        vdomMap: (view: AnyVirtualDOM) => {
+                            return view
+                        },
+                    },
                 ],
             },
             {
+                tag: 'div',
                 class: 'd-flex align-items-center  rounded p-1 ms-2  ',
                 style: {
                     fontSize: 'medium',
                 },
                 children: [
                     {
+                        tag: 'div',
                         class: `${baseClass} fa-minus  `,
                         onclick: () => state.minimize(app.instanceId),
                     },
                     {
+                        tag: 'div',
                         class: `${baseClass} fa-clone`,
 
                         onclick: () => {
@@ -123,6 +158,7 @@ class RunningAppTitleView implements VirtualDOM {
                         },
                     },
                     {
+                        tag: 'div',
                         class: `${baseClass} fa-times`,
                         onclick: () => state.close(app.instanceId),
                     },

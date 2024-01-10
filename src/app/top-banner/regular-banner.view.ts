@@ -1,16 +1,21 @@
-import { child$, children$, VirtualDOM } from '@youwol/flux-view'
+import { ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
 import * as OsCore from '@youwol/os-core'
 import { EnvironmentBadgesView, LaunchpadBadgeView } from './badges'
 import { sessionDetails$ } from './utils.view'
 import { CorporationBadgeView } from './badges/corporation.view'
 import { ProfilesState } from '../modals/profiles'
+import { Accounts } from '@youwol/http-clients'
 
 /**
  * Regular top banner of the application (no application running)
  *
  * @category View
  */
-export class RegularBannerView implements VirtualDOM {
+export class RegularBannerView implements VirtualDOM<'div'> {
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly tag = 'div'
     /**
      * @group Immutable DOM Constants
      */
@@ -18,7 +23,7 @@ export class RegularBannerView implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly children: VirtualDOM[]
+    public readonly children: ChildrenLike
     /**
      * @group Immutable DOM Constants
      */
@@ -28,26 +33,38 @@ export class RegularBannerView implements VirtualDOM {
 
     constructor(state: OsCore.PlatformState, profileState: ProfilesState) {
         this.children = [
-            child$(
-                OsCore.PreferencesFacade.getPreferences$(),
-                (preferences) =>
+            {
+                source$: OsCore.PreferencesFacade.getPreferences$(),
+                vdomMap: (preferences: OsCore.Preferences) =>
                     new CorporationBadgeView({ preferences, state }),
-            ),
+            },
             new LaunchpadBadgeView({ state }),
             {
+                tag: 'div',
                 class: 'flex-grow-1 my-auto h-100 d-flex justify-content-around',
-                children: children$(
-                    OsCore.PreferencesFacade.getPreferences$(),
-                    (preferences) =>
+                children: {
+                    policy: 'replace',
+                    source$: OsCore.PreferencesFacade.getPreferences$(),
+                    vdomMap: (preferences: OsCore.Preferences) =>
                         OsCore.PreferencesExtractor.getTopBannerWidgets(
                             preferences,
                             { platformState: state },
                         ),
-                ),
+                },
             },
-            child$(sessionDetails$, (sessionInfo) => {
-                return new EnvironmentBadgesView({ sessionInfo, profileState })
-            }),
+            {
+                source$: sessionDetails$,
+                vdomMap: (
+                    sessionInfo:
+                        | Accounts.SessionImpersonationDetails
+                        | Accounts.SessionBaseDetails,
+                ) => {
+                    return new EnvironmentBadgesView({
+                        sessionInfo,
+                        profileState,
+                    })
+                },
+            },
         ]
     }
 }

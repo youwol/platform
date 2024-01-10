@@ -1,8 +1,8 @@
-import { attr$, VirtualDOM } from '@youwol/flux-view'
+import { ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
 import { VisitorFormView } from '../user'
 import { separatorView } from '../user/common'
 import { BehaviorSubject } from 'rxjs'
-import { Modal } from '@youwol/fv-group'
+import { Modal } from '@youwol/rx-group-views'
 import { ClosePopupButtonView } from '../profiles'
 
 /**
@@ -59,7 +59,11 @@ export class WelcomeVisitorState {
 /**
  * @category View
  */
-export class WelcomeVisitorView implements VirtualDOM {
+export class WelcomeVisitorView implements VirtualDOM<'div'> {
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly tag = 'div'
     /**
      * @group Immutable DOM Constants
      */
@@ -69,12 +73,12 @@ export class WelcomeVisitorView implements VirtualDOM {
      * @group Immutable DOM Constants
      */
     public readonly style = {
-        position: 'relative',
+        position: 'relative' as const,
     }
     /**
      * @group Immutable DOM Constants
      */
-    public readonly children: VirtualDOM[]
+    public readonly children: ChildrenLike
 
     constructor({ modalState }: { modalState: Modal.State }) {
         const state = new WelcomeVisitorState()
@@ -90,7 +94,11 @@ export class WelcomeVisitorView implements VirtualDOM {
 /**
  * @category View
  */
-export class DoNotShowAgainView implements VirtualDOM {
+export class DoNotShowAgainView implements VirtualDOM<'div'> {
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly tag = 'div'
     /**
      * @group Immutable DOM Constants
      */
@@ -98,7 +106,7 @@ export class DoNotShowAgainView implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly children: VirtualDOM[]
+    public readonly children: ChildrenLike
     /**
      * @group States
      */
@@ -110,10 +118,14 @@ export class DoNotShowAgainView implements VirtualDOM {
             {
                 tag: 'input',
                 type: 'checkbox',
-                checked: attr$(this.state.showAgain$, (v) => !v),
+                checked: {
+                    source$: this.state.showAgain$,
+                    vdomMap: (v) => !v,
+                },
                 onclick: () => this.state.toggleShowAgain(),
             },
             {
+                tag: 'div',
                 class: 'px-2',
                 innerText: 'Do not show again.',
             },

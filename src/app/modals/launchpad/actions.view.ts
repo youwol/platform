@@ -1,24 +1,29 @@
-import { attr$, child$, VirtualDOM } from '@youwol/flux-view'
+import { ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
 import * as OsCore from '@youwol/os-core'
-import * as cdnClient from '@youwol/cdn-client'
+import * as webpmClient from '@youwol/webpm-client'
 import type * as Marked from 'marked'
 
-import { Modal } from '@youwol/fv-group'
+import { Modal } from '@youwol/rx-group-views'
 import { popupModal } from '../common'
 import { from } from 'rxjs'
 import { map } from 'rxjs/operators'
 import { setup } from '../../../auto-generated'
 import { FavoritesFacade } from '@youwol/os-core'
+import { AssetsBackend, ExplorerBackend } from '@youwol/http-clients'
 
-export class SideAppActionsView implements VirtualDOM {
-    public readonly class = 'd-flex flex-column' //: Stream$<boolean, string>
+export class SideAppActionsView implements VirtualDOM<'div'> {
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly tag = 'div'
+    public readonly class = 'd-flex flex-column'
     public readonly style = {
-        position: 'absolute',
+        position: 'absolute' as const,
         top: '5px',
         right: '5%',
     }
 
-    public readonly children: VirtualDOM[]
+    public readonly children: ChildrenLike
     public readonly onclick = (ev) => ev.stopPropagation()
 
     constructor(params: {
@@ -33,19 +38,19 @@ export class SideAppActionsView implements VirtualDOM {
                 modalState: params.modalState,
                 app: params.app,
             }),
-            child$(
-                OsCore.RequestsExecutor.getAsset(
+            {
+                source$: OsCore.RequestsExecutor.getAsset(
                     window.btoa(window.btoa(params.app.cdnPackage)),
                 ),
-                (asset) => {
+                vdomMap: (asset: AssetsBackend.AssetBase) => {
                     return asset.description
                         ? new SideAppInfoAction({
                               name: params.app.displayName,
                               description: asset.description,
                           })
-                        : {}
+                        : { tag: 'div' }
                 },
-            ),
+            },
             new SideAppFavoriteAction({
                 assetId: assetId,
             }),
@@ -63,10 +68,14 @@ const basedActionsStyle = {
 
 const iconsClasses = 'fas  fa-xs yw-hover-text-orange fv-pointer'
 
-class SideAppRunAction implements VirtualDOM {
+class SideAppRunAction implements VirtualDOM<'div'> {
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly tag = 'div'
     public readonly class = basedActionsClass
     public readonly style = basedActionsStyle
-    public readonly children: VirtualDOM[]
+    public readonly children: ChildrenLike
     public readonly onclick: (ev) => void
 
     constructor(params: {
@@ -76,6 +85,7 @@ class SideAppRunAction implements VirtualDOM {
     }) {
         this.children = [
             {
+                tag: 'div',
                 class: `fa-play ${iconsClasses}`,
                 customAttributes: {
                     dataToggle: 'tooltip',
@@ -96,16 +106,21 @@ class SideAppRunAction implements VirtualDOM {
     }
 }
 
-class SideAppInfoAction implements VirtualDOM {
+class SideAppInfoAction implements VirtualDOM<'div'> {
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly tag = 'div'
     public readonly class = basedActionsClass
     public readonly style = basedActionsStyle
-    public readonly children: VirtualDOM[]
+    public readonly children: ChildrenLike
     public readonly onclick: () => void
 
     constructor(params: { name: string; description: string }) {
         Object.assign(this, params)
         this.children = [
             {
+                tag: 'div',
                 class: `fa-info ${iconsClasses}`,
                 customAttributes: {
                     dataToggle: 'tooltip',
@@ -124,26 +139,31 @@ class SideAppInfoAction implements VirtualDOM {
     }
 }
 
-class SideAppFavoriteAction implements VirtualDOM {
+class SideAppFavoriteAction implements VirtualDOM<'div'> {
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly tag = 'div'
     public readonly class = basedActionsClass
     public readonly style = basedActionsStyle
-    public readonly children: VirtualDOM[]
+    public readonly children: ChildrenLike
     public readonly onclick: () => void
 
     constructor(params: { assetId: string }) {
         Object.assign(this, params)
         this.children = [
             {
-                class: attr$(
-                    OsCore.FavoritesFacade.getApplications$(),
-                    (app) =>
+                tag: 'div',
+                class: {
+                    source$: OsCore.FavoritesFacade.getApplications$(),
+                    vdomMap: (app: ExplorerBackend.ItemBase[]) =>
                         app.find((a) => a.assetId === params.assetId)
                             ? `fa-star text-secondary ${iconsClasses}`
                             : `fa-star  ${iconsClasses}`,
-                ),
-                customAttributes: attr$(
-                    FavoritesFacade.getApplications$(),
-                    (app) => {
+                },
+                customAttributes: {
+                    source$: FavoritesFacade.getApplications$(),
+                    vdomMap: (app: ExplorerBackend.ItemBase[]) => {
                         const isFavorite = app.find(
                             (a) => a.assetId === params.assetId,
                         )
@@ -154,7 +174,7 @@ class SideAppFavoriteAction implements VirtualDOM {
                                 : `Add to desktop`,
                         }
                     },
-                ),
+                },
             },
         ]
         this.onclick = () => {
@@ -165,16 +185,21 @@ class SideAppFavoriteAction implements VirtualDOM {
 
 function installMarked$() {
     return from(
-        cdnClient.install({
+        webpmClient.install({
             modules: [`marked#${setup.runTimeDependencies.externals.marked}`],
         }) as unknown as Promise<{ marked: typeof Marked }>,
     ).pipe(map(({ marked }) => marked))
 }
 
-class AppDescriptionView implements VirtualDOM {
+class AppDescriptionView implements VirtualDOM<'div'> {
+    /**
+     * @group Immutable DOM Constants
+     */
+    public readonly tag = 'div'
+
     public readonly class =
         'vw-50 vh-50 rounded mx-auto my-auto p-4 yw-bg-dark  yw-box-shadow yw-animate-in '
-    public readonly children: VirtualDOM[]
+    public readonly children: ChildrenLike
 
     constructor(params: { name: string; description: string }) {
         this.children = [
@@ -182,15 +207,20 @@ class AppDescriptionView implements VirtualDOM {
                 title: params.name,
                 fa: 'info',
             }),
-            child$(installMarked$(), (markedModule) => ({
-                class: 'fv-text-primary mt-4 mb-4 text-start overflow-auto',
-                style: {
-                    width: '50vh',
-                    maxHeight: '50vh',
-                },
-                innerHTML: markedModule.parse(params.description),
-            })),
             {
+                source$: installMarked$(),
+                vdomMap: (markedModule: typeof Marked) => ({
+                    tag: 'div',
+                    class: 'fv-text-primary mt-4 mb-4 text-start overflow-auto',
+                    style: {
+                        width: '50vh',
+                        maxHeight: '50vh',
+                    },
+                    innerHTML: markedModule.parse(params.description),
+                }),
+            },
+            {
+                tag: 'div',
                 class: 'd-flex  fv-text-primary yw-hover-text-dark justify-content-center',
                 children: [new CanclePopupButtonView()],
             },
@@ -200,11 +230,11 @@ class AppDescriptionView implements VirtualDOM {
     }
 }
 
-export class PopupHeaderView implements VirtualDOM {
+export class PopupHeaderView implements VirtualDOM<'i'> {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly tag: string = 'i'
+    public readonly tag = 'i'
     /**
      * @group Immutable DOM Constants
      */
@@ -212,11 +242,12 @@ export class PopupHeaderView implements VirtualDOM {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly children: VirtualDOM[]
+    public readonly children: ChildrenLike
 
     constructor({ title, fa }: { title: string; fa: string }) {
         this.children = [
             {
+                tag: 'div',
                 style: {
                     fontSize: '16px',
                 },
@@ -228,7 +259,7 @@ export class PopupHeaderView implements VirtualDOM {
     }
 }
 
-export class CanclePopupButtonView implements VirtualDOM {
+export class CanclePopupButtonView implements VirtualDOM<'span'> {
     /**
      * @group Immutable DOM Constants
      */
@@ -256,7 +287,7 @@ export class CanclePopupButtonView implements VirtualDOM {
     public readonly onclick = () => closeWithoutAction()
 }
 
-export class ClosePopupButtonView implements VirtualDOM {
+export class ClosePopupButtonView implements VirtualDOM<'span'> {
     /**
      * @group Immutable DOM Constants
      */
@@ -269,7 +300,7 @@ export class ClosePopupButtonView implements VirtualDOM {
      * @group Immutable DOM Constants
      */
     public readonly style = {
-        position: 'absolute',
+        position: 'absolute' as const,
         top: '10px',
         right: '10px',
     }

@@ -37,7 +37,7 @@ template = Template(
                 "@youwol/rx-group-views": "^0.3.0",
                 "@youwol/rx-vdom": "^1.0.1",
                 "rxjs": "^7.5.6",
-                "@youwol/rx-code-mirror-editors": "0.4.1",
+                "@youwol/rx-code-mirror-editors": "0.5.0",
                 "@youwol/webpm-client": "^3.0.0",
             }
         ),

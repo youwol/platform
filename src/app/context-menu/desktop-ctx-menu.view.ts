@@ -1,9 +1,9 @@
 import { ChildrenLike, VirtualDOM } from '@youwol/rx-vdom'
-import { BehaviorSubject } from 'rxjs'
 import { baseClassCtxMenuActions } from './context-menu.view'
 import { ProfileEditOptView } from '../top-banner/badges'
 import { Accounts } from '@youwol/http-clients'
 import { Profile, ProfilesState } from '../modals/profiles'
+import { isFullscreen$, toggleFullscreenMode } from '../fullscreen-mode'
 
 export class DesktopCtxMenuView implements VirtualDOM<'div'> {
     /**
@@ -45,19 +45,16 @@ export class FullscreenView implements VirtualDOM<'div'> {
     /**
      * @group Immutable DOM Constants
      */
-    public readonly onclick: () => void
+    public readonly onclick: (ev) => void
 
     constructor() {
-        const isFullscreen$ = new BehaviorSubject<boolean>(
-            !document.fullscreenElement,
-        )
         this.children = [
             {
                 tag: 'div',
                 class: {
                     source$: isFullscreen$,
                     vdomMap: (isFullscreen) =>
-                        !isFullscreen
+                        isFullscreen
                             ? 'fas fa-compress pe-2'
                             : 'fas fa-expand pe-2',
                 },
@@ -67,16 +64,12 @@ export class FullscreenView implements VirtualDOM<'div'> {
                 innerText: {
                     source$: isFullscreen$,
                     vdomMap: (isFullscreen) =>
-                        !isFullscreen ? 'Reduce screen' : 'Full screen',
+                        isFullscreen ? 'Reduce screen' : 'Full screen',
                 },
             },
         ]
         this.onclick = () => {
-            const doc = document
-            const elem = doc.documentElement
-            !doc.fullscreenElement
-                ? elem.requestFullscreen()
-                : doc.exitFullscreen()
+            toggleFullscreenMode()
         }
     }
 }

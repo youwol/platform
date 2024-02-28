@@ -71,10 +71,6 @@ export class PlatformView implements VirtualDOM<'div'> {
      * @group Immutable DOM Constants
      */
     public readonly style: CSSAttribute
-    /**
-     * @group Immutable DOM Constants
-     */
-    public readonly onclick: (ev) => void
 
     constructor() {
         this.children = [

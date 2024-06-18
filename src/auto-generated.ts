@@ -1,84 +1,84 @@
 
 const runTimeDependencies = {
     "externals": {
-        "marked": "^4.2.3",
-        "@youwol/os-core": "^0.2.0",
         "@youwol/http-clients": "^3.0.1",
-        "uuid": "^8.3.2",
-        "codemirror": "^5.52.0",
-        "@youwol/rx-context-menu-views": "^0.2.0",
-        "@youwol/rx-tab-views": "^0.3.0",
-        "@youwol/rx-group-views": "^0.3.0",
-        "@youwol/rx-vdom": "^1.0.1",
-        "rxjs": "^7.5.6",
+        "@youwol/os-core": "^0.2.0",
         "@youwol/rx-code-mirror-editors": "0.5.0",
-        "@youwol/webpm-client": "^3.0.0"
+        "@youwol/rx-context-menu-views": "^0.2.0",
+        "@youwol/rx-group-views": "^0.3.0",
+        "@youwol/rx-tab-views": "^0.3.0",
+        "@youwol/rx-vdom": "^1.0.1",
+        "@youwol/webpm-client": "^3.0.0",
+        "codemirror": "^5.52.0",
+        "marked": "^4.2.3",
+        "rxjs": "^7.5.6",
+        "uuid": "^8.3.2"
     },
     "includedInBundle": {}
 }
 const externals = {
-    "marked": "window['marked_APIv4']",
-    "@youwol/os-core": "window['@youwol/os-core_APIv02']",
     "@youwol/http-clients": "window['@youwol/http-clients_APIv3']",
-    "uuid": "window['uuid_APIv8']",
-    "codemirror": "window['CodeMirror_APIv5']",
-    "@youwol/rx-context-menu-views": "window['@youwol/rx-context-menu-views_APIv02']",
-    "@youwol/rx-tab-views": "window['@youwol/rx-tab-views_APIv03']",
-    "@youwol/rx-group-views": "window['@youwol/rx-group-views_APIv03']",
-    "@youwol/rx-vdom": "window['@youwol/rx-vdom_APIv1']",
-    "rxjs": "window['rxjs_APIv7']",
+    "@youwol/os-core": "window['@youwol/os-core_APIv02']",
     "@youwol/rx-code-mirror-editors": "window['@youwol/rx-code-mirror-editors_APIv05']",
+    "@youwol/rx-context-menu-views": "window['@youwol/rx-context-menu-views_APIv02']",
+    "@youwol/rx-group-views": "window['@youwol/rx-group-views_APIv03']",
+    "@youwol/rx-tab-views": "window['@youwol/rx-tab-views_APIv03']",
+    "@youwol/rx-vdom": "window['@youwol/rx-vdom_APIv1']",
     "@youwol/webpm-client": "window['@youwol/webpm-client_APIv3']",
-    "rxjs/operators": "window['rxjs_APIv7']['operators']"
+    "codemirror": "window['CodeMirror_APIv5']",
+    "marked": "window['marked_APIv4']",
+    "rxjs": "window['rxjs_APIv7']",
+    "rxjs/operators": "window['rxjs_APIv7']['operators']",
+    "uuid": "window['uuid_APIv8']"
 }
 const exportedSymbols = {
-    "marked": {
-        "apiKey": "4",
-        "exportedSymbol": "marked"
+    "@youwol/http-clients": {
+        "apiKey": "3",
+        "exportedSymbol": "@youwol/http-clients"
     },
     "@youwol/os-core": {
         "apiKey": "02",
         "exportedSymbol": "@youwol/os-core"
     },
-    "@youwol/http-clients": {
-        "apiKey": "3",
-        "exportedSymbol": "@youwol/http-clients"
-    },
-    "uuid": {
-        "apiKey": "8",
-        "exportedSymbol": "uuid"
-    },
-    "codemirror": {
-        "apiKey": "5",
-        "exportedSymbol": "CodeMirror"
+    "@youwol/rx-code-mirror-editors": {
+        "apiKey": "05",
+        "exportedSymbol": "@youwol/rx-code-mirror-editors"
     },
     "@youwol/rx-context-menu-views": {
         "apiKey": "02",
         "exportedSymbol": "@youwol/rx-context-menu-views"
     },
-    "@youwol/rx-tab-views": {
-        "apiKey": "03",
-        "exportedSymbol": "@youwol/rx-tab-views"
-    },
     "@youwol/rx-group-views": {
         "apiKey": "03",
         "exportedSymbol": "@youwol/rx-group-views"
+    },
+    "@youwol/rx-tab-views": {
+        "apiKey": "03",
+        "exportedSymbol": "@youwol/rx-tab-views"
     },
     "@youwol/rx-vdom": {
         "apiKey": "1",
         "exportedSymbol": "@youwol/rx-vdom"
     },
+    "@youwol/webpm-client": {
+        "apiKey": "3",
+        "exportedSymbol": "@youwol/webpm-client"
+    },
+    "codemirror": {
+        "apiKey": "5",
+        "exportedSymbol": "CodeMirror"
+    },
+    "marked": {
+        "apiKey": "4",
+        "exportedSymbol": "marked"
+    },
     "rxjs": {
         "apiKey": "7",
         "exportedSymbol": "rxjs"
     },
-    "@youwol/rx-code-mirror-editors": {
-        "apiKey": "05",
-        "exportedSymbol": "@youwol/rx-code-mirror-editors"
-    },
-    "@youwol/webpm-client": {
-        "apiKey": "3",
-        "exportedSymbol": "@youwol/webpm-client"
+    "uuid": {
+        "apiKey": "8",
+        "exportedSymbol": "uuid"
     }
 }
 

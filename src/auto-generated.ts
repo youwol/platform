@@ -25,7 +25,7 @@ const externals = {
     "@youwol/rx-tab-views": "window['@youwol/rx-tab-views_APIv03']",
     "@youwol/rx-vdom": "window['@youwol/rx-vdom_APIv1']",
     "@youwol/webpm-client": "window['@youwol/webpm-client_APIv3']",
-    "codemirror": "window['CodeMirror_APIv5']",
+    "codemirror": "window['codemirror_APIv5']",
     "marked": "window['marked_APIv4']",
     "rxjs": "window['rxjs_APIv7']",
     "rxjs/operators": "window['rxjs_APIv7']['operators']",
@@ -66,7 +66,7 @@ const exportedSymbols = {
     },
     "codemirror": {
         "apiKey": "5",
-        "exportedSymbol": "CodeMirror"
+        "exportedSymbol": "codemirror"
     },
     "marked": {
         "apiKey": "4",
